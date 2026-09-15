@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.2</title>
+<title>Rattana Purchase Chat v1.3</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -402,7 +402,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.2</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.3</div>
   </div>
 </div>
 
@@ -413,7 +413,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:34px;height:34px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.2</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.3</span>
   </div>
   <div class="hdr-r">
     <button class="hdr-btn" id="bellBtn" onclick="toggleNotify()" title="เปิด/ปิดเสียงแจ้งเตือน">🔔</button>
@@ -624,13 +624,13 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.2 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.3 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.2';
+const APP_VERSION   = '1.3';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
@@ -822,7 +822,7 @@ async function refreshAll(){
       await loadChats();
       if(activeId) renderMsgs(await loadMsgs(activeId));
       if(view === 'dash') await loadDash();
-      if(view === 'set') renderSettings();
+      if(view === 'set'){ oaAdmins = null; renderSettings(); }
     }
     showToast('อัพเดทเรียบร้อย ✓', 'success');
   }catch(e){ showToast('โหลดไม่สำเร็จ: ' + e.message, 'error'); }
@@ -1639,12 +1639,21 @@ window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTi
 //  SETTINGS
 // ═══════════════════════════════════════════════════════════
 let staffDir = null;      // รายชื่อจากตาราง staff ของ Chat Hub (โหลดครั้งเดียว)
+let oaAdmins = null;      // แอดมินที่ส่วนขยายเห็นใน LINE OA Manager (หัวหน้าเท่านั้น) · null = ยังไม่โหลด
 let peopleQ = '';
 function renderSettings(){
   if(view !== 'set') return;
   const sup = isSup();
   $('setContent').innerHTML = linkCardHtml() + (sup ? teamCardHtml() + peopleCardHtml() + hoursCardHtml() : '') + quickCardHtml(sup) + (sup ? ackCardHtml() : '') + quotaCardHtml() + (isAdmin() ? adminCardHtml() : '') + aboutCardHtml();
   if(sup) renderPeopleRows();
+  if(sup && oaAdmins === null && !DEMO) loadOaAdmins();
+}
+async function loadOaAdmins(){
+  oaAdmins = [];
+  const { data, error } = await sb.from('pur_oa_admins').select('*').order('last_seen_at', { ascending:false }).limit(200);
+  if(error){ console.warn('oa admins:', error.message); return; }
+  oaAdmins = data || [];
+  const el = $('teamCard'); if(el) el.outerHTML = teamCardHtml();
 }
 // อัปเดตเฉพาะการ์ดที่ขึ้นกับ pur_people (มาจาก realtime) — ไม่ล้างฟอร์มที่กำลังแก้อยู่
 function refreshPeopleCards(){
@@ -1684,12 +1693,19 @@ function teamCardHtml(){
     <div class="acts"><button class="btn btn-gold btn-sm" onclick="openMemberModal()">＋ เพิ่มสมาชิก</button></div>
     <div class="hint">คนในรายชื่อนี้เท่านั้นที่เข้าแอพได้ · <b>หัวหน้า</b>เห็นแดชบอร์ดทุกคนและตั้งค่าระบบได้ · <b>พนักงาน</b>เห็นสถิติของตัวเอง · <b>ผู้ดูแลระบบ</b>ตั้งหัวหน้าได้</div></div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr>${['ชื่อเล่น', 'ชื่อ-สกุล', 'อีเมล', 'ชื่อใน OA', 'สิทธิ์', 'LINE ที่ผูก', 'สถานะ', ''].map(h => `<th style="cursor:default">${h}</th>`).join('')}</tr></thead><tbody>
-    ${list.map(m => `<tr class="${m.active ? '' : 'dim'}"><td><b>${esc(m.nick || '—')}</b></td><td>${esc(m.name || '—')}</td><td class="mini">${esc(m.email)}</td><td class="mini">${esc(m.oa_name || '—')}</td>
+    ${list.map(m => `<tr class="${m.active ? '' : 'dim'}"><td><b>${esc(m.nick || '—')}</b></td><td>${esc(m.name || '—')}</td><td class="mini">${esc(m.email)}</td><td class="mini">${esc(m.oa_name || '—')}${m.oa_biz_id ? ' <span class="pill ok" title="ผูกกับแอดมินใน LINE OA Manager แล้ว — คำตอบใน OA นับเป็นผลงานคนนี้">ผูกแล้ว</span>' : ''}</td>
       <td><span class="pill ${m.role === 'admin' ? 'bad' : m.role === 'supervisor' ? 'gold' : 'grey'}">${roleLabel(m.role)}</span></td>
       <td class="mini">${linked(m.email).map(esc).join(', ') || '<span class="txt-muted">—</span>'}</td>
       <td>${m.active ? '<span class="pill ok">ใช้งาน</span>' : '<span class="pill grey">ปิด</span>'}</td>
       <td><button class="btn btn-outline btn-sm" data-e="${esc(m.email)}" onclick="openMemberModal(this.dataset.e)">แก้ไข</button></td></tr>`).join('')}
-    </tbody></table></div></div>`;
+    </tbody></table></div>${oaAdminsHtml()}</div>`;
+}
+// แอดมินที่ส่วนขยายเห็นใน OA Manager — ช่วยหัวหน้าจับคู่ "ชื่อใน OA" ให้ครบทุกคน
+function oaAdminsHtml(){
+  const list = oaAdmins || []; if(!list.length) return '';
+  return `<div class="card-body" style="border-top:1px solid var(--border)">
+    <div class="mini" style="margin-bottom:6px"><b>แอดมินที่เห็นใน LINE OA Manager</b> — คนที่ยังไม่จับคู่: กด "แก้ไข" ที่สมาชิกคนนั้น แล้วเลือกชื่อในช่อง "ชื่อที่แสดงใน LINE OA Manager" ระบบจะผูกให้ภายใน ~1 นาที และนับคำตอบใน OA ย้อนหลังให้</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">${list.map(a => `<span class="tag ${a.member_email ? 'assg' : 'none'}" title="เห็นล่าสุด ${esc(thDateTime(a.last_seen_at))}">${esc(a.name || String(a.biz_id).slice(0, 8))} → ${a.member_email ? esc(memberName(a.member_email)) : 'ยังไม่จับคู่'}</span>`).join('')}</div></div>`;
 }
 function openMemberModal(email){
   const m = email ? members.get(email) : null; const canRole = isAdmin();
@@ -1700,7 +1716,7 @@ function openMemberModal(email){
       <div class="help">ดึงจากทะเบียนพนักงานของ Chat Hub (ถ้ามี) หรือกรอกเองด้านล่าง</div></div>`}
     <div class="row"><div class="field"><label>ชื่อเล่น</label><input class="input" id="mmNick" value="${esc(m?.nick || '')}" placeholder="เช่น นก"></div><div class="field"><label>ชื่อ-สกุล</label><input class="input" id="mmName" value="${esc(m?.name || '')}"></div></div>
     <div class="field mt-12"><label>อีเมล Google ที่ใช้ล็อกอิน</label><input class="input" id="mmEmail" type="email" value="${esc(m?.email || '')}" ${m ? 'readonly style="opacity:.7"' : ''} placeholder="name@rattanaphaiboon.com"></div>
-    <div class="field"><label>ชื่อที่แสดงใน LINE OA Manager</label><input class="input" id="mmOa" value="${esc(m?.oa_name || '')}" placeholder="ชื่อแอดมินตามที่ OA Manager แสดง"><div class="help">ใช้จับคู่คำตอบที่พิมพ์ใน OA Manager (ผ่านส่วนขยาย) ให้เป็นผลงานของคนนี้ — ถ้าเว้นว่างจะเทียบกับชื่อเล่น/ชื่อจริง</div></div>
+    <div class="field"><label>ชื่อที่แสดงใน LINE OA Manager</label><input class="input" id="mmOa" list="oaAdminList" value="${esc(m?.oa_name || '')}" placeholder="เลือกหรือพิมพ์ชื่อแอดมินตามที่ OA Manager แสดง"><datalist id="oaAdminList">${(oaAdmins || []).filter(a => a.name && (!a.member_email || a.member_email === m?.email)).map(a => `<option value="${esc(a.name)}"></option>`).join('')}</datalist><div class="help">${m?.oa_biz_id ? '✓ ผูกกับแอดมินใน OA แล้ว · ' : ''}ใช้จับคู่คำตอบที่พิมพ์ใน OA Manager (ผ่านส่วนขยาย) ให้เป็นผลงานของคนนี้ รวมคำตอบย้อนหลัง — ถ้าเว้นว่างจะเทียบกับชื่อเล่น/ชื่อจริง</div></div>
     <div class="field"><label>สิทธิ์</label><select class="input" id="mmRole" ${canRole ? '' : 'disabled'}>
       <option value="staff" ${(m?.role || 'staff') === 'staff' ? 'selected' : ''}>พนักงาน — เห็นสถิติตัวเอง</option>
       <option value="supervisor" ${m?.role === 'supervisor' ? 'selected' : ''}>หัวหน้า — เห็นทุกคน ตั้งค่าได้</option>
