@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.1</title>
+<title>Rattana Purchase Chat v1.2</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -73,10 +73,13 @@ a{color:inherit}
 
 /* ───────────── LIST PANE ───────────── */
 .list-pane{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--card-bg);z-index:1}
-.search-wrap{padding:9px 10px 6px;flex-shrink:0;background:var(--card-bg)}
-.search-inp{width:100%;height:40px;padding:0 14px 0 36px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;transition:border-color .15s;
+.search-wrap{padding:9px 10px 6px;flex-shrink:0;background:var(--card-bg);display:flex;gap:6px;align-items:center}
+.search-inp{flex:1;min-width:0;width:100%;height:40px;padding:0 14px 0 36px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;transition:border-color .15s;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%237a88a8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.868-3.833zm-5.242 1.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:11px center}
 .search-inp:focus{border-color:var(--gold)}
+.sort-btn{flex-shrink:0;height:40px;padding:0 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:var(--muted);font-size:12px;font-weight:600;white-space:nowrap}
+.sort-btn:hover{border-color:var(--gold);color:var(--text)}
+.sort-btn.wait{background:rgba(250,178,25,.18);border-color:rgba(250,178,25,.5);color:var(--text)}
 .chips{display:flex;gap:6px;padding:4px 10px 9px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--card-bg)}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex-shrink:0;padding:5px 11px;border-radius:14px;border:1.5px solid var(--border);background:var(--bg);font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:5px;min-height:30px;white-space:nowrap}
@@ -146,6 +149,12 @@ body.dark .tool-btn.done{background:#1a3a25;color:#7be0a3;border-color:#2b5a3a}
 .msgs-area{flex:1;overflow-y:auto;padding:12px 12px 6px;display:flex;flex-direction:column;gap:7px;-webkit-overflow-scrolling:touch}
 .date-sep{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;margin:6px 0}
 .date-sep::before,.date-sep::after{content:'';flex:1;height:1px;background:var(--border)}
+.date-sep.hist{color:var(--text);font-weight:600;text-align:center}
+.date-sep.hist::before,.date-sep.hist::after{background:var(--gold)}
+.older-bar{align-self:center;flex-shrink:0;font-size:12px;color:var(--muted);background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:4px 14px;margin:2px 0 4px}
+button.older-bar:hover{border-color:var(--gold);color:var(--text)}
+.new-pill{position:absolute;left:50%;transform:translateX(-50%);z-index:5;display:none;background:var(--navy);color:#fff;border-radius:16px;padding:6px 14px;font-size:12px;font-weight:600;box-shadow:var(--shadow-sm)}
+.new-pill.show{display:block}
 .sys-msg{align-self:center;font-size:11px;color:var(--muted);background:var(--card-bg);border:1px dashed var(--border);border-radius:12px;padding:3px 12px;max-width:92%;text-align:center}
 .msg-grp{display:flex;flex-direction:column;gap:2px;max-width:82%}
 .msg-grp.fc{align-self:flex-start}
@@ -393,7 +402,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.1</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.2</div>
   </div>
 </div>
 
@@ -404,7 +413,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:34px;height:34px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.1</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.2</span>
   </div>
   <div class="hdr-r">
     <button class="hdr-btn" id="bellBtn" onclick="toggleNotify()" title="เปิด/ปิดเสียงแจ้งเตือน">🔔</button>
@@ -428,6 +437,7 @@ select.input{appearance:auto}
     <div class="list-pane" id="listPane">
       <div class="search-wrap">
         <input class="search-inp" type="search" placeholder="ค้นหาซัพพลายเออร์ / กลุ่ม / ข้อความ" oninput="filterConv(this.value)" autocomplete="off">
+        <button class="sort-btn" id="sortBtn" onclick="toggleSort()">⇅ ล่าสุด</button>
       </div>
       <div class="chips" id="listChips">
         <button class="chip active" data-f="all" onclick="setListFilter('all')">ทั้งหมด <span class="n" id="cn-all"></span></button>
@@ -445,10 +455,10 @@ select.input{appearance:auto}
       <div class="chat-empty" id="chatEmpty">
         <div class="cei">💬</div>
         <div style="font-size:15px;font-weight:600">เลือกแชทจากรายการทางซ้าย</div>
-        <div style="font-size:13px">แชทที่รอตอบจะขึ้นบนสุด เรียงจากที่รอนานที่สุด</div>
+        <div style="font-size:13px">เรียงแบบ LINE — แชทที่มีข้อความล่าสุดอยู่บนสุด · กดปุ่ม ⇅ ข้างช่องค้นหาเพื่อให้แชทที่รอตอบนานสุดขึ้นก่อน</div>
       </div>
 
-      <div id="chatContent" style="display:none;flex-direction:column;flex:1;min-height:0">
+      <div id="chatContent" style="display:none;flex-direction:column;flex:1;min-height:0;position:relative">
         <div class="chat-hdr">
           <button class="back-btn" onclick="closeChat()" title="กลับ">←</button>
           <div class="av" id="chatAv" style="width:38px;height:38px;font-size:14px"></div>
@@ -461,6 +471,7 @@ select.input{appearance:auto}
         <div class="chat-tools" id="chatTools"></div>
         <div id="chatStrips"></div>
         <div class="msgs-area" id="msgsArea"></div>
+        <button class="new-pill" id="newPill" onclick="jumpBottom()">ข้อความใหม่ ↓</button>
         <div class="qr-wrap" id="qrWrap"></div>
         <div class="quoting" id="quoting">
           <span>↩ ตอบกลับ:</span><span class="qtext" id="quoteText"></span>
@@ -613,13 +624,13 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.0 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.2 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.1';
+const APP_VERSION   = '1.2';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
@@ -638,6 +649,9 @@ let activeId = null, listFilter = 'all', searchQ = '', view = 'chat', quoting = 
 const LS = { get(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }, set(k, v){ try{ localStorage.setItem(k, v); }catch(_){} } };
 let clockMode = LS.get('pur.clock') || 'biz';          // biz = เวลาทำการ · raw = 24 ชม.
 let notifyOn  = LS.get('pur.notifyOff') !== '1';
+let listSort  = LS.get('pur.sort') === 'wait' ? 'wait' : 'recent';   // recent = แบบ LINE ข้อความล่าสุดบนสุด · wait = รอตอบนานสุดก่อน
+const msgMeta = {};                   // chatId → {hasMore, loading} โหลดข้อความทีละหน้า
+let openedAt  = 0;                    // เวลาเปิดแชทล่าสุด (กันโหลดหน้าเก่าเองตอนเพิ่งเปิด)
 const signedCache = new Map();        // storage path → {url, exp}
 const forceReply  = new Set();        // แชทที่ผู้ใช้กด "ลองส่งดูอยู่ดี"
 const isSup   = () => !!me && (me.role === 'supervisor' || me.role === 'admin');
@@ -775,11 +789,28 @@ async function loadChats(){
   detectNew(before); renderList(); updateBadges();
   if(activeId && chatById.get(activeId)) renderChatHeader(chatById.get(activeId));
 }
+// ข้อความโหลดทีละหน้าแบบ LINE: เปิดแชทเห็นข้อความล่าสุดด้านล่าง เลื่อนขึ้นบนสุดเพื่อโหลดข้อความเก่ากว่า
+const MSG_PAGE = 120;
+const byTime = (a, b) => (Date.parse(a.sent_at) - Date.parse(b.sent_at)) || String(a.created_at || '').localeCompare(String(b.created_at || ''));
+async function fetchMsgPage(chatId, before){
+  let q = sb.from('pur_messages').select('*').eq('chat_id', chatId);
+  if(before) q = q.lte('sent_at', before);
+  const { data, error } = await q.order('sent_at', { ascending:false }).order('created_at', { ascending:false }).limit(MSG_PAGE);
+  if(error) throw new Error(error.message);
+  return data || [];
+}
 async function loadMsgs(chatId){
   if(DEMO) return msgCache[chatId] || [];
-  const rows = await fetchAll('pur_messages', q => q.eq('chat_id', chatId).order('sent_at'));
-  const tmp = (msgCache[chatId] || []).filter(m => m.tmp);     // ฟองที่กำลังส่งอยู่ ยังไม่มีในฐานข้อมูล
-  msgCache[chatId] = [...rows, ...tmp];
+  const rows = (await fetchMsgPage(chatId)).reverse();                  // เก่า → ใหม่
+  const prev = msgCache[chatId] || [], meta = msgMeta[chatId] || (msgMeta[chatId] = {});
+  const tmp = prev.filter(m => m.tmp);                                  // ฟองที่กำลังส่งอยู่ ยังไม่มีในฐานข้อมูล
+  const full = rows.length === MSG_PAGE, edge = rows.length ? Date.parse(rows[0].sent_at) : Infinity;
+  const ids = new Set(rows.map(r => r.id));
+  // เก็บหน้าเก่าที่เลื่อนโหลดไว้แล้ว — เฉพาะเมื่อต่อกับหน้าล่าสุดได้ (ไม่มีช่องว่างตรงกลาง)
+  const joined = !full || prev.some(m => ids.has(m.id));
+  const older = joined ? prev.filter(m => !m.tmp && !ids.has(m.id) && Date.parse(m.sent_at) <= edge) : [];
+  if(!joined || meta.hasMore === undefined) meta.hasMore = full;
+  msgCache[chatId] = [...older, ...rows, ...tmp];
   return msgCache[chatId];
 }
 async function refreshAll(){
@@ -837,11 +868,13 @@ function filteredChats(){
     if(q){ const hay = [c.supplier_name, c.title, c.last_message, c.note, c.assignee_email && memberName(c.assignee_email)].join(' ').toLowerCase(); if(!hay.includes(q)) return false; }
     return true;
   }).sort((a, b) => {
-    // งานรอตอบขึ้นก่อน (รอนานสุดบนสุด) แล้วค่อยเรียงตามข้อความล่าสุด
+    const recent = (Date.parse(b.last_message_at || 0) || 0) - (Date.parse(a.last_message_at || 0) || 0);
+    if(listSort !== 'wait') return recent;          // แบบ LINE: ข้อความล่าสุดบนสุด แชทเก่าลงล่าง
+    // รอนานสุดก่อน: งานรอตอบขึ้นก่อน (รอนานสุดบนสุด) แล้วค่อยเรียงตามข้อความล่าสุด
     const aw = a.awaiting_since ? 1 : 0, bw = b.awaiting_since ? 1 : 0;
     if(aw !== bw) return bw - aw;
     if(aw && bw) return Date.parse(a.awaiting_since) - Date.parse(b.awaiting_since);
-    return (Date.parse(b.last_message_at || 0) || 0) - (Date.parse(a.last_message_at || 0) || 0);
+    return recent;
   });
 }
 function avatarHtml(c, size){
@@ -874,6 +907,14 @@ function renderList(){
   }).join('');
 }
 function setListFilter(f){ listFilter = f; document.querySelectorAll('#listChips .chip').forEach(b => b.classList.toggle('active', b.dataset.f === f)); renderList(); }
+function toggleSort(){ listSort = listSort === 'wait' ? 'recent' : 'wait'; LS.set('pur.sort', listSort); renderSortBtn(); renderList(); $('convList').scrollTop = 0; }
+function renderSortBtn(){
+  const b = $('sortBtn'); if(!b) return; const w = listSort === 'wait';
+  b.textContent = w ? '⏱ รอนานสุด' : '⇅ ล่าสุด';
+  b.classList.toggle('wait', w);
+  b.title = w ? 'ตอนนี้: แชทที่รอตอบนานสุดอยู่บนสุด — กดเพื่อเรียงแบบ LINE (ข้อความล่าสุดบนสุด)'
+              : 'ตอนนี้: เรียงแบบ LINE ข้อความล่าสุดบนสุด — กดเพื่อให้แชทที่รอตอบนานสุดขึ้นก่อน';
+}
 function filterConv(q){ searchQ = q; renderList(); }
 function updateBadges(){
   const n = chats.filter(c => c.awaiting_since).length;
@@ -884,7 +925,7 @@ function updateBadges(){
 // ── OPEN CHAT ──
 async function openChat(id){
   const c = chatById.get(id); if(!c) return;
-  activeId = id; clearQuote(); forceReply.delete(id);
+  activeId = id; openedAt = Date.now(); clearQuote(); forceReply.delete(id); $('newPill').classList.remove('show');
   if(c.unread_count > 0){
     c.unread_count = 0; renderList();
     if(!DEMO){ rpc('pur_mark_read', { p_chat:id }).catch(e => console.warn('mark read:', e.message)); if(c.kind === 'user') callFn({ action:'markRead', chatId:id }); }
@@ -977,8 +1018,11 @@ function renderMsgs(msgs){
   const area = $('msgsArea'); const c = chatById.get(activeId);
   if(!msgs || !msgs.length){ area.innerHTML = '<div class="conv-empty">ยังไม่มีข้อความ</div>'; return; }
   const byLine = new Map(msgs.filter(m => m.line_msg_id).map(m => [m.line_msg_id, m]));
-  let html = '', lastDate = '';
+  let html = olderBarHtml(), lastDate = '', lastHist = false;
   msgs.forEach(m => {
+    // เส้นแบ่ง: ข้อความด้านบนเป็นประวัติที่นำเข้าจาก OA Manager ก่อนเริ่มใช้ระบบ (ไม่นับสถิติ)
+    if(lastHist && !m.is_history) html += `<div class="date-sep hist">เริ่มใช้ระบบ — ข้อความด้านบนนำเข้าจาก LINE OA Manager (ไม่นับสถิติ)</div>`;
+    lastHist = !!m.is_history;
     const ds = thDayLong(m.sent_at);
     if(ds !== lastDate){ html += `<div class="date-sep">${ds}</div>`; lastDate = ds; }
     if(m.sender_type === 'system' || m.via === 'system'){
@@ -1002,6 +1046,40 @@ function renderMsgs(msgs){
   resolveMedia(area);
 }
 function scrollBottom(){ setTimeout(() => { const a = $('msgsArea'); a.scrollTop = a.scrollHeight; }, 60); }
+function jumpBottom(){ $('newPill').classList.remove('show'); scrollBottom(); }
+function showNewPill(){
+  const p = $('newPill'), a = $('msgsArea');
+  p.style.bottom = Math.max(8, $('chatContent').clientHeight - (a.offsetTop + a.clientHeight) + 10) + 'px';
+  p.classList.add('show');
+}
+// แถบบนสุดของแชท: โหลดข้อความเก่ากว่า (เลื่อนขึ้นบนสุดก็โหลดเอง)
+function olderBarHtml(){
+  const meta = msgMeta[activeId];
+  if(DEMO || !meta) return '';
+  if(meta.loading) return '<div class="older-bar" id="olderBar">กำลังโหลดข้อความเก่า…</div>';
+  return meta.hasMore ? '<button class="older-bar" id="olderBar" onclick="loadOlder()">↑ ดูข้อความเก่ากว่านี้</button>' : '';
+}
+function renderOlderBar(){
+  const el = $('olderBar'), h = olderBarHtml();
+  if(el){ if(h) el.outerHTML = h; else el.remove(); }
+  else if(h && (msgCache[activeId] || []).length) $('msgsArea').insertAdjacentHTML('afterbegin', h);
+}
+async function loadOlder(){
+  const id = activeId; if(!id || DEMO) return;
+  const meta = msgMeta[id]; if(!meta || !meta.hasMore || meta.loading) return;
+  const list = msgCache[id] || [], first = list.find(m => !m.tmp); if(!first) return;
+  meta.loading = true; renderOlderBar();
+  const area = $('msgsArea'), h0 = area.scrollHeight, top0 = area.scrollTop;
+  try{
+    const rows = await fetchMsgPage(id, first.sent_at);
+    if(activeId !== id){ meta.loading = false; return; }
+    const have = new Set(list.map(m => m.id)), add = rows.filter(r => !have.has(r.id)).reverse();
+    meta.hasMore = rows.length === MSG_PAGE && add.length > 0;
+    meta.loading = false;
+    if(add.length){ msgCache[id] = [...add, ...list]; renderMsgs(msgCache[id]); area.scrollTop = area.scrollHeight - h0 + top0; }   // คงตำแหน่งที่อ่านอยู่
+    else renderOlderBar();
+  }catch(e){ meta.loading = false; if(activeId === id) renderOlderBar(); showToast('โหลดข้อความเก่าไม่ได้: ' + e.message, 'error'); }
+}
 // รูป/ไฟล์อยู่ใน bucket ส่วนตัว → ขอลิงก์ลงนาม (หมดอายุ 1 ชม.) เป็นชุด
 async function resolveMedia(area){
   const els = [...area.querySelectorAll('[data-path]')]; if(!els.length || DEMO) return;
@@ -1180,12 +1258,23 @@ function onMsgInsert(m){
   if(!m || m.chat_id !== activeId) return;
   const list = msgCache[activeId] || (msgCache[activeId] = []);
   if(list.some(x => x.id === m.id)) return;
+  const meta = msgMeta[activeId] || {}, first = list.find(x => !x.tmp);
+  // เก่ากว่าหน้าที่โหลดไว้ (เช่น ระหว่างนำเข้าประวัติ) → ไม่แทรกกลางจอ เลื่อนขึ้นไปจะโหลดเอง
+  if(meta.hasMore && first && byTime(m, first) < 0) return;
+  const area = $('msgsArea'), atBottom = area.scrollHeight - area.scrollTop - area.clientHeight < 160;
   // ฟองที่เราส่งเองแบบ optimistic ยังไม่มี id → รับ id จากแถวจริงแทนการเพิ่มซ้ำ
   const tmp = m.via === 'app' && m.staff_email === me.email ? list.find(x => x.tmp && !x.idAdopted && x.msg_type === m.msg_type && (m.msg_type !== 'text' || x.content === m.content)) : null;
   if(tmp){ Object.assign(tmp, m, { tmp:false, idAdopted:true, status: tmp.status === 'sending' ? m.status : tmp.status, content: m.msg_type === 'image' ? tmp.content : m.content }); }
-  else list.push(m);
-  renderMsgs(list); scrollBottom();
-  if(m.direction === 'in' && !DEMO){
+  else {
+    // แทรกตามเวลา — ข้อความจาก OA Manager อาจมาถึงช้ากว่าข้อความที่ใหม่กว่า
+    let i = list.length; while(i > 0 && byTime(list[i - 1], m) > 0) i--;
+    list.splice(i, 0, m);
+  }
+  const top0 = area.scrollTop;
+  renderMsgs(list);
+  if(atBottom || tmp) scrollBottom();                       // อ่านอยู่ล่างสุด → เลื่อนตามข้อความใหม่เหมือน LINE
+  else { area.scrollTop = top0; if(list[list.length - 1] === m && !m.is_history) showNewPill(); }
+  if(m.direction === 'in' && !m.is_history && !DEMO){
     const c = chatById.get(activeId); if(c){ c.unread_count = 0; }
     rpc('pur_mark_read', { p_chat:activeId }).catch(() => {});
     if(c && c.kind === 'user') callFn({ action:'markRead', chatId:activeId });
@@ -1941,6 +2030,12 @@ function demoDash(){
   cp.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive:true });
   cp.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx, dy = Math.abs(e.changedTouches[0].clientY - sy); if(dx > 70 && dy < 50 && window.innerWidth < 768) closeChat(); }, { passive:true });
   $('bellBtn').textContent = notifyOn ? '🔔' : '🔕';
+  renderSortBtn();
+  $('msgsArea').addEventListener('scroll', () => {   // เลื่อนขึ้นบนสุด = โหลดข้อความเก่ากว่า · ลงล่างสุด = ซ่อนป้ายข้อความใหม่
+    const a = $('msgsArea');
+    if(a.scrollTop < 120 && Date.now() - openedAt > 800) loadOlder();
+    if(a.scrollHeight - a.scrollTop - a.clientHeight < 160) $('newPill').classList.remove('show');
+  }, { passive:true });
   if(DEMO){ $('demoBanner').hidden = false; showApp(); return; }
   if(/YOUR-PROJECT|YOUR_PUBLISHABLE/.test(SUPABASE_URL + SUPABASE_ANON)){ showLogin(); document.getElementById('lgErr').textContent = 'แอพยังไม่ได้เชื่อมกับ Supabase — ผู้ดูแลระบบต้องใส่ Project URL และ Publishable key ก่อน'; return; }
   sb.auth.onAuthStateChange((_e, s) => route(s));
