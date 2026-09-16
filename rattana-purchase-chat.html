@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.5</title>
+<title>Rattana Purchase Chat v1.6</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -319,6 +319,8 @@ select.input{appearance:auto}
 .dd-list li:hover small{color:rgba(255,255,255,.7)}
 .dd-list li.no-result{color:var(--muted);cursor:default;font-style:italic}
 .dd-sm .dd-trigger{min-height:34px;padding:5px 10px;font-size:13px}
+.dash-sel{min-height:34px;max-width:190px;padding:5px 10px;font-size:13px;font-family:inherit;background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text)}
+.dash-sel:focus{outline:none;border-color:var(--gold)}
 .holi{display:flex;flex-wrap:wrap;gap:6px}
 .holi .tag{font-size:12px;padding:4px 8px;display:inline-flex;gap:6px;align-items:center;line-height:1.3}
 .holi .tag button{color:var(--st-crit);font-weight:700;font-size:13px;line-height:1}
@@ -402,7 +404,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.5</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.6</div>
   </div>
 </div>
 
@@ -413,7 +415,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:34px;height:34px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.5</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.6</span>
   </div>
   <div class="hdr-r">
     <button class="hdr-btn" id="bellBtn" onclick="toggleNotify()" title="เปิด/ปิดเสียงแจ้งเตือน">🔔</button>
@@ -520,14 +522,8 @@ select.input{appearance:auto}
             <button data-k="group" onclick="setKind('group')">กลุ่ม</button>
             <button data-k="user" onclick="setKind('user')">1:1</button>
           </div>
-          <span id="personWrap" style="flex-shrink:0;min-width:170px;display:none">
-            <div class="dd-wrap dd-sm" id="ddPerson">
-              <button class="dd-trigger" type="button" onclick="toggleDD('ddPerson')"><span id="ddPersonLabel">👤 ทุกคน</span> ▾</button>
-              <div class="dd-panel" id="ddPersonPanel">
-                <input class="dd-search" type="text" placeholder="🔍 ค้นหาชื่อ…" oninput="filterDD(this,'ddPersonList')" autocomplete="off">
-                <ul class="dd-list" id="ddPersonList"></ul>
-              </div>
-            </div>
+          <span id="personWrap" style="flex-shrink:0;display:none">
+            <select class="dash-sel" id="dashPerson" onchange="setPerson(this.value)" title="ดูเฉพาะงานของคนที่เลือก"></select>
           </span>
           <span style="flex:1"></span>
           <button class="btn btn-outline btn-sm" onclick="exportDashExcel()" title="ส่งออก Excel">📥 Excel</button>
@@ -624,13 +620,13 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.5 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.6 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.5';
+const APP_VERSION   = '1.6';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
@@ -661,7 +657,7 @@ const viaLabel  = v => v === 'app' ? 'แอป' : v === 'oa' ? 'OA Manager' : '
 
 function defaultSettings(){
   return { work_days:[1,2,3,4,5,6], work_start:'08:00', work_end:'17:00', holidays:[], sla_minutes:60,
-           ack_words:[], quick_replies:['สวัสดีครับ 🙏','รับทราบครับ ✓','ขอบคุณครับ 🙏'], auto_assign:true };
+           ack_words:[], quick_replies:['สวัสดีค่ะ 🙏','รับทราบค่ะ ✓','ขอบคุณค่ะ 🙏'], auto_assign:false };
 }
 function applySettings(s){
   settings = { ...defaultSettings(), ...(s || {}) };
@@ -1365,13 +1361,15 @@ function setClock(c){
   if(activeId && chatById.get(activeId)) renderStrips(chatById.get(activeId));
 }
 function setKind(k){ dash.kind = k; document.querySelectorAll('#segKind button').forEach(b => b.classList.toggle('active', b.dataset.k === k)); renderDash(); }
-function setPerson(p, label){ dash.person = p; $('ddPersonLabel').textContent = '👤 ' + label; document.querySelectorAll('.dd-panel.open').forEach(x => x.classList.remove('open')); renderDash(); }
+function setPerson(p){ dash.person = p || 'all'; renderDash(); }
 function fillPersonDD(){
   if(!isSup()){ $('personWrap').style.display = 'none'; return; }
   $('personWrap').style.display = '';
   const list = [...members.values()].sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1) || (a.nick || a.name || '').localeCompare(b.nick || b.name || '', 'th'));
-  $('ddPersonList').innerHTML = `<li onclick="setPerson('all','ทุกคน')">ทุกคน</li><li onclick="setPerson('none','ไม่มีผู้รับผิดชอบ')">ไม่มีผู้รับผิดชอบ</li>` +
-    list.map(m => `<li data-e="${esc(m.email)}" data-n="${esc(m.nick || m.name || m.email)}" onclick="setPerson(this.dataset.e,this.dataset.n)">${esc(m.nick || m.name || m.email)}<small>${m.active ? '' : 'พ้นสภาพ'}</small></li>`).join('');
+  const sel = $('dashPerson'), cur = dash.person || 'all';
+  sel.innerHTML = `<option value="all">👤 ทุกคน</option><option value="none">ไม่มีผู้รับผิดชอบ</option>` +
+    list.map(m => `<option value="${esc(m.email)}">${esc(m.nick || m.name || m.email)}${m.active ? '' : ' (พ้นสภาพ)'}</option>`).join('');
+  sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'all';
 }
 
 async function loadDash(){
@@ -2004,7 +2002,7 @@ function demoInit(){
         waits.push(w);
         c.last_inbound_at = st.toISOString(); c.last_message_at = st.toISOString(); c.last_message = (s[0] === 'group' ? 'เซลส์: ' : '') + asks[Math.floor(rnd() * asks.length)];
         if(!closed){ c.awaiting_since = st.toISOString(); c.open_wait_id = w.id; c.unread_count = 1 + Math.floor(rnd() * 3); }
-        else { c.awaiting_since = null; c.open_wait_id = null; c.unread_count = 0; if(reason === 'answered'){ c.last_message_at = closed.toISOString(); c.last_message = via === 'app' ? 'รับทราบครับ เดี๋ยวเช็คให้นะครับ' : (s[0] === 'group' ? 'นก: ได้ครับ จัดให้' : 'ได้ครับ'); } }
+        else { c.awaiting_since = null; c.open_wait_id = null; c.unread_count = 0; if(reason === 'answered'){ c.last_message_at = closed.toISOString(); c.last_message = via === 'app' ? 'รับทราบค่ะ เดี๋ยวเช็คให้นะคะ' : (s[0] === 'group' ? 'นก: ได้ค่ะ จัดให้' : 'ได้ครับ'); } }
       }
     }
     chats.push(c);
@@ -2039,7 +2037,7 @@ function demoMsgs(c, rnd){
     mk(7, { via:'system', direction:'in', sender_type:'system', msg_type:'text', content:'ปิดงานรอตอบ — ไม่ต้องตอบ', staff_email:'sup@demo', sent_at:t(3.5) }),
     mk(8, { via:'line', direction:'in', sender_type:'supplier', sender_name:sales, msg_type:'text', content:c.last_message.replace(/^เซลส์: /, ''), sent_at:c.awaiting_since || t(4), quote_token:'q8' }),
   ];
-  if(!c.awaiting_since) list.push(mk(9, { via:'app', direction:'out', sender_type:'staff', staff_email:staff, sender_name:memberName(staff), msg_type:'text', content:'ได้ครับ ยืนยันตามนั้นเลยครับ 🙏', sent_at:c.last_message_at || t(5) }));
+  if(!c.awaiting_since) list.push(mk(9, { via:'app', direction:'out', sender_type:'staff', staff_email:staff, sender_name:memberName(staff), msg_type:'text', content:'ได้ค่ะ ยืนยันตามนั้นเลยค่ะ 🙏', sent_at:c.last_message_at || t(5) }));
   return list.sort((a, b) => Date.parse(a.sent_at) - Date.parse(b.sent_at));
 }
 function demoDash(){
