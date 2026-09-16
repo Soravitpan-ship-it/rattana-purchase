@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.4</title>
+<title>Rattana Purchase Chat v1.5</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -402,7 +402,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.4</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.5</div>
   </div>
 </div>
 
@@ -413,7 +413,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:34px;height:34px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.4</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.5</span>
   </div>
   <div class="hdr-r">
     <button class="hdr-btn" id="bellBtn" onclick="toggleNotify()" title="เปิด/ปิดเสียงแจ้งเตือน">🔔</button>
@@ -624,13 +624,13 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.4 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.5 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.4';
+const APP_VERSION   = '1.5';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
@@ -1692,10 +1692,12 @@ function teamCardHtml(){
   const list = [...members.values()].sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1) || (a.nick || a.name || '').localeCompare(b.nick || b.name || '', 'th'));
   const linked = e => [...people.values()].filter(p => p.member_email === e).map(p => p.display_name || p.line_user_id);
   return `<div class="card card-gold" id="teamCard"><div class="card-head"><h3>👥 ทีมจัดซื้อ <span class="mini">${list.filter(m => m.active).length} คน</span></h3>
-    <div class="acts"><button class="btn btn-gold btn-sm" onclick="openMemberModal()">＋ เพิ่มสมาชิก</button></div>
-    <div class="hint">คนในรายชื่อนี้เท่านั้นที่เข้าแอพได้ · <b>หัวหน้า</b>เห็นแดชบอร์ดทุกคนและตั้งค่าระบบได้ · <b>พนักงาน</b>เห็นสถิติของตัวเอง · <b>ผู้ดูแลระบบ</b>ตั้งหัวหน้าได้</div></div>
-    <div class="tbl-wrap"><table class="tbl"><thead><tr>${['ชื่อเล่น', 'ชื่อ-สกุล', 'อีเมล', 'ชื่อใน OA', 'สิทธิ์', 'LINE ที่ผูก', 'สถานะ', ''].map(h => `<th style="cursor:default">${h}</th>`).join('')}</tr></thead><tbody>
+    <div class="acts"><button class="btn btn-outline btn-sm" onclick="applyPu()" title="ไล่ดูชื่อแชททุกแชท แล้วตั้งผู้รับผิดชอบตามรหัส PU">🔁 ใช้รหัส PU กับทุกแชท</button><button class="btn btn-gold btn-sm" onclick="openMemberModal()">＋ เพิ่มสมาชิก</button></div>
+    <div class="hint">คนในรายชื่อนี้เท่านั้นที่เข้าแอพได้ · <b>หัวหน้า</b>เห็นแดชบอร์ดทุกคนและตั้งค่าระบบได้ · <b>พนักงาน</b>เห็นสถิติของตัวเอง · <b>ผู้ดูแลระบบ</b>ตั้งหัวหน้าได้<br>
+      <b>รหัส PU</b> = รหัสแบ่งงานที่ทีมใส่ไว้ในชื่อแชท (เช่น <b>PU1#คาราบาว</b>) — แชทไหนมีรหัส ระบบยกให้เจ้าของรหัสอัตโนมัติ และเปลี่ยนตามทันทีเมื่อทีมแก้ชื่อแชทใน OA Manager · แชทที่ยังไม่มีรหัสจะไม่ถูกแตะ</div></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr>${['ชื่อเล่น', 'ชื่อ-สกุล', 'อีเมล', 'ชื่อใน OA', 'รหัส PU', 'สิทธิ์', 'LINE ที่ผูก', 'สถานะ', ''].map(h => `<th style="cursor:default">${h}</th>`).join('')}</tr></thead><tbody>
     ${list.map(m => `<tr class="${m.active ? '' : 'dim'}"><td><b>${esc(m.nick || '—')}</b></td><td>${esc(m.name || '—')}</td><td class="mini">${esc(m.email)}</td><td class="mini">${esc(m.oa_name || '—')}${m.oa_biz_id ? ' <span class="pill ok" title="ผูกกับแอดมินใน LINE OA Manager แล้ว — คำตอบใน OA นับเป็นผลงานคนนี้">ผูกแล้ว</span>' : ''}</td>
+      <td class="mini">${m.pu_code ? `<b>${esc(m.pu_code)}</b>` : '—'}</td>
       <td><span class="pill ${m.role === 'admin' ? 'bad' : m.role === 'supervisor' ? 'gold' : 'grey'}">${roleLabel(m.role)}</span></td>
       <td class="mini">${linked(m.email).map(esc).join(', ') || '<span class="txt-muted">—</span>'}</td>
       <td>${m.active ? '<span class="pill ok">ใช้งาน</span>' : '<span class="pill grey">ปิด</span>'}</td>
@@ -1719,6 +1721,7 @@ function openMemberModal(email){
     <div class="row"><div class="field"><label>ชื่อเล่น</label><input class="input" id="mmNick" value="${esc(m?.nick || '')}" placeholder="เช่น นก"></div><div class="field"><label>ชื่อ-สกุล</label><input class="input" id="mmName" value="${esc(m?.name || '')}"></div></div>
     <div class="field mt-12"><label>อีเมล Google ที่ใช้ล็อกอิน</label><input class="input" id="mmEmail" type="email" value="${esc(m?.email || '')}" ${m ? 'readonly style="opacity:.7"' : ''} placeholder="name@rattanaphaiboon.com"></div>
     <div class="field"><label>ชื่อที่แสดงใน LINE OA Manager</label><input class="input" id="mmOa" list="oaAdminList" value="${esc(m?.oa_name || '')}" placeholder="เลือกหรือพิมพ์ชื่อแอดมินตามที่ OA Manager แสดง"><datalist id="oaAdminList">${(oaAdmins || []).filter(a => a.name && (!a.member_email || a.member_email === m?.email)).map(a => `<option value="${esc(a.name)}"></option>`).join('')}</datalist><div class="help">${m?.oa_biz_id ? '✓ ผูกกับแอดมินใน OA แล้ว · ' : ''}ใช้จับคู่คำตอบที่พิมพ์ใน OA Manager (ผ่านส่วนขยาย) ให้เป็นผลงานของคนนี้ รวมคำตอบย้อนหลัง — ถ้าเว้นว่างจะเทียบกับชื่อเล่น/ชื่อจริง</div></div>
+    <div class="field"><label>รหัส PU (รหัสแบ่งงานในชื่อแชท)</label><input class="input" id="mmPu" value="${esc(m?.pu_code || '')}" placeholder="เช่น PU1 · เว้นว่างได้ถ้าไม่ได้แบ่งงานด้วยรหัส"><div class="help">แชทที่มีรหัสนี้ในชื่อ (เช่น "PU1#คาราบาว") จะถูกยกให้คนนี้อัตโนมัติ และเปลี่ยนตามเมื่อทีมแก้ชื่อแชท · 1 รหัสต่อ 1 คน</div></div>
     <div class="field"><label>สิทธิ์</label><select class="input" id="mmRole" ${canRole ? '' : 'disabled'}>
       <option value="staff" ${(m?.role || 'staff') === 'staff' ? 'selected' : ''}>พนักงาน — เห็นสถิติตัวเอง</option>
       <option value="supervisor" ${m?.role === 'supervisor' ? 'selected' : ''}>หัวหน้า — เห็นทุกคน ตั้งค่าได้</option>
@@ -1726,6 +1729,14 @@ function openMemberModal(email){
       ${canRole ? '' : '<div class="help">การตั้งหัวหน้า/ผู้ดูแล ต้องให้ผู้ดูแลระบบ (admin) ทำ</div>'}</div>
     <label class="check ${m?.active === false ? '' : 'on'}"><input type="checkbox" id="mmActive" ${m?.active === false ? '' : 'checked'} onchange="this.parentElement.classList.toggle('on',this.checked)"> ใช้งานอยู่ (ปิด = เข้าแอพไม่ได้ สถิติเดิมยังอยู่)</label>`,
     `<button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button><button class="btn btn-gold" onclick="saveMember()">💾 บันทึก</button>`);
+}
+// ไล่ตั้งผู้รับผิดชอบตามรหัส PU ในชื่อแชททั้งหมด (ปกติระบบทำให้เองตอนชื่อแชทเปลี่ยน)
+async function applyPu(){
+  try{
+    const n = await rpc('pur_apply_pu');
+    await loadChats(); renderSettings();
+    showToast(n ? `ยกแชทตามรหัส PU แล้ว ${nf(n)} แชท ✓` : 'ทุกแชทตรงกับรหัส PU อยู่แล้ว ✓', 'success');
+  }catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
 async function loadStaffDir(){
   const ul = $('ddStaffList'); if(!ul) return;
@@ -1743,8 +1754,8 @@ async function saveMember(){
   const email = $('mmEmail').value.trim().toLowerCase();
   if(!email){ showToast('กรอกอีเมล', 'warning'); return; }
   try{
-    await rpc('pur_upsert_member', { p_email:email, p_nick:$('mmNick').value.trim(), p_name:$('mmName').value.trim(), p_role:$('mmRole').value, p_active:$('mmActive').checked, p_oa_name:$('mmOa').value.trim() });
-    closeModal(); await loadMembers(); renderSettings(); fillPersonDD(); showToast('บันทึกสมาชิกแล้ว ✓', 'success');
+    await rpc('pur_upsert_member', { p_email:email, p_nick:$('mmNick').value.trim(), p_name:$('mmName').value.trim(), p_role:$('mmRole').value, p_active:$('mmActive').checked, p_oa_name:$('mmOa').value.trim(), p_pu_code:$('mmPu').value.trim() });
+    closeModal(); await loadMembers(); await loadChats(); renderSettings(); fillPersonDD(); showToast('บันทึกสมาชิกแล้ว ✓', 'success');
   }catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
 
