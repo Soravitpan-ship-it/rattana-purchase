@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.6</title>
+<title>Rattana Purchase Chat v1.7</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -404,7 +404,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.6</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.7</div>
   </div>
 </div>
 
@@ -415,7 +415,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:34px;height:34px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.6</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.7</span>
   </div>
   <div class="hdr-r">
     <button class="hdr-btn" id="bellBtn" onclick="toggleNotify()" title="เปิด/ปิดเสียงแจ้งเตือน">🔔</button>
@@ -620,13 +620,13 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.6 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.7 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.6';
+const APP_VERSION   = '1.7';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
@@ -1573,13 +1573,13 @@ function renderPersons(inR, open, reps){
   reps.forEach(r => { if(!r.staff_email) return; const p = get(r.staff_email); if(r.via === 'app') p.repApp += Number(r.replies); else if(r.via === 'oa') p.repOa += Number(r.replies); else p.repLine += Number(r.replies); });
   if(isSup() && dash.person === 'all') [...members.values()].filter(m => m.active).forEach(m => get(m.email));
   const list = [...rows.values()].map(r => { r.durs.sort((a, b) => a - b); r.med = quantile(r.durs, .5); r.p90 = quantile(r.durs, .9); r.slaPct = r.answered ? r.ok / r.answered : null; r.reps = r.repApp + r.repLine + r.repOa; return r; });
-  const cols = [['name', 'ผู้รับผิดชอบ', 'str'], ['total', 'งานรอตอบ', 'num'], ['answered', 'ตอบแล้ว', 'num'], ['openR', 'ยังไม่ตอบ', 'num'], ['dis', 'ไม่ต้องตอบ', 'num'], ['openNow', 'ค้างตอนนี้', 'num'], ['slaPct', 'ทัน SLA', 'num'], ['med', 'มัธยฐาน', 'num'], ['p90', 'P90', 'num'], ['byOther', 'คนอื่นช่วยตอบ', 'num'], ['reps', 'ข้อความส่ง', 'num']];
+  const cols = [['name', 'ผู้รับผิดชอบ', 'str'], ['total', 'งานรอตอบ', 'num'], ['answered', 'ตอบแล้ว', 'num'], ['openR', 'ยังไม่ตอบ', 'num'], ['dis', 'ไม่ต้องตอบ', 'num'], ['openNow', 'ค้างตอนนี้', 'num'], ['slaPct', 'ทัน SLA', 'num'], ['late', 'ช้ากว่า SLA', 'num'], ['med', 'มัธยฐาน', 'num'], ['p90', 'P90', 'num'], ['byOther', 'คนอื่นช่วยตอบ', 'num'], ['reps', 'ข้อความส่ง', 'num']];
   const sorted = sortRows(list, personSort.key, personSort.dir);
-  const T = list.reduce((t, r) => { t.total += r.total; t.answered += r.answered; t.openR += r.openR; t.dis += r.dis; t.openNow += r.openNow; t.ok += r.ok; t.byOther += r.byOther; t.reps += r.reps; return t; }, { total:0, answered:0, openR:0, dis:0, openNow:0, ok:0, byOther:0, reps:0 });
+  const T = list.reduce((t, r) => { t.total += r.total; t.answered += r.answered; t.openR += r.openR; t.dis += r.dis; t.openNow += r.openNow; t.ok += r.ok; t.late += r.late; t.byOther += r.byOther; t.reps += r.reps; return t; }, { total:0, answered:0, openR:0, dis:0, openNow:0, ok:0, late:0, byOther:0, reps:0 });
   const allDurs = inR.filter(w => w._answered).map(w => w._dur).sort((a, b) => a - b);
   $('personTable').innerHTML = `<table class="tbl" id="personTbl"><thead><tr>${cols.map(c => `<th class="${c[2] === 'num' ? 'num' : ''}" data-key="${c[0]}" data-type="${c[2]}">${c[1]}<span class="sort-ind">${personSort.key === c[0] ? (personSort.dir === 'asc' ? '▲' : '▼') : ''}</span></th>`).join('')}</tr></thead>
-    <tbody>${sorted.length ? sorted.map(r => `<tr><td>${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</td><td class="num">${nf(r.total)}</td><td class="num">${nf(r.answered)}</td><td class="num">${r.openR ? `<span class="pill bad">${nf(r.openR)}</span>` : '0'}</td><td class="num">${nf(r.dis)}</td><td class="num">${r.openNow ? `<span class="pill bad">${nf(r.openNow)}</span>` : '0'}</td><td class="num">${slaPill(r.slaPct)}</td><td class="num">${fmtDur(r.med)}</td><td class="num">${fmtDur(r.p90)}</td><td class="num">${nf(r.byOther)}</td><td class="num" title="แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}">${nf(r.reps)}</td></tr>`).join('') : `<tr class="empty-row"><td colspan="11">ไม่มีข้อมูลในช่วงนี้</td></tr>`}</tbody>
-    <tfoot><tr><td>รวม</td><td class="num">${nf(T.total)}</td><td class="num">${nf(T.answered)}</td><td class="num">${nf(T.openR)}</td><td class="num">${nf(T.dis)}</td><td class="num">${nf(T.openNow)}</td><td class="num">${T.answered ? Math.round(T.ok / T.answered * 100) + '%' : '–'}</td><td class="num">${fmtDur(quantile(allDurs, .5))}</td><td class="num">${fmtDur(quantile(allDurs, .9))}</td><td class="num">${nf(T.byOther)}</td><td class="num">${nf(T.reps)}</td></tr></tfoot></table>`;
+    <tbody>${sorted.length ? sorted.map(r => `<tr><td>${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</td><td class="num">${nf(r.total)}</td><td class="num">${nf(r.answered)}</td><td class="num">${r.openR ? `<span class="pill bad">${nf(r.openR)}</span>` : '0'}</td><td class="num">${nf(r.dis)}</td><td class="num">${r.openNow ? `<span class="pill bad">${nf(r.openNow)}</span>` : '0'}</td><td class="num">${slaPill(r.slaPct)}</td><td class="num" title="ตอบแล้วแต่ช้ากว่า SLA">${r.late ? `<span class="pill bad">${nf(r.late)}</span>` : '0'}</td><td class="num">${fmtDur(r.med)}</td><td class="num">${fmtDur(r.p90)}</td><td class="num">${nf(r.byOther)}</td><td class="num" title="แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}">${nf(r.reps)}</td></tr>`).join('') : `<tr class="empty-row"><td colspan="12">ไม่มีข้อมูลในช่วงนี้</td></tr>`}</tbody>
+    <tfoot><tr><td>รวม</td><td class="num">${nf(T.total)}</td><td class="num">${nf(T.answered)}</td><td class="num">${nf(T.openR)}</td><td class="num">${nf(T.dis)}</td><td class="num">${nf(T.openNow)}</td><td class="num">${T.answered ? Math.round(T.ok / T.answered * 100) + '%' : '–'}</td><td class="num">${nf(T.late)}</td><td class="num">${fmtDur(quantile(allDurs, .5))}</td><td class="num">${fmtDur(quantile(allDurs, .9))}</td><td class="num">${nf(T.byOther)}</td><td class="num">${nf(T.reps)}</td></tr></tfoot></table>`;
   $('personTbl').querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
     const key = th.dataset.key, type = th.dataset.type;
     if(personSort.key === key) personSort.dir = personSort.dir === 'asc' ? 'desc' : 'asc'; else personSort = { key, dir:type === 'num' ? 'desc' : 'asc' };
@@ -1620,7 +1620,7 @@ function exportDashExcel(){
   if(!dashLoadedOnce){ showToast('ยังไม่มีข้อมูล', 'warning'); return; }
   const all = visibleWaits(), [from, to] = currentRange(), sla = slaSec(), inR = all.filter(w => w._inRange);
   const wb = XLSX.utils.book_new();
-  const persons = (dash.lastPersons || []).map(r => ({ 'ผู้รับผิดชอบ':r.name, 'งานรอตอบ':r.total, 'ตอบแล้ว':r.answered, 'ยังไม่ตอบ':r.openR, 'ไม่ต้องตอบ':r.dis, 'ค้างตอนนี้':r.openNow, 'ทัน SLA (%)':r.slaPct == null ? '' : Math.round(r.slaPct * 100), 'มัธยฐาน (นาที)':r.med == null ? '' : Math.round(r.med / 60), 'P90 (นาที)':r.p90 == null ? '' : Math.round(r.p90 / 60), 'คนอื่นช่วยตอบ':r.byOther, 'ข้อความจากแอป':r.repApp, 'ข้อความจาก LINE ส่วนตัว':r.repLine, 'ข้อความจาก OA Manager':r.repOa }));
+  const persons = (dash.lastPersons || []).map(r => ({ 'ผู้รับผิดชอบ':r.name, 'งานรอตอบ':r.total, 'ตอบแล้ว':r.answered, 'ยังไม่ตอบ':r.openR, 'ไม่ต้องตอบ':r.dis, 'ค้างตอนนี้':r.openNow, 'ทัน SLA (%)':r.slaPct == null ? '' : Math.round(r.slaPct * 100), 'ช้ากว่า SLA (ครั้ง)':r.late,'มัธยฐาน (นาที)':r.med == null ? '' : Math.round(r.med / 60), 'P90 (นาที)':r.p90 == null ? '' : Math.round(r.p90 / 60), 'คนอื่นช่วยตอบ':r.byOther, 'ข้อความจากแอป':r.repApp, 'ข้อความจาก LINE ส่วนตัว':r.repLine, 'ข้อความจาก OA Manager':r.repOa }));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(persons), 'รายคน');
   const waits = inR.sort((a, b) => a._s - b._s).map(w => { const c = chatById.get(w.chat_id); return { 'วันที่':thDate(w.started_at), 'เวลา':thTime(w.started_at), 'ซัพพลายเออร์/แชท':c ? chatName(c) : '', 'ประเภท':w.chat_kind === 'user' ? '1:1' : 'กลุ่ม', 'ผู้รับผิดชอบ':w.owner_email ? memberName(w.owner_email) : '', 'สถานะ':w._answered ? 'ตอบแล้ว' : w._dismissed ? 'ไม่ต้องตอบ' : 'ยังไม่ตอบ', 'ตอบโดย':w.closed_by ? memberName(w.closed_by) : '', 'ช่องทาง':w.answer_via === 'app' ? 'แอป' : w.answer_via === 'oa' ? 'OA Manager' : w.answer_via === 'line' ? 'LINE' : '', 'ตอบเมื่อ':w.closed_at ? thDateTime(w.closed_at) : '', 'ข้อความจากซัพ':w.in_count, 'เวลาตอบ 24ชม. (นาที)':w.response_sec == null ? '' : Math.round(w.response_sec / 60), 'เวลาตอบ เวลาทำการ (นาที)':w._answered ? Math.round(bizSeconds(Date.parse(w.started_at), Date.parse(w.closed_at)) / 60) : '', 'ทัน SLA':w._answered ? (w._ok ? 'ทัน' : 'ช้า') : '' }; });
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(waits), 'งานรอตอบ');
@@ -1645,7 +1645,7 @@ function renderSettings(){
   if(view !== 'set') return;
   const sup = isSup();
   $('setContent').innerHTML = linkCardHtml() + (sup ? teamCardHtml() + peopleCardHtml() + hoursCardHtml() : '') + quickCardHtml(sup) + (sup ? ackCardHtml() : '') + quotaCardHtml() + (isAdmin() ? adminCardHtml() : '') + aboutCardHtml();
-  if(sup) renderPeopleRows();
+  if(sup && peopleOpen) renderPeopleRows();
   if(sup && oaAdmins === null && !DEMO) loadOaAdmins();
 }
 async function loadOaAdmins(){
@@ -1758,11 +1758,15 @@ async function saveMember(){
 }
 
 // ── บัญชี LINE ที่พบ ──
+let peopleOpen = false;   // รายชื่อยาวมาก → พับไว้ก่อน
+function togglePeople(){ peopleOpen = !peopleOpen; renderSettings(); }
 function peopleCardHtml(){
-  return `<div class="card card-gold" id="peopleCard"><div class="card-head"><h3>🪪 บัญชี LINE ที่พบในแชท <span class="mini">${people.size}</span></h3>
+  const inCo = [...people.values()].filter(p => p.side === 'company').length;
+  return `<div class="card card-gold" id="peopleCard"><div class="card-head"><h3>🪪 บัญชี LINE ที่พบในแชท <span class="mini">${nf(people.size)} บัญชี · คนในบริษัท ${nf(inCo)}</span></h3>
+    <div class="acts"><button class="btn btn-outline btn-sm" onclick="togglePeople()">${peopleOpen ? '▲ ซ่อนรายชื่อ' : '▼ แสดงรายชื่อ'}</button></div>
     <div class="hint">ระบบต้องรู้ว่าบัญชี LINE ไหนเป็น <b>คนในบริษัท</b> เพื่อไม่นับข้อความของพนักงานเป็นคำถามของซัพพลายเออร์ และให้เครดิตการตอบถูกคน · เปลี่ยนแล้วระบบคำนวณสถิติย้อนหลังของคนนั้นใหม่ทันที · พนักงานผูกเองได้ที่ "ผูก LINE ของฉัน"</div></div>
-    <div class="card-body" style="padding-bottom:8px"><input class="input input-sm" placeholder="🔍 ค้นหาชื่อ LINE / อีเมลพนักงาน…" value="${esc(peopleQ)}" oninput="peopleQ=this.value;renderPeopleRows()"></div>
-    <div class="tbl-wrap" id="peopleRows"></div></div>`;
+    ${peopleOpen ? `<div class="card-body" style="padding-bottom:8px"><input class="input input-sm" placeholder="🔍 ค้นหาชื่อ LINE / อีเมลพนักงาน…" value="${esc(peopleQ)}" oninput="peopleQ=this.value;renderPeopleRows()"></div>
+    <div class="tbl-wrap" id="peopleRows" style="max-height:min(60vh,460px);overflow:auto"></div>` : ''}</div>`;
 }
 function renderPeopleRows(){
   const el = $('peopleRows'); if(!el) return; const q = peopleQ.trim().toLowerCase();
