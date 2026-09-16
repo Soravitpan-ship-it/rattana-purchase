@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.3</title>
+<title>Rattana Purchase Chat v1.4</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -402,7 +402,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.3</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.4</div>
   </div>
 </div>
 
@@ -413,7 +413,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:34px;height:34px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.3</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.4</span>
   </div>
   <div class="hdr-r">
     <button class="hdr-btn" id="bellBtn" onclick="toggleNotify()" title="เปิด/ปิดเสียงแจ้งเตือน">🔔</button>
@@ -624,13 +624,13 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.3 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.4 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.3';
+const APP_VERSION   = '1.4';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
@@ -1284,7 +1284,9 @@ function onMsgUpdate(m){
   if(!m || m.chat_id !== activeId) return;
   const list = msgCache[activeId] || []; const x = list.find(y => y.id === m.id);
   if(!x) return;
-  Object.assign(x, { status:m.status, error:m.error, unsent:m.unsent, line_msg_id:m.line_msg_id, quote_token:m.quote_token });
+  // รวมกรณีไฟล์แนบที่เพิ่งดึงกลับมาจาก LINE (ป้ายข้อความ → รูป/ไฟล์จริง) และเครดิตคนตอบที่เพิ่งจับคู่ได้
+  Object.assign(x, { status:m.status, error:m.error, unsent:m.unsent, line_msg_id:m.line_msg_id, quote_token:m.quote_token,
+                     msg_type:m.msg_type, content:m.content, file_name:m.file_name, staff_email:m.staff_email, sender_name:m.sender_name });
   renderMsgs(list);
 }
 
