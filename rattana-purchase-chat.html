@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.9</title>
+<title>Rattana Purchase Chat v1.9.1</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -33,6 +33,7 @@ body.dark{--bg:#0a1020;--text:#e8eaf0;--card-bg:#111c35;--border:#243b73;--muted
 
 /* ───────────── RESET ───────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:#0d1b3e}
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{font-family:'Sarabun',sans-serif;font-size:14px;line-height:1.5;background:var(--bg);color:var(--text);display:flex;flex-direction:column;transition:background .25s,color .25s;-webkit-text-size-adjust:100%}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
@@ -75,6 +76,12 @@ a{color:inherit}
 .noti-empty{padding:28px 14px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}
 .noti-foot{width:100%;padding:9px;font-size:12px;font-weight:600;color:var(--muted);border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
 .noti-foot:hover{color:var(--text)}
+/* แถบแจ้งว่ามีเวอร์ชันใหม่ — มือถือชอบค้างของเก่าไว้ในแคช */
+.upd-bar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:200;display:none;align-items:center;gap:10px;padding:11px 13px;border-radius:var(--radius-md);background:var(--navy);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3);font-size:13px;border:1px solid rgba(201,168,76,.5)}
+.upd-bar.show{display:flex}
+.upd-bar b{color:var(--gold)}
+.upd-bar button{margin-left:auto;flex-shrink:0;background:var(--gold);color:var(--navy);border-radius:8px;padding:7px 13px;font-weight:700;font-size:13px;font-family:inherit}
+@media(min-width:768px){.upd-bar{left:auto;right:16px;bottom:16px;max-width:420px}}
 .top-tabs{display:none;background:var(--navy);border-bottom:3px solid var(--gold);padding:0 8px;gap:4px;flex-shrink:0}
 .tab-btn{background:transparent;color:rgba(255,255,255,.6);padding:10px 18px;font-size:13px;font-weight:600;border-bottom:3px solid transparent;margin-bottom:-3px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all .18s}
 .tab-btn:hover{color:#fff;background:rgba(255,255,255,.06)}
@@ -450,10 +457,11 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.9</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.9.1</div>
   </div>
 </div>
 
+<div class="upd-bar" id="updBar"><span>มีเวอร์ชันใหม่ <b id="updVer"></b> พร้อมแล้ว</span><button onclick="applyUpdate()">อัปเดตเลย</button></div>
 <div class="demo-banner" id="demoBanner" hidden>โหมดตัวอย่าง — ข้อมูลสมมติ ไม่ได้เชื่อมต่อ LINE / ฐานข้อมูล</div>
 
 <!-- HEADER -->
@@ -461,7 +469,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.9</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.9.1</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -676,7 +684,7 @@ select.input{appearance:auto}
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.9';
+const APP_VERSION   = '1.9.1';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const VAPID_PUBLIC = 'BLein9hi9x50rwGAK_dWnUcP69vIoKzTPx14DWzQSZ8Sg65QUcgGbwgIYPNgeZXWNYiWNtRFK05sV9EMIQnV8aw';        // กุญแจสาธารณะ Web Push — เติมด้วย node tools/make_vapid.mjs (เปิดเผยได้ตามสเปก)
@@ -1539,6 +1547,30 @@ function startSlaWatch(){
   setTimeout(slaWatch, 4000);
 }
 
+// ── เช็คเวอร์ชันใหม่ ──────────────────────────────────────
+// มือถือ (โดยเฉพาะไอคอนบนหน้าจอโฮม) ชอบเปิดไฟล์เก่าที่ค้างในแคช จนแก้อะไรไปก็ไม่เห็นผล
+// จึงถามเซิร์ฟเวอร์เป็นระยะว่ามีเวอร์ชันใหม่ไหม — ขอแค่ส่วนหัวไฟล์ ไม่ได้โหลดทั้งไฟล์
+let updSeen = null;
+async function checkUpdate(){
+  if(DEMO) return;
+  try{
+    const res = await fetch(location.pathname + '?v=' + Date.now(),
+                            { cache:'no-store', headers:{ Range:'bytes=0-1500' } });
+    if(!res.ok && res.status !== 206) return;
+    const head = await res.text();
+    const m = /Rattana Purchase Chat v([0-9.]+)/.exec(head);
+    if(!m || m[1] === APP_VERSION || m[1] === updSeen) return;
+    updSeen = m[1];
+    $('updVer').textContent = 'v' + m[1];
+    $('updBar').classList.add('show');
+  }catch(_){ /* ออฟไลน์อยู่ ไม่เป็นไร */ }
+}
+function applyUpdate(){
+  $('updBar').classList.remove('show');
+  // ใส่ ?v= ท้าย URL บังคับให้โหลดไฟล์ใหม่จริง (reload เฉยๆ บน iOS ยังได้ของเก่าในแคช)
+  location.replace(location.pathname + '?v=' + Date.now());
+}
+
 // ── แจ้งเตือนตอนไม่ได้เปิดแอพ (Web Push) ──────────────────────
 // แจ้งเตือนในแอพข้างบนทำงานเฉพาะตอนเปิดแอพค้างไว้ · ส่วนนี้ให้เซิร์ฟเวอร์ยิงมาหาเครื่อง
 // แม้ปิดแอพ/ปิดจอ โดยผ่าน service worker (sw.js)
@@ -2356,7 +2388,9 @@ async function showApp(){
   }catch(e){ console.error('load failed:', e); showToast('โหลดข้อมูลไม่สำเร็จ: ' + e.message, 'error', 6000); }
   finally{ hideSpinner(); }
   $('hdrGreet').textContent = `สวัสดี ${me.nick || me.name || me.email} 👋 · ${roleLabel(me.role)}`;
-  notiLoad(); startSlaWatch(); askNotifyPermission(); initPush(); openChatFromHash();   // แจ้งเตือน: โหลดค่าตั้ง (scope ขึ้นกับสิทธิ์) แล้วเริ่มเฝ้า SLA
+  notiLoad(); startSlaWatch(); askNotifyPermission(); initPush(); openChatFromHash();
+  setTimeout(checkUpdate, 5000); setInterval(checkUpdate, 30 * 60 * 1000);
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) checkUpdate(); });   // แจ้งเตือน: โหลดค่าตั้ง (scope ขึ้นกับสิทธิ์) แล้วเริ่มเฝ้า SLA
   setView(LS.get('pur.view') || 'chat');
   // ตัวเลข "รอมานาน" เดินตามเวลาจริง
   setInterval(() => { renderList(); if(activeId && chatById.get(activeId)) renderStrips(chatById.get(activeId)); if(view === 'dash' && dashLoadedOnce) renderDash(); }, 60000);
