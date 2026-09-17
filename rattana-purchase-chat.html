@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.9.2</title>
+<title>Rattana Purchase Chat v1.10</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -294,10 +294,10 @@ button.older-bar:hover{border-color:var(--gold);color:var(--text)}
 .heat .hx{text-align:center;height:14px;line-height:14px;overflow:hidden}
 .scale{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);margin-top:8px;padding:0 2px}
 .scale i{flex:1;height:8px;border-radius:2px;max-width:34px}
-.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tbl-wrap{overflow:auto;-webkit-overflow-scrolling:touch;max-height:min(70vh,620px)}
 .tbl{width:100%;border-collapse:collapse;min-width:640px}
 .tbl thead{background:var(--navy);color:#fff}
-.tbl thead th{padding:9px 10px;text-align:left;font-size:12px;font-weight:600;white-space:nowrap;border-bottom:2px solid var(--gold);cursor:pointer;user-select:none}
+.tbl thead th{position:sticky;top:0;z-index:3;background:var(--navy);padding:9px 10px;text-align:left;font-size:12px;font-weight:600;white-space:nowrap;border-bottom:2px solid var(--gold);cursor:pointer;user-select:none}
 .tbl thead th.num{text-align:right}
 .tbl thead th:hover{background:var(--navy-mid)}
 .tbl thead th .sort-ind{font-size:10px;color:var(--gold);margin-left:3px;font-weight:700}
@@ -305,10 +305,12 @@ button.older-bar:hover{border-color:var(--gold);color:var(--text)}
 .tbl tbody tr:nth-child(even){background:var(--row-alt)}
 .tbl tbody tr:hover{background:rgba(201,168,76,.07)}
 .tbl tbody tr.clickable{cursor:pointer}
+.tbl .drill{cursor:pointer;border-bottom:1px dashed currentColor}
+.tbl .drill:hover{opacity:.75}
 .tbl td{padding:8px 10px;font-size:13px;vertical-align:middle}
 .tbl td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:500}
 .tbl .empty-row td{text-align:center;padding:36px 20px;color:var(--muted);font-size:13px}
-.tbl tfoot td{padding:8px 10px;font-size:12px;font-weight:700;border-top:2px solid var(--border);background:var(--row-alt)}
+.tbl tfoot td{position:sticky;bottom:0;z-index:2;padding:8px 10px;font-size:12px;font-weight:700;border-top:2px solid var(--border);background:var(--card-bg);box-shadow:0 -1px 0 var(--border)}
 .tbl tfoot td.num{text-align:right;font-variant-numeric:tabular-nums}
 .tbl.compact{min-width:0}
 .mini{font-size:11px;color:var(--muted)}
@@ -384,6 +386,7 @@ select.input{appearance:auto}
 @media(min-width:768px){#backToTop{bottom:24px}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.modal-overlay.wide .modal{max-width:min(96vw,880px)}
 @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* ───────────── LOGIN GATE ───────────── */
@@ -457,7 +460,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.9.2</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.10</div>
   </div>
 </div>
 
@@ -469,7 +472,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.9.2</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.10</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -641,6 +644,23 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
+          <h3>🐢 ตอบช้ากว่า SLA <span class="mini" id="lateCount"></span></h3>
+          <div class="hint">งานที่<b>ตอบแล้ว</b>แต่ใช้เวลาเกิน SLA ในช่วงที่เลือก · คอลัมน์ "เกินไป" = ช้ากว่ากำหนดเท่าไหร่ · คลิกเพื่อเปิดแชท</div>
+        </div>
+        <div class="tbl-wrap" id="lateTable"></div>
+      </div>
+
+      <div class="card card-gold">
+        <div class="card-head">
+          <h3>❓ แชทที่ยังไม่มีผู้รับผิดชอบ <span class="mini" id="noOwnerCount"></span></h3>
+          <div class="acts" id="noOwnerSum"></div>
+          <div class="hint">นับทุกแชทที่ยังเปิดอยู่ (ไม่ขึ้นกับช่วงเวลาที่เลือก) · ส่วนใหญ่แก้ได้ด้วยการใส่รหัส <b>PU1#ชื่อร้าน</b> ในชื่อแชทที่ OA Manager แล้วระบบยกให้เอง · คลิกเพื่อเปิดแชท</div>
+        </div>
+        <div class="tbl-wrap" id="noOwnerTable"></div>
+      </div>
+
+      <div class="card card-gold">
+        <div class="card-head">
           <h3>🏷 ซัพพลายเออร์ที่ทักบ่อยสุด</h3>
           <div class="hint">จำนวนงานรอตอบในช่วงที่เลือก · คลิกเพื่อเปิดแชท</div>
         </div>
@@ -684,7 +704,7 @@ select.input{appearance:auto}
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.9.2';
+const APP_VERSION   = '1.10';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const VAPID_PUBLIC = 'BLein9hi9x50rwGAK_dWnUcP69vIoKzTPx14DWzQSZ8Sg65QUcgGbwgIYPNgeZXWNYiWNtRFK05sV9EMIQnV8aw';        // กุญแจสาธารณะ Web Push — เติมด้วย node tools/make_vapid.mjs (เปิดเผยได้ตามสเปก)
@@ -800,7 +820,11 @@ function showToast(msg, type = 'info', ms = 3000){
 }
 const showSpinner = (m = 'กำลังโหลด…') => { $('spinnerMsg').textContent = m; $('spinner').classList.add('show'); };
 const hideSpinner = () => $('spinner').classList.remove('show');
-function openModal(title, body, foot){ $('modalTitle').textContent = title; $('modalBody').innerHTML = body; $('modalFoot').innerHTML = foot || ''; $('modal').classList.add('open'); }
+function openModal(title, body, foot, opts){
+  $('modalTitle').textContent = title; $('modalBody').innerHTML = body; $('modalFoot').innerHTML = foot || '';
+  $('modal').classList.toggle('wide', !!opts?.wide);        // ตารางรายละเอียดต้องการที่กว้างกว่าฟอร์มปกติ
+  $('modal').classList.add('open');
+}
 function closeModal(){ $('modal').classList.remove('open'); }
 function toggleDD(id){
   const p = document.querySelector(`#${id} .dd-panel`); const open = p.classList.contains('open');
@@ -1848,7 +1872,7 @@ function renderDash(){
   ].join('');
 
   renderDaily(inR, from, to); renderHist(answered); renderHeat(inR);
-  renderPersons(inR, open, reps); renderBacklog(open); renderTop(inR);
+  renderPersons(inR, open, reps); renderBacklog(open); renderLate(); renderNoOwner(); renderTop(inR);
 }
 
 // ── ทูลทิป (ใช้ร่วมทุกกราฟ) ──
@@ -1989,7 +2013,7 @@ function renderPersons(inR, open, reps){
   const T = list.reduce((t, r) => { t.total += r.total; t.answered += r.answered; t.openR += r.openR; t.dis += r.dis; t.openNow += r.openNow; t.ok += r.ok; t.late += r.late; t.byOther += r.byOther; t.reps += r.reps; return t; }, { total:0, answered:0, openR:0, dis:0, openNow:0, ok:0, late:0, byOther:0, reps:0 });
   const allDurs = inR.filter(w => w._answered).map(w => w._dur).sort((a, b) => a - b);
   $('personTable').innerHTML = `<table class="tbl" id="personTbl"><thead><tr>${cols.map(c => `<th class="${c[2] === 'num' ? 'num' : ''}" data-key="${c[0]}" data-type="${c[2]}">${c[1]}<span class="sort-ind">${personSort.key === c[0] ? (personSort.dir === 'asc' ? '▲' : '▼') : ''}</span></th>`).join('')}</tr></thead>
-    <tbody>${sorted.length ? sorted.map(r => `<tr><td>${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</td><td class="num">${nf(r.total)}</td><td class="num">${nf(r.answered)}</td><td class="num">${r.openR ? `<span class="pill bad">${nf(r.openR)}</span>` : '0'}</td><td class="num">${nf(r.dis)}</td><td class="num">${r.openNow ? `<span class="pill bad">${nf(r.openNow)}</span>` : '0'}</td><td class="num">${slaPill(r.slaPct)}</td><td class="num" title="ตอบแล้วแต่ช้ากว่า SLA">${r.late ? `<span class="pill bad">${nf(r.late)}</span>` : '0'}</td><td class="num">${fmtDur(r.med)}</td><td class="num">${fmtDur(r.p90)}</td><td class="num">${nf(r.byOther)}</td><td class="num" title="แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}">${nf(r.reps)}</td></tr>`).join('') : `<tr class="empty-row"><td colspan="12">ไม่มีข้อมูลในช่วงนี้</td></tr>`}</tbody>
+    <tbody>${sorted.length ? sorted.map(r => `<tr><td>${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</td><td class="num">${nf(r.total)}</td><td class="num">${nf(r.answered)}</td><td class="num">${r.openR ? `<span class="pill bad">${nf(r.openR)}</span>` : '0'}</td><td class="num">${nf(r.dis)}</td><td class="num">${r.openNow ? `<span class="pill bad">${nf(r.openNow)}</span>` : '0'}</td><td class="num">${slaPill(r.slaPct)}</td><td class="num" title="ตอบแล้วแต่ช้ากว่า SLA — คลิกดูว่าเป็นแชทไหนบ้าง">${r.late ? `<span class="pill bad drill" onclick="openLateFor('${r.email}')">${nf(r.late)}</span>` : '0'}</td><td class="num">${fmtDur(r.med)}</td><td class="num">${fmtDur(r.p90)}</td><td class="num">${nf(r.byOther)}</td><td class="num" title="แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}">${nf(r.reps)}</td></tr>`).join('') : `<tr class="empty-row"><td colspan="12">ไม่มีข้อมูลในช่วงนี้</td></tr>`}</tbody>
     <tfoot><tr><td>รวม</td><td class="num">${nf(T.total)}</td><td class="num">${nf(T.answered)}</td><td class="num">${nf(T.openR)}</td><td class="num">${nf(T.dis)}</td><td class="num">${nf(T.openNow)}</td><td class="num">${T.answered ? Math.round(T.ok / T.answered * 100) + '%' : '–'}</td><td class="num">${nf(T.late)}</td><td class="num">${fmtDur(quantile(allDurs, .5))}</td><td class="num">${fmtDur(quantile(allDurs, .9))}</td><td class="num">${nf(T.byOther)}</td><td class="num">${nf(T.reps)}</td></tr></tfoot></table>`;
   $('personTbl').querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
     const key = th.dataset.key, type = th.dataset.type;
@@ -2016,6 +2040,117 @@ function renderBacklog(open){
   dash.lastBacklog = rows;
 }
 function openChatFromDash(id){ setView('chat'); openChat(id); }
+
+// ══════════════════════════════════════════════════════════
+//  แชทที่ยังไม่มีผู้รับผิดชอบ + งานที่ตอบช้ากว่า SLA
+//  ทั้งสองการ์ดกดที่แถวเพื่อเปิดแชทนั้นได้เลย
+// ══════════════════════════════════════════════════════════
+
+// แกะรหัส PU จากชื่อแชท — กติกาเดียวกับฝั่งฐานข้อมูล (pur_pu_code)
+// ดูชื่อที่ทีมตั้งก่อน แล้วค่อยดูชื่อจาก LINE · กัน "POMPUI" ด้วยการบังคับว่าหน้า PU ต้องไม่ใช่ตัวอักษร
+function puCodeOf(c){
+  for(const t of [c.supplier_name, c.title]){
+    const m = /(?:^|[^A-Za-z])[Pp][Uu]\s*#?\s*([0-9]{1,2})/.exec(String(t || ''));
+    if(m) return 'PU' + m[1];
+  }
+  return null;
+}
+const puOwners = () => new Set([...members.values()].filter(m => m.active && m.pu_code).map(m => m.pu_code.toUpperCase()));
+
+// ── ❓ แชทที่ยังไม่มีผู้รับผิดชอบ ──
+function noOwnerRows(){
+  const owned = puOwners();
+  return chats.filter(c => !c.assignee_email && !c.exclude_kpi && c.status !== 'resolved')
+    .map(c => {
+      const pu = puCodeOf(c);
+      return { c, pu,
+        // ไม่มีรหัสเลย = ต้องไปแก้ชื่อแชทใน OA Manager
+        // มีรหัสแต่ไม่มีเจ้าของ = รหัสนั้นยังไม่ได้ผูกกับใครในทีม
+        why: !pu ? 'no_code' : (owned.has(pu) ? 'unassigned' : 'no_owner'),
+        age: c.awaiting_since ? elapsedSec(c.awaiting_since, null) : null };
+    })
+    .sort((a, b) => (b.age ?? -1) - (a.age ?? -1)
+                 || Date.parse(b.c.last_message_at || 0) - Date.parse(a.c.last_message_at || 0));
+}
+const WHY_LABEL = {
+  no_code:    ['ไม่มีรหัส PU ในชื่อ', 'bad'],
+  no_owner:   ['รหัสนี้ยังไม่มีเจ้าของ', 'warn'],
+  unassigned: ['มีรหัสแล้วแต่ยังไม่ถูกยก', 'info'],
+};
+function renderNoOwner(){
+  const rows = noOwnerRows(), sla = slaSec();
+  const byWhy = k => rows.filter(r => r.why === k).length;
+  const waiting = rows.filter(r => r.age != null).length;
+
+  $('noOwnerCount').innerHTML = rows.length
+    ? `(${nf(rows.length)} แชท` + (waiting ? ` · รอตอบอยู่ ${nf(waiting)}` : '') + ')'
+    : '';
+  $('noOwnerSum').innerHTML = rows.length ? [
+    byWhy('no_code')  ? `<span class="pill bad">ไม่มีรหัส PU ในชื่อ ${nf(byWhy('no_code'))}</span>` : '',
+    byWhy('no_owner') ? `<span class="pill warn">รหัส PU ที่ยังไม่มีเจ้าของ ${nf(byWhy('no_owner'))}</span>` : '',
+    byWhy('unassigned') ? `<span class="pill info">มีรหัสแล้วแต่ยังไม่ถูกยก ${nf(byWhy('unassigned'))}</span>` : '',
+  ].filter(Boolean).join(' ') : '';
+
+  const th = t => `<th style="cursor:default" class="${t.startsWith('#') ? 'num' : ''}">${t.replace('#', '')}</th>`;
+  $('noOwnerTable').innerHTML = `<table class="tbl"><thead><tr>${
+    ['ซัพพลายเออร์ / แชท', 'ประเภท', 'รหัส PU ในชื่อ', 'สาเหตุ', '#รอตอบมานาน', 'ข้อความล่าสุด'].map(th).join('')
+  }</tr></thead><tbody>${
+    rows.length ? rows.map(r => {
+      const [lbl, cls] = WHY_LABEL[r.why], over = r.age != null && r.age > sla;
+      return `<tr class="clickable" onclick="openChatFromDash('${r.c.id}')">
+        <td>${esc(chatName(r.c))}</td>
+        <td class="mini">${r.c.kind === 'user' ? '1:1' : `กลุ่ม${r.c.member_count ? ' · ' + r.c.member_count : ''}`}</td>
+        <td>${r.pu ? `<b>${esc(r.pu)}</b>` : '<span class="txt-muted">—</span>'}</td>
+        <td><span class="pill ${cls}">${lbl}</span></td>
+        <td class="num ${over ? 'txt-danger txt-bold' : ''}">${r.age != null ? fmtDur(r.age) : '<span class="txt-muted">ไม่มีงานค้าง</span>'}</td>
+        <td class="mini" style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.c.last_message || '')}</td></tr>`;
+    }).join('') : `<tr class="empty-row"><td colspan="6">ทุกแชทมีผู้รับผิดชอบแล้ว 🎉</td></tr>`}</tbody></table>`;
+  dash.lastNoOwner = rows;
+}
+
+// ── 🐢 งานที่ตอบช้ากว่า SLA ──
+// นับเฉพาะงานที่ "ตอบแล้ว" แต่ใช้เวลาเกิน SLA — เกินไปกี่นาทีดูที่คอลัมน์ "เกินไป"
+function lateWaits(email){
+  const sla = slaSec();
+  return visibleWaits()
+    .filter(w => w._inRange && w._late && (email === undefined || (w.owner_email || '') === email))
+    .map(w => ({ ...w, _over:w._dur - sla }))
+    .sort((a, b) => b._over - a._over);
+}
+function lateTableHtml(rows, showOwner = true){
+  const th = t => `<th style="cursor:default" class="${t.startsWith('#') ? 'num' : ''}">${t.replace('#', '')}</th>`;
+  const head = ['ซัพพลายเออร์ / แชท', ...(showOwner ? ['ผู้รับผิดชอบ'] : []), 'คนที่ตอบ', '#ใช้เวลาตอบ', '#เกินไป', 'ทักเมื่อ', 'ตอบเมื่อ'];
+  return `<table class="tbl${showOwner ? '' : ' compact'}"><thead><tr>${head.map(th).join('')}</tr></thead><tbody>${
+    rows.length ? rows.map(w => {
+      const c = chatById.get(w.chat_id);
+      return `<tr class="clickable" onclick="closeModal();openChatFromDash('${w.chat_id}')">
+        <td>${c ? esc(chatName(c)) : '—'} <span class="mini">${w.chat_kind === 'user' ? '1:1' : 'กลุ่ม'}</span></td>
+        ${showOwner ? `<td>${w.owner_email ? esc(memberName(w.owner_email)) : '<span class="pill grey">ไม่มี</span>'}</td>` : ''}
+        <td>${w.closed_by ? esc(memberName(w.closed_by)) : '<span class="txt-muted">—</span>'}</td>
+        <td class="num">${fmtDur(w._dur)}</td>
+        <td class="num txt-danger txt-bold">+${fmtDur(w._over)}</td>
+        <td class="mini">${thDateTime(w.started_at)}</td>
+        <td class="mini">${thDateTime(w.closed_at)}</td></tr>`;
+    }).join('') : `<tr class="empty-row"><td colspan="${head.length}">ไม่มีงานที่ตอบช้ากว่า SLA 🎉</td></tr>`}</tbody></table>`;
+}
+function renderLate(){
+  const rows = lateWaits(), sla = slaSec();
+  const overs = rows.map(r => r._over).sort((a, b) => a - b);
+  $('lateCount').textContent = rows.length
+    ? `(${nf(rows.length)} ครั้ง · เกินเฉลี่ย ${fmtDur(Math.round(overs.reduce((a, b) => a + b, 0) / overs.length))} · มากสุด ${fmtDur(overs[overs.length - 1])})`
+    : '';
+  $('lateTable').innerHTML = lateTableHtml(rows);
+  dash.lastLate = rows;
+}
+// กดตัวเลข "ช้ากว่า SLA" ในตารางรายคน → ดูว่าเป็นแชทไหนบ้าง
+function openLateFor(email){
+  const rows = lateWaits(email), who = email ? memberName(email) : 'ไม่มีผู้รับผิดชอบ';
+  openModal(`ตอบช้ากว่า SLA — ${who} (${nf(rows.length)} ครั้ง)`,
+    `<div class="tbl-wrap">${lateTableHtml(rows, false)}</div>
+     <p class="txt-sm txt-muted mt-8">SLA ${settings.sla_minutes} นาที · นับตาม${clockMode === 'biz' ? 'เวลาทำการ' : 'เวลาจริง 24 ชม.'} · คลิกแถวเพื่อเปิดแชท</p>`,
+    `<button class="btn btn-outline" onclick="closeModal()">ปิด</button>`, { wide:true });
+}
+
 
 // ── ซัพพลายเออร์ที่ทักบ่อยสุด ──
 function renderTop(inR){
