@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.13</title>
+<title>Rattana Purchase Chat v1.14</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -513,7 +513,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.13</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.14</div>
   </div>
 </div>
 
@@ -525,7 +525,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.13</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.14</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -644,6 +644,7 @@ select.input{appearance:auto}
           <button class="btn btn-outline btn-sm" onclick="exportDashExcel()" title="ส่งออก Excel">📥 Excel</button>
         </div>
         <div class="txt-sm txt-muted" id="dashRangeLabel"></div>
+        <div id="oaStale" style="width:100%"></div>
       </div>
 
       <div class="stat-grid" id="statGrid"></div>
@@ -764,7 +765,7 @@ select.input{appearance:auto}
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.13';
+const APP_VERSION   = '1.14';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const LINE_OA_ID = '@429hgoxl';   // ไอดี LINE OA จัดซื้อ (RTNPurchase) — ใช้ทำลิงก์เปิดแอพ LINE
@@ -929,6 +930,7 @@ async function loadChats(){
   const before = snapshot();
   const rows = await fetchAll('pur_chats', q => q.order('last_message_at', { ascending:false, nullsFirst:false }));
   chats = rows; chatById = new Map(rows.map(r => [r.id, r]));
+  if(typeof paintSnap !== 'undefined') paintSnap = null;
   detectNew(before); renderList(); updateBadges();
   if(activeId && chatById.get(activeId)) renderChatHeader(chatById.get(activeId));
 }
@@ -1025,13 +1027,19 @@ function avatarHtml(c, size){
   const bg = c.avatar_url ? `${avCol(name)} url('${esc(c.avatar_url)}') center/cover no-repeat` : avCol(name);
   return `<div class="av ${grp ? 'group' : ''}" style="background:${bg};${size ? `width:${size}px;height:${size}px;font-size:${Math.round(size*.36)}px` : ''}">${c.avatar_url ? '' : (grp ? '👥' : esc(name.charAt(0)))}</div>`;
 }
+const LIST_STEP = 80;            // วาดทีละเท่านี้ เลื่อนถึงท้ายค่อยต่อ — 438 รายการรวดเดียวหนักเกินไปสำหรับมือถือ
+let listShown = LIST_STEP;
+function moreChats(){ listShown += LIST_STEP; renderList(); }
+function resetList(){ listShown = LIST_STEP; }
 function renderList(){
   const list = filteredChats(); const el = $('convList');
   const n = chipCounts();
   for(const k in n){ const e = $('cn-' + k); if(e) e.textContent = n[k] || ''; }
   if(!list.length){ el.innerHTML = `<div class="conv-empty">${chats.length ? 'ไม่มีแชทในหมวดนี้' : 'ยังไม่มีแชทเข้ามา<br><span class="txt-sm">เชิญบัญชี LINE จัดซื้อเข้ากลุ่มซัพพลายเออร์ หรือรอให้ซัพพลายเออร์ทักเข้ามา</span>'}</div>`; return; }
   const sla = slaSec();
-  el.innerHTML = list.map(c => {
+  if(listShown > LIST_STEP && listShown > list.length) listShown = Math.max(LIST_STEP, Math.ceil(list.length / LIST_STEP) * LIST_STEP);
+  const shown = list.slice(0, listShown), rest = list.length - shown.length;
+  el.innerHTML = shown.map(c => {
     const age = c.awaiting_since ? elapsedSec(c.awaiting_since, null) : null; const over = age != null && age > sla;
     const cls = ['conv-item', c.unread_count > 0 ? 'unread' : '', c.awaiting_since ? 'awaiting' : '', over ? 'over' : '', activeId === c.id ? 'selected' : '', c.status === 'resolved' ? 'resolved' : ''].join(' ');
     const tags = [];
@@ -1047,10 +1055,11 @@ function renderList(){
         <div class="conv-row2"><div class="conv-prev">${esc(c.last_message || '')}</div>${c.unread_count > 0 ? `<div class="ubadge">${c.unread_count}</div>` : ''}</div>
         <div class="conv-row3">${tags.join('')}</div>
       </div></div>`;
-  }).join('');
+  }).join('') + (rest > 0
+    ? `<button class="older-bar" style="display:block;margin:10px auto" onclick="moreChats()">แสดงเพิ่ม (เหลืออีก ${nf(rest)} แชท)</button>` : '');
 }
-function setListFilter(f){ listFilter = f; document.querySelectorAll('#listChips .chip').forEach(b => b.classList.toggle('active', b.dataset.f === f)); renderList(); }
-function toggleSort(){ listSort = listSort === 'wait' ? 'recent' : 'wait'; LS.set('pur.sort', listSort); renderSortBtn(); renderList(); $('convList').scrollTop = 0; }
+function setListFilter(f){ listFilter = f; resetList(); document.querySelectorAll('#listChips .chip').forEach(b => b.classList.toggle('active', b.dataset.f === f)); renderList(); }
+function toggleSort(){ listSort = listSort === 'wait' ? 'recent' : 'wait'; resetList(); LS.set('pur.sort', listSort); renderSortBtn(); renderList(); $('convList').scrollTop = 0; }
 function renderSortBtn(){
   const b = $('sortBtn'); if(!b) return; const w = listSort === 'wait';
   b.textContent = w ? '⏱ รอนานสุด' : '⇅ ล่าสุด';
@@ -1058,7 +1067,7 @@ function renderSortBtn(){
   b.title = w ? 'ตอนนี้: แชทที่รอตอบนานสุดอยู่บนสุด — กดเพื่อเรียงแบบ LINE (ข้อความล่าสุดบนสุด)'
               : 'ตอนนี้: เรียงแบบ LINE ข้อความล่าสุดบนสุด — กดเพื่อให้แชทที่รอตอบนานสุดขึ้นก่อน';
 }
-function filterConv(q){ searchQ = q; renderList(); }
+function filterConv(q){ searchQ = q; resetList(); renderList(); }
 function updateBadges(){
   const n = chats.filter(c => c.awaiting_since).length;
   ['tb-chat', 'bn-chat'].forEach(id => { const e = $(id); if(e) e.textContent = n || ''; });
@@ -1391,14 +1400,30 @@ function upsertChat(r){
   if(i >= 0){ chats[i] = { ...chats[i], ...r }; chatById.set(r.id, chats[i]); }
   else { chats.push(r); chatById.set(r.id, r); }
 }
+// แถวแชทเปลี่ยนทีละแถว แต่การวาดรายการใหม่แต่ละครั้งกินเวลาหลายสิบมิลลิวินาที
+// ตอนส่วนขยายดึงประวัติเข้ามา แถวเปลี่ยนเป็นร้อยครั้งรวดเดียว → ถ้าวาดทุกครั้งแอพจะค้าง
+// จึงพักไว้ก่อนแล้ววาดรอบเดียวเมื่อเหตุการณ์เงียบลง
+let paintTimer = null, paintSnap = null, paintHeader = false;
+function schedulePaint(){
+  if(paintTimer) return;
+  paintTimer = setTimeout(() => {
+    paintTimer = null;
+    const before = paintSnap; paintSnap = null;
+    if(before) detectNew(before);           // เทียบกับสภาพก่อนเหตุการณ์ชุดนี้ จะได้ไม่แจ้งเตือนซ้ำ
+    renderList(); updateBadges();
+    if(paintHeader && activeId && chatById.get(activeId)) renderChatHeader(chatById.get(activeId));
+    paintHeader = false;
+  }, 250);
+}
 function setupRealtime(){
   sb.channel('pur-chats').on('postgres_changes', { event:'*', schema:'public', table:'pur_chats' }, p => {
-    if(p.eventType === 'DELETE'){ const id = p.old?.id; if(id){ chats = chats.filter(c => c.id !== id); chatById.delete(id); if(activeId === id) closeChat(); renderList(); } return; }
+    if(p.eventType === 'DELETE'){ const id = p.old?.id; if(id){ chats = chats.filter(c => c.id !== id); chatById.delete(id); if(activeId === id) closeChat(); schedulePaint(); } return; }
     const r = p.new; if(!r?.id) return;
-    const before = snapshot(); upsertChat(r);
+    if(!paintSnap) paintSnap = snapshot();   // เก็บภาพก่อนหน้าครั้งเดียวต่อรอบ ไม่ใช่ทุกเหตุการณ์
+    upsertChat(r);
     if(activeId === r.id && r.unread_count > 0 && document.hasFocus()){ r.unread_count = 0; chatById.get(r.id).unread_count = 0; }
-    detectNew(before); renderList(); updateBadges();
-    if(activeId === r.id) renderChatHeader(chatById.get(r.id));
+    if(activeId === r.id) paintHeader = true;
+    schedulePaint();
   }).subscribe();
 
   sb.channel('pur-msgs')
@@ -1888,9 +1913,30 @@ async function loadDash(){
       const map = new Map(); [...w1, ...w2].forEach(w => map.set(w.id, w));
       dash.data = { waits:[...map.values()], replies:rc.data || [] };
     }
-    dashLoadedOnce = true; renderDash();
+    dashLoadedOnce = true; renderDash(); checkOaFresh();
   }catch(e){ showToast('โหลดแดชบอร์ดไม่สำเร็จ: ' + e.message, 'error'); }
   finally{ dash.loading = false; content.classList.remove('dim'); }
+}
+
+// คำตอบที่ทีมพิมพ์ใน OA Manager เข้าระบบได้ทางส่วนขยาย Chrome ทางเดียว
+// ถ้าส่วนขยายหยุด ตัวเลขงานค้าง/เกิน SLA จะสูงเกินจริงโดยไม่มีใครรู้ → เตือนไว้ตรงหัวแดชบอร์ด
+const OA_STALE_MIN = 120;
+async function checkOaFresh(){
+  const el = $('oaStale'); if(!el) return;
+  if(DEMO) return;
+  try{
+    const { data } = await sb.from('pur_messages').select('created_at')
+      .eq('via', 'oa').order('created_at', { ascending:false }).limit(1).maybeSingle();
+    const last = data?.created_at ? Date.parse(data.created_at) : 0;
+    const mins = last ? Math.round((Date.now() - last) / 60000) : null;
+    if(mins !== null && mins < OA_STALE_MIN){ el.innerHTML = ''; return; }
+    const ago = mins === null ? 'ยังไม่เคยมีข้อมูลเข้ามา'
+              : mins >= 60 ? `${Math.floor(mins / 60)} ชม.${mins % 60 ? ' ' + (mins % 60) + ' น.' : ''}` : `${mins} นาที`;
+    el.innerHTML = `<div class="warn-box bad mt-8">⚠️ <b>คำตอบจาก OA Manager ไม่เข้าระบบมา ${ago}</b> —
+      ตัวเลข "งานค้าง" และ "เกิน SLA" อาจสูงเกินจริง เพราะงานที่ทีมตอบใน OA Manager ยังไม่ถูกบันทึก<br>
+      แก้: เปิด Chrome เครื่องที่ติดตั้งส่วนขยาย ค้างแท็บ <b>chat.line.biz</b> ไว้ แล้วกด <b>ดึงเดี๋ยวนี้</b> ที่ไอคอนส่วนขยาย
+      ${isSup() ? '· ระบบจะแจ้งเตือนหัวหน้า/ผู้ดูแลอัตโนมัติถ้าเงียบเกิน 2 ชม. ในเวลาทำการ' : ''}</div>`;
+  }catch(e){ console.warn('oa freshness:', e.message); }
 }
 
 // คัดกรอง + คำนวณระยะเวลาของแต่ละงานตามตัวกรองปัจจุบัน
@@ -2089,6 +2135,14 @@ function renderPersons(inR, open, reps){
 
 // ── ตัวสร้างการ์ดที่ใช้ร่วมกันทุกที่ ──
 // tone: crit = แดง (เลยกำหนดแล้ว) · warn = ส้ม (ต้องรีบ) · info = ฟ้า
+const PC_STEP = 60;              // การ์ดต่อหน้า — แชทที่ไม่มีผู้รับผิดชอบมีเกือบ 300 ใบ
+const pcShown = { noOwner:PC_STEP, backlog:PC_STEP, late:PC_STEP };
+function pcMore(k){ pcShown[k] += PC_STEP; renderDash(); }
+const pcReset = k => { pcShown[k] = PC_STEP; };
+function pcMoreBtn(k, total){
+  return total > pcShown[k]
+    ? `<button class="older-bar" style="display:block;margin:12px auto 0" onclick="pcMore('${k}')">แสดงเพิ่ม (เหลืออีก ${nf(total - pcShown[k])})</button>` : '';
+}
 function pcardHtml({ c, tone, onclick, main, sub, meta, msg, foot }){
   return `<button class="pcard ${tone}" onclick="${onclick}" title="${esc(chatName(c))}">
     <div class="pc-top">${avatarHtml(c, 42)}
@@ -2108,7 +2162,7 @@ const ownerPill = e => e
 
 // ── 🚨 งานค้างตอนนี้ ──
 let backlogFilter = 'all';
-function setBacklogFilter(k){ backlogFilter = backlogFilter === k ? 'all' : k; renderDash(); }
+function setBacklogFilter(k){ backlogFilter = backlogFilter === k ? 'all' : k; pcReset('backlog'); renderDash(); }
 function renderBacklog(open){
   const sla = slaSec();
   const all = [...open].sort((a, b) => b._age - a._age);
@@ -2122,7 +2176,7 @@ function renderBacklog(open){
   $('backlogSum').innerHTML = all.length
     ? chip('over', 'เกิน SLA', 'bad', over.length) + chip('ok', 'ยังทัน', 'warn', still.length) : '';
 
-  $('backlogTable').innerHTML = rows.length ? `<div class="pcards">${rows.map(w => {
+  $('backlogTable').innerHTML = rows.length ? `<div class="pcards">${rows.slice(0, pcShown.backlog).map(w => {
     const c = chatById.get(w.chat_id); if(!c) return '';
     const late = w._age > sla;
     return pcardHtml({
@@ -2134,7 +2188,7 @@ function renderBacklog(open){
       msg: esc(c.last_message || '—'),
       foot: ownerPill(w.owner_email),
     });
-  }).join('')}</div>` : `<div class="conv-empty">${all.length ? 'ไม่มีงานในกลุ่มที่กรองอยู่' : 'ไม่มีงานค้าง 🎉'}</div>`;
+  }).join('')}</div>${pcMoreBtn('backlog', rows.length)}` : `<div class="conv-empty">${all.length ? 'ไม่มีงานในกลุ่มที่กรองอยู่' : 'ไม่มีงานค้าง 🎉'}</div>`;
   dash.lastBacklog = all;
 }
 function openChatFromDash(id){ setView('chat'); openChat(id); }
@@ -2496,7 +2550,7 @@ const WHY_LABEL = {
   unassigned: ['มีรหัสแล้วแต่ยังไม่ถูกยก', 'info'],
 };
 let noOwnerFilter = 'all';
-function setNoOwnerFilter(k){ noOwnerFilter = noOwnerFilter === k ? 'all' : k; renderNoOwner(); }
+function setNoOwnerFilter(k){ noOwnerFilter = noOwnerFilter === k ? 'all' : k; pcReset('noOwner'); renderNoOwner(); }
 function renderNoOwner(){
   const all = noOwnerRows(), sla = slaSec();
   const byWhy = k => all.filter(r => r.why === k).length;
@@ -2514,7 +2568,7 @@ function renderNoOwner(){
   $('noOwnerSum').innerHTML = all.length
     ? chip('no_code', 'bad') + chip('no_owner', 'warn') + chip('unassigned', 'info') : '';
 
-  $('noOwnerTable').innerHTML = rows.length ? `<div class="pcards">${rows.map(r => {
+  $('noOwnerTable').innerHTML = rows.length ? `<div class="pcards">${rows.slice(0, pcShown.noOwner).map(r => {
     const [lbl, cls] = WHY_LABEL[r.why];
     const over = r.age != null && r.age > sla;
     const tone = over ? 'crit' : (r.why === 'no_code' ? 'warn' : 'info');
@@ -2532,7 +2586,7 @@ function renderNoOwner(){
       <div class="pc-msg">${esc(r.c.last_message || '—')}</div>
       <div class="pc-foot"><span class="pill ${cls}">${lbl}</span></div>
     </button>`;
-  }).join('')}</div>` : `<div class="conv-empty">${all.length ? 'ไม่มีแชทในกลุ่มที่กรองอยู่' : 'ทุกแชทมีผู้รับผิดชอบแล้ว 🎉'}</div>`;
+  }).join('')}</div>${pcMoreBtn('noOwner', rows.length)}` : `<div class="conv-empty">${all.length ? 'ไม่มีแชทในกลุ่มที่กรองอยู่' : 'ทุกแชทมีผู้รับผิดชอบแล้ว 🎉'}</div>`;
   dash.lastNoOwner = all;
 }
 
@@ -2547,7 +2601,7 @@ function lateWaits(email){
 }
 function lateCardsHtml(rows, showOwner = true){
   if(!rows.length) return `<div class="conv-empty">ไม่มีงานที่ตอบช้ากว่า SLA 🎉</div>`;
-  return `<div class="pcards">${rows.map(w => {
+  return `<div class="pcards">${rows.slice(0, pcShown.late).map(w => {
     const c = chatById.get(w.chat_id); if(!c) return '';
     const byOther = w.closed_by && w.owner_email && w.closed_by !== w.owner_email;
     return pcardHtml({
@@ -2561,7 +2615,7 @@ function lateCardsHtml(rows, showOwner = true){
           + (w.closed_by && (byOther || !showOwner || !w.owner_email)
               ? `<span class="pill ${byOther ? 'gold' : 'grey'}">✍️ ตอบโดย ${esc(memberName(w.closed_by))}</span>` : ''),
     });
-  }).join('')}</div>`;
+  }).join('')}</div>${pcMoreBtn('late', rows.length)}`;
 }
 function renderLate(){
   const rows = lateWaits();
@@ -2982,7 +3036,13 @@ async function showApp(){
   document.addEventListener('visibilitychange', () => { if(!document.hidden) checkUpdate(); });   // แจ้งเตือน: โหลดค่าตั้ง (scope ขึ้นกับสิทธิ์) แล้วเริ่มเฝ้า SLA
   setView(LS.get('pur.view') || 'chat');
   // ตัวเลข "รอมานาน" เดินตามเวลาจริง
-  setInterval(() => { renderList(); if(activeId && chatById.get(activeId)) renderStrips(chatById.get(activeId)); if(view === 'dash' && dashLoadedOnce) renderDash(); }, 60000);
+  // ตัวเลข "รอมานาน" เดินตามเวลาจริง — ข้ามตอนแอพถูกซ่อน ไม่มีใครดูอยู่ก็ไม่ต้องเปลืองแรงเครื่อง
+  setInterval(() => {
+    if(document.hidden) return;
+    renderList();
+    if(activeId && chatById.get(activeId)) renderStrips(chatById.get(activeId));
+    if(view === 'dash' && dashLoadedOnce) renderDash();
+  }, 60000);
 }
 // ตาข่ายรองรับกรณี realtime หลุด — ดึงใหม่ทุก 45 วินาทีตอนหน้าต่างเปิดอยู่
 const REFRESH_MS = 45000; let refreshTimer = null, refreshing = false;
