@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.11</title>
+<title>Rattana Purchase Chat v1.12</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -313,6 +313,40 @@ button.older-bar:hover{border-color:var(--gold);color:var(--text)}
 .tbl tfoot td{position:sticky;bottom:0;z-index:2;padding:8px 10px;font-size:12px;font-weight:700;border-top:2px solid var(--border);background:var(--card-bg);box-shadow:0 -1px 0 var(--border)}
 .tbl tfoot td.num{text-align:right;font-variant-numeric:tabular-nums}
 .tbl.compact{min-width:0}
+/* กล่องแชทแบบหน้าดูสินค้า — ยกลอยตอนชี้ มีแถบสีบอกสาเหตุด้านบน */
+.pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:12px;
+  max-height:min(72vh,660px);overflow:auto;padding:4px 4px 8px}
+.pcard{position:relative;display:flex;flex-direction:column;gap:9px;text-align:left;width:100%;
+  background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:14px 13px 12px;
+  cursor:pointer;overflow:hidden;
+  box-shadow:0 1px 2px rgba(13,27,62,.07), 0 7px 16px -8px rgba(13,27,62,.22);
+  transition:transform .17s cubic-bezier(.4,0,.2,1), box-shadow .17s, border-color .17s}
+.pcard:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.6);
+  box-shadow:0 2px 4px rgba(13,27,62,.09), 0 18px 30px -12px rgba(13,27,62,.38)}
+.pcard:active{transform:translateY(-1px)}
+body.dark .pcard{box-shadow:0 1px 2px rgba(0,0,0,.45), 0 8px 18px -8px rgba(0,0,0,.65)}
+body.dark .pcard:hover{box-shadow:0 2px 5px rgba(0,0,0,.5), 0 20px 34px -12px rgba(0,0,0,.8)}
+.pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--pc-accent,var(--border))}
+.pcard.crit{--pc-accent:var(--danger)}
+.pcard.warn{--pc-accent:var(--warning)}
+.pcard.info{--pc-accent:var(--info)}
+.pc-top{display:flex;gap:10px;align-items:flex-start}
+.pc-id{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.pc-nm{font-size:13.5px;font-weight:700;line-height:1.35;overflow:hidden;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.pc-kind{font-size:11px;color:var(--sub);font-weight:500}
+.pc-wait{display:flex;align-items:baseline;gap:5px;padding:7px 9px;border-radius:9px;
+  background:var(--bg);border:1px solid var(--border)}
+.pc-wait b{font-size:14px;font-variant-numeric:tabular-nums}
+.pc-wait span{font-size:10.5px;color:var(--muted)}
+.pcard.crit .pc-wait{background:rgba(231,76,60,.10);border-color:rgba(231,76,60,.38)}
+.pcard.crit .pc-wait b{color:var(--danger)}
+.pc-msg{font-size:11px;color:var(--muted);line-height:1.45;overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word;min-height:16px}
+.pc-foot{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:auto}
+.filter-pill{cursor:pointer;border:1px solid transparent}
+.filter-pill.off{opacity:.45}
+.filter-pill:hover{opacity:1;border-color:var(--gold)}
 /* หน้าส่งข้อความหลายเจ้า */
 .bl-list{max-height:min(46vh,420px);overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
 .bl-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
@@ -476,7 +510,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.11</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.12</div>
   </div>
 </div>
 
@@ -488,7 +522,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.11</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.12</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -673,7 +707,7 @@ select.input{appearance:auto}
           <div class="acts" id="noOwnerSum"></div>
           <div class="hint">นับทุกแชทที่ยังเปิดอยู่ (ไม่ขึ้นกับช่วงเวลาที่เลือก) · ส่วนใหญ่แก้ได้ด้วยการใส่รหัส <b>PU1#ชื่อร้าน</b> ในชื่อแชทที่ OA Manager แล้วระบบยกให้เอง · คลิกเพื่อเปิดแชท</div>
         </div>
-        <div class="tbl-wrap" id="noOwnerTable"></div>
+        <div class="card-body" id="noOwnerTable"></div>
       </div>
 
       <div class="card card-gold">
@@ -726,7 +760,7 @@ select.input{appearance:auto}
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.11';
+const APP_VERSION   = '1.12';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const VAPID_PUBLIC = 'BLein9hi9x50rwGAK_dWnUcP69vIoKzTPx14DWzQSZ8Sg65QUcgGbwgIYPNgeZXWNYiWNtRFK05sV9EMIQnV8aw';        // กุญแจสาธารณะ Web Push — เติมด้วย node tools/make_vapid.mjs (เปิดเผยได้ตามสเปก)
@@ -2419,35 +2453,45 @@ const WHY_LABEL = {
   no_owner:   ['รหัสนี้ยังไม่มีเจ้าของ', 'warn'],
   unassigned: ['มีรหัสแล้วแต่ยังไม่ถูกยก', 'info'],
 };
+let noOwnerFilter = 'all';
+function setNoOwnerFilter(k){ noOwnerFilter = noOwnerFilter === k ? 'all' : k; renderNoOwner(); }
 function renderNoOwner(){
-  const rows = noOwnerRows(), sla = slaSec();
-  const byWhy = k => rows.filter(r => r.why === k).length;
-  const waiting = rows.filter(r => r.age != null).length;
+  const all = noOwnerRows(), sla = slaSec();
+  const byWhy = k => all.filter(r => r.why === k).length;
+  const rows = noOwnerFilter === 'all' ? all : all.filter(r => r.why === noOwnerFilter);
+  const waiting = all.filter(r => r.age != null).length;
 
-  $('noOwnerCount').innerHTML = rows.length
-    ? `(${nf(rows.length)} แชท` + (waiting ? ` · รอตอบอยู่ ${nf(waiting)}` : '') + ')'
+  $('noOwnerCount').innerHTML = all.length
+    ? `(${nf(all.length)} แชท` + (waiting ? ` · รอตอบอยู่ ${nf(waiting)}` : '') + ')'
     : '';
-  $('noOwnerSum').innerHTML = rows.length ? [
-    byWhy('no_code')  ? `<span class="pill bad">ไม่มีรหัส PU ในชื่อ ${nf(byWhy('no_code'))}</span>` : '',
-    byWhy('no_owner') ? `<span class="pill warn">รหัส PU ที่ยังไม่มีเจ้าของ ${nf(byWhy('no_owner'))}</span>` : '',
-    byWhy('unassigned') ? `<span class="pill info">มีรหัสแล้วแต่ยังไม่ถูกยก ${nf(byWhy('unassigned'))}</span>` : '',
-  ].filter(Boolean).join(' ') : '';
+  // ป้ายสรุป = ตัวกรองด้วย กดซ้ำเพื่อยกเลิก
+  const chip = (k, cls) => byWhy(k)
+    ? `<span class="pill ${cls} filter-pill ${noOwnerFilter !== 'all' && noOwnerFilter !== k ? 'off' : ''}"
+         onclick="setNoOwnerFilter('${k}')" title="กดเพื่อกรองเฉพาะกลุ่มนี้">${WHY_LABEL[k][0]} ${nf(byWhy(k))}</span>`
+    : '';
+  $('noOwnerSum').innerHTML = all.length
+    ? chip('no_code', 'bad') + chip('no_owner', 'warn') + chip('unassigned', 'info') : '';
 
-  const th = t => `<th style="cursor:default" class="${t.startsWith('#') ? 'num' : ''}">${t.replace('#', '')}</th>`;
-  $('noOwnerTable').innerHTML = `<table class="tbl"><thead><tr>${
-    ['ซัพพลายเออร์ / แชท', 'ประเภท', 'รหัส PU ในชื่อ', 'สาเหตุ', '#รอตอบมานาน', 'ข้อความล่าสุด'].map(th).join('')
-  }</tr></thead><tbody>${
-    rows.length ? rows.map(r => {
-      const [lbl, cls] = WHY_LABEL[r.why], over = r.age != null && r.age > sla;
-      return `<tr class="clickable" onclick="openChatFromDash('${r.c.id}')">
-        <td>${esc(chatName(r.c))}</td>
-        <td class="mini">${r.c.kind === 'user' ? '1:1' : `กลุ่ม${r.c.member_count ? ' · ' + r.c.member_count : ''}`}</td>
-        <td>${r.pu ? `<b>${esc(r.pu)}</b>` : '<span class="txt-muted">—</span>'}</td>
-        <td><span class="pill ${cls}">${lbl}</span></td>
-        <td class="num ${over ? 'txt-danger txt-bold' : ''}">${r.age != null ? fmtDur(r.age) : '<span class="txt-muted">ไม่มีงานค้าง</span>'}</td>
-        <td class="mini" style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.c.last_message || '')}</td></tr>`;
-    }).join('') : `<tr class="empty-row"><td colspan="6">ทุกแชทมีผู้รับผิดชอบแล้ว 🎉</td></tr>`}</tbody></table>`;
-  dash.lastNoOwner = rows;
+  $('noOwnerTable').innerHTML = rows.length ? `<div class="pcards">${rows.map(r => {
+    const [lbl, cls] = WHY_LABEL[r.why];
+    const over = r.age != null && r.age > sla;
+    const tone = over ? 'crit' : (r.why === 'no_code' ? 'warn' : 'info');
+    return `<button class="pcard ${tone}" onclick="openChatFromDash('${r.c.id}')" title="${esc(chatName(r.c))}">
+      <div class="pc-top">
+        ${avatarHtml(r.c, 42)}
+        <div class="pc-id">
+          <div class="pc-nm">${esc(chatName(r.c))}</div>
+          <div class="pc-kind">${r.c.kind === 'user' ? '👤 แชท 1:1' : `👥 กลุ่ม · ${nf(r.c.member_count || 1)} คน`}${r.pu ? ` · <b>${esc(r.pu)}</b>` : ''}</div>
+        </div>
+      </div>
+      <div class="pc-wait">${r.age != null
+        ? `<b>${fmtDur(r.age)}</b><span>${over ? 'เกิน SLA แล้ว' : 'รอตอบอยู่'}</span>`
+        : `<b style="font-size:12px;color:var(--muted)">ไม่มีงานค้าง</b><span>ยังไม่มีใครดูแล</span>`}</div>
+      <div class="pc-msg">${esc(r.c.last_message || '—')}</div>
+      <div class="pc-foot"><span class="pill ${cls}">${lbl}</span></div>
+    </button>`;
+  }).join('')}</div>` : `<div class="conv-empty">${all.length ? 'ไม่มีแชทในกลุ่มที่กรองอยู่' : 'ทุกแชทมีผู้รับผิดชอบแล้ว 🎉'}</div>`;
+  dash.lastNoOwner = all;
 }
 
 // ── 🐢 งานที่ตอบช้ากว่า SLA ──
