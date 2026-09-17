@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.9.1</title>
+<title>Rattana Purchase Chat v1.9.2</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -457,7 +457,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.9.1</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.9.2</div>
   </div>
 </div>
 
@@ -469,7 +469,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.9.1</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.9.2</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -684,7 +684,7 @@ select.input{appearance:auto}
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.9.1';
+const APP_VERSION   = '1.9.2';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const VAPID_PUBLIC = 'BLein9hi9x50rwGAK_dWnUcP69vIoKzTPx14DWzQSZ8Sg65QUcgGbwgIYPNgeZXWNYiWNtRFK05sV9EMIQnV8aw';        // กุญแจสาธารณะ Web Push — เติมด้วย node tools/make_vapid.mjs (เปิดเผยได้ตามสเปก)
@@ -975,6 +975,19 @@ function updateBadges(){
   const n = chats.filter(c => c.awaiting_since).length;
   ['tb-chat', 'bn-chat'].forEach(id => { const e = $(id); if(e) e.textContent = n || ''; });
   document.title = (n ? `(${n}) ` : '') + `Rattana Purchase Chat v${APP_VERSION}`;
+  setAppBadge(n);
+}
+// เลขบนไอคอนแอพที่หน้าจอโฮม (มือถือ/คอมที่ติดตั้งแอพไว้) = จำนวนงานที่รอตอบ
+// ตัวเลขเดียวกับที่ขึ้นบนแท็บแชท · ตอนปิดแอพ service worker อัปเดตให้จาก push
+let badgeShown = -1;
+function setAppBadge(n){
+  if(DEMO || n === badgeShown) return;
+  badgeShown = n;
+  try{
+    if(navigator.setAppBadge) n > 0 ? navigator.setAppBadge(n) : navigator.clearAppBadge?.();
+    // เผื่อเบราว์เซอร์รองรับเฉพาะใน service worker
+    else navigator.serviceWorker?.controller?.postMessage({ type:'badge', count:n });
+  }catch(_){}
 }
 
 // ── OPEN CHAT ──
@@ -1660,8 +1673,8 @@ async function disablePush(){
   finally{ pushBusy = false; if(view === 'set') renderSettings(); }
 }
 
-// ชนิดที่เปิดไว้ในแอพ = ชนิดที่ให้ส่ง push (ไม่ส่ง 'warn' ออกนอกแอพ — ถี่เกินไป)
-const pushKinds = () => ['msg', 'sla', 'assign', 'orphan'].filter(k => notiPrefs[k]);
+// ชนิดที่เปิดไว้ในแอพ = ชนิดที่ให้ส่ง push (ครบทุกชนิด รวม "ใกล้ครบ SLA")
+const pushKinds = () => ['msg', 'warn', 'sla', 'assign', 'orphan'].filter(k => notiPrefs[k]);
 
 // ค่าตั้งในแอพเปลี่ยน → บอกเซิร์ฟเวอร์ด้วย ไม่งั้น push จะใช้กติกาเก่า
 async function syncPushPrefs(){
@@ -1711,7 +1724,7 @@ function pushCardHtml(){
     </div>
     ${iosBlock ? `<div class="mini" style="color:var(--warning)"><b>บน iPhone ต้องเพิ่มลงหน้าจอโฮมก่อน</b> — กดปุ่มแชร์ <b>􀈂</b> ด้านล่าง › <b>เพิ่มไปยังหน้าจอโฮม</b> แล้วเปิดแอพจากไอคอนนั้น ค่อยกลับมากดเปิดแจ้งเตือน (ข้อจำกัดของ Apple ทุกเว็บแอพเป็นเหมือนกัน)</div>`
       : `<div class="mini">เด้งแม้ปิดแอพ/ปิดจอ · ตั้งค่าแยกทีละเครื่อง (เปิดในมือถือแล้วต้องมาเปิดในคอมอีกที)${on ? ` · เครื่องนี้: ${esc(deviceLabel())}` : ''}<br>
-         ส่งเฉพาะ <b>ข้อความใหม่ · เกิน SLA · ได้รับมอบหมาย</b> ตามขอบเขตที่เลือกไว้ข้างบน (ไม่ส่ง "ใกล้ครบ SLA" ออกนอกแอพ เพราะถี่เกินไป)</div>`}
+         ส่งทุกชนิดที่เปิดไว้ข้างบน ตามขอบเขตที่เลือก · เลขบนไอคอนแอพ = จำนวนงานที่รอตอบ อัปเดตเองแม้ปิดแอพ</div>`}
   </div>`;
 }
 
