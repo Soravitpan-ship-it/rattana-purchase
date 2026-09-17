@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.12</title>
+<title>Rattana Purchase Chat v1.13</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -343,6 +343,9 @@ body.dark .pcard:hover{box-shadow:0 2px 5px rgba(0,0,0,.5), 0 20px 34px -12px rg
 .pcard.crit .pc-wait b{color:var(--danger)}
 .pc-msg{font-size:11px;color:var(--muted);line-height:1.45;overflow:hidden;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word;min-height:16px}
+.pc-meta{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted);line-height:1.4}
+.pc-meta b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
+.pcard.crit .pc-wait b.over{color:var(--danger)}
 .pc-foot{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:auto}
 .filter-pill{cursor:pointer;border:1px solid transparent}
 .filter-pill.off{opacity:.45}
@@ -510,7 +513,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.12</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.13</div>
   </div>
 </div>
 
@@ -522,7 +525,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.12</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.13</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -688,9 +691,10 @@ select.input{appearance:auto}
       <div class="card card-gold">
         <div class="card-head">
           <h3>🚨 งานค้างตอนนี้ <span class="mini" id="backlogCount"></span></h3>
+          <div class="acts" id="backlogSum"></div>
           <div class="hint">ทุกแชทที่ซัพพลายเออร์ทักแล้วยังไม่มีใครตอบ (ไม่จำกัดช่วงเวลา) · คลิกเพื่อเปิดแชท</div>
         </div>
-        <div class="tbl-wrap" id="backlogTable"></div>
+        <div class="card-body" id="backlogTable"></div>
       </div>
 
       <div class="card card-gold">
@@ -698,7 +702,7 @@ select.input{appearance:auto}
           <h3>🐢 ตอบช้ากว่า SLA <span class="mini" id="lateCount"></span></h3>
           <div class="hint">งานที่<b>ตอบแล้ว</b>แต่ใช้เวลาเกิน SLA ในช่วงที่เลือก · คอลัมน์ "เกินไป" = ช้ากว่ากำหนดเท่าไหร่ · คลิกเพื่อเปิดแชท</div>
         </div>
-        <div class="tbl-wrap" id="lateTable"></div>
+        <div class="card-body" id="lateTable"></div>
       </div>
 
       <div class="card card-gold">
@@ -760,9 +764,10 @@ select.input{appearance:auto}
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.12';
+const APP_VERSION   = '1.13';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
+const LINE_OA_ID = '@429hgoxl';   // ไอดี LINE OA จัดซื้อ (RTNPurchase) — ใช้ทำลิงก์เปิดแอพ LINE
 const VAPID_PUBLIC = 'BLein9hi9x50rwGAK_dWnUcP69vIoKzTPx14DWzQSZ8Sg65QUcgGbwgIYPNgeZXWNYiWNtRFK05sV9EMIQnV8aw';        // กุญแจสาธารณะ Web Push — เติมด้วย node tools/make_vapid.mjs (เปิดเผยได้ตามสเปก)
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
 const BUCKET  = 'pur-media';      // bucket ส่วนตัว เก็บรูป-ไฟล์ (เปิดผ่านลิงก์ลงนามเท่านั้น)
@@ -840,6 +845,9 @@ const AV = ['#5e72e4','#11cdef','#2dce89','#fb6340','#f5365c','#8965e0','#e8a838
 const avCol = s => { let h = 0; for(const c of String(s||'')) h = (h*31 + c.charCodeAt(0)) & 0xffffff; return AV[Math.abs(h) % AV.length]; };
 const chatName   = c => c.supplier_name || c.title || (c.kind === 'user' ? 'ผู้ติดต่อ LINE' : 'กลุ่ม LINE');
 const memberName = e => { if(!e) return '—'; const m = members.get(e); return m ? (m.nick || m.name || e) : e.split('@')[0]; };
+// ลิงก์เปิดแอพ LINE ไปที่แชท 1:1 กับ OA พร้อมพิมพ์ข้อความรอไว้ให้ — ผู้ใช้แค่กดส่ง
+const oaChatUrl = text => `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OA_ID)}/?${encodeURIComponent(text)}`;
+const oaAddUrl  = () => `https://line.me/R/ti/p/${encodeURIComponent(LINE_OA_ID)}`;
 const linkify = escaped => escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
 const slaSec = () => (settings?.sla_minutes || 60) * 60;
 
@@ -2079,21 +2087,55 @@ function renderPersons(inR, open, reps){
   dash.lastPersons = list;
 }
 
-// ── งานค้างตอนนี้ ──
+// ── ตัวสร้างการ์ดที่ใช้ร่วมกันทุกที่ ──
+// tone: crit = แดง (เลยกำหนดแล้ว) · warn = ส้ม (ต้องรีบ) · info = ฟ้า
+function pcardHtml({ c, tone, onclick, main, sub, meta, msg, foot }){
+  return `<button class="pcard ${tone}" onclick="${onclick}" title="${esc(chatName(c))}">
+    <div class="pc-top">${avatarHtml(c, 42)}
+      <div class="pc-id">
+        <div class="pc-nm">${esc(chatName(c))}</div>
+        <div class="pc-kind">${c.kind === 'user' ? '👤 แชท 1:1' : `👥 กลุ่ม · ${nf(c.member_count || 1)} คน`}</div>
+      </div></div>
+    <div class="pc-wait">${main}${sub ? `<span>${sub}</span>` : ''}</div>
+    ${meta ? `<div class="pc-meta">${meta}</div>` : ''}
+    ${msg !== undefined ? `<div class="pc-msg">${msg}</div>` : ''}
+    ${foot ? `<div class="pc-foot">${foot}</div>` : ''}
+  </button>`;
+}
+const ownerPill = e => e
+  ? `<span class="pill grey">👤 ${esc(memberName(e))}</span>`
+  : `<span class="pill bad">ไม่มีผู้รับผิดชอบ</span>`;
+
+// ── 🚨 งานค้างตอนนี้ ──
+let backlogFilter = 'all';
+function setBacklogFilter(k){ backlogFilter = backlogFilter === k ? 'all' : k; renderDash(); }
 function renderBacklog(open){
-  const sla = slaSec(), rows = [...open].sort((a, b) => b._age - a._age);
-  $('backlogCount').textContent = rows.length ? `(${nf(rows.length)} งาน · เกิน SLA ${nf(rows.filter(w => w._age > sla).length)})` : '';
-  const th = t => `<th style="cursor:default" class="${t.startsWith('#') ? 'num' : ''}">${t.replace('#', '')}</th>`;
-  $('backlogTable').innerHTML = `<table class="tbl"><thead><tr>${['ซัพพลายเออร์ / แชท', 'ผู้รับผิดชอบ', '#รอมานาน', 'SLA', 'ทักเมื่อ', '#ข้อความ', 'ข้อความล่าสุด'].map(th).join('')}</tr></thead><tbody>${
-    rows.length ? rows.map(w => { const c = chatById.get(w.chat_id), over = w._age > sla; return `<tr class="clickable" onclick="openChatFromDash('${w.chat_id}')">
-      <td>${c ? esc(chatName(c)) : '—'} <span class="mini">${w.chat_kind === 'user' ? '1:1' : 'กลุ่ม'}</span></td>
-      <td>${w.owner_email ? esc(memberName(w.owner_email)) : '<span class="pill grey">ไม่มี</span>'}</td>
-      <td class="num ${over ? 'txt-danger txt-bold' : ''}">${fmtDur(w._age)}</td>
-      <td>${over ? '<span class="pill bad">เกินกำหนด</span>' : '<span class="pill warn">ยังทัน</span>'}</td>
-      <td>${thDateTime(w.started_at)}</td><td class="num">${nf(w.in_count)}</td>
-      <td class="mini" style="max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c ? esc(c.last_message || '') : ''}</td></tr>`; }).join('')
-    : `<tr class="empty-row"><td colspan="7">ไม่มีงานค้าง 🎉</td></tr>`}</tbody></table>`;
-  dash.lastBacklog = rows;
+  const sla = slaSec();
+  const all = [...open].sort((a, b) => b._age - a._age);
+  const over = all.filter(w => w._age > sla), still = all.filter(w => w._age <= sla);
+  const rows = backlogFilter === 'over' ? over : backlogFilter === 'ok' ? still : all;
+
+  $('backlogCount').textContent = all.length ? `(${nf(all.length)} งาน)` : '';
+  const chip = (k, label, cls, n) => n
+    ? `<span class="pill ${cls} filter-pill ${backlogFilter !== 'all' && backlogFilter !== k ? 'off' : ''}"
+         onclick="setBacklogFilter('${k}')" title="กดเพื่อกรองเฉพาะกลุ่มนี้">${label} ${nf(n)}</span>` : '';
+  $('backlogSum').innerHTML = all.length
+    ? chip('over', 'เกิน SLA', 'bad', over.length) + chip('ok', 'ยังทัน', 'warn', still.length) : '';
+
+  $('backlogTable').innerHTML = rows.length ? `<div class="pcards">${rows.map(w => {
+    const c = chatById.get(w.chat_id); if(!c) return '';
+    const late = w._age > sla;
+    return pcardHtml({
+      c, tone: late ? 'crit' : 'warn', onclick: `openChatFromDash('${w.chat_id}')`,
+      main: `<b class="${late ? 'over' : ''}">${fmtDur(w._age)}</b>`,
+      sub: late ? 'เกิน SLA แล้ว' : `ยังทัน · เหลือ ${fmtDur(sla - w._age)}`,
+      meta: `<div>ทักเมื่อ <b>${thDateTime(w.started_at)}</b></div>
+             <div>ยังไม่ได้ตอบ <b>${nf(w.in_count)}</b> ข้อความ</div>`,
+      msg: esc(c.last_message || '—'),
+      foot: ownerPill(w.owner_email),
+    });
+  }).join('')}</div>` : `<div class="conv-empty">${all.length ? 'ไม่มีงานในกลุ่มที่กรองอยู่' : 'ไม่มีงานค้าง 🎉'}</div>`;
+  dash.lastBacklog = all;
 }
 function openChatFromDash(id){ setView('chat'); openChat(id); }
 
@@ -2503,40 +2545,41 @@ function lateWaits(email){
     .map(w => ({ ...w, _over:w._dur - sla }))
     .sort((a, b) => b._over - a._over);
 }
-function lateTableHtml(rows, showOwner = true){
-  const th = t => `<th style="cursor:default" class="${t.startsWith('#') ? 'num' : ''}">${t.replace('#', '')}</th>`;
-  const head = ['ซัพพลายเออร์ / แชท', ...(showOwner ? ['ผู้รับผิดชอบ'] : []), 'คนที่ตอบ', '#ใช้เวลาตอบ', '#เกินไป', 'ทักเมื่อ', 'ตอบเมื่อ'];
-  return `<table class="tbl${showOwner ? '' : ' compact'}"><thead><tr>${head.map(th).join('')}</tr></thead><tbody>${
-    rows.length ? rows.map(w => {
-      const c = chatById.get(w.chat_id);
-      return `<tr class="clickable" onclick="closeModal();openChatFromDash('${w.chat_id}')">
-        <td>${c ? esc(chatName(c)) : '—'} <span class="mini">${w.chat_kind === 'user' ? '1:1' : 'กลุ่ม'}</span></td>
-        ${showOwner ? `<td>${w.owner_email ? esc(memberName(w.owner_email)) : '<span class="pill grey">ไม่มี</span>'}</td>` : ''}
-        <td>${w.closed_by ? esc(memberName(w.closed_by)) : '<span class="txt-muted">—</span>'}</td>
-        <td class="num">${fmtDur(w._dur)}</td>
-        <td class="num txt-danger txt-bold">+${fmtDur(w._over)}</td>
-        <td class="mini">${thDateTime(w.started_at)}</td>
-        <td class="mini">${thDateTime(w.closed_at)}</td></tr>`;
-    }).join('') : `<tr class="empty-row"><td colspan="${head.length}">ไม่มีงานที่ตอบช้ากว่า SLA 🎉</td></tr>`}</tbody></table>`;
+function lateCardsHtml(rows, showOwner = true){
+  if(!rows.length) return `<div class="conv-empty">ไม่มีงานที่ตอบช้ากว่า SLA 🎉</div>`;
+  return `<div class="pcards">${rows.map(w => {
+    const c = chatById.get(w.chat_id); if(!c) return '';
+    const byOther = w.closed_by && w.owner_email && w.closed_by !== w.owner_email;
+    return pcardHtml({
+      c, tone: 'crit', onclick: `closeModal();openChatFromDash('${w.chat_id}')`,
+      main: `<b class="over">+${fmtDur(w._over)}</b>`, sub: 'ช้ากว่ากำหนด',
+      meta: `<div>ใช้เวลาตอบ <b>${fmtDur(w._dur)}</b> (SLA ${settings.sla_minutes} นาที)</div>
+             <div>ทัก <b>${thDateTime(w.started_at)}</b></div>
+             <div>ตอบ <b>${thDateTime(w.closed_at)}</b></div>`,
+      // ถ้าคนตอบไม่ใช่เจ้าของงาน ให้เห็นชัดว่ามีคนอื่นมาช่วย
+      foot: (showOwner ? ownerPill(w.owner_email) : '')
+          + (w.closed_by && (byOther || !showOwner || !w.owner_email)
+              ? `<span class="pill ${byOther ? 'gold' : 'grey'}">✍️ ตอบโดย ${esc(memberName(w.closed_by))}</span>` : ''),
+    });
+  }).join('')}</div>`;
 }
 function renderLate(){
-  const rows = lateWaits(), sla = slaSec();
+  const rows = lateWaits();
   const overs = rows.map(r => r._over).sort((a, b) => a - b);
   $('lateCount').textContent = rows.length
     ? `(${nf(rows.length)} ครั้ง · เกินเฉลี่ย ${fmtDur(Math.round(overs.reduce((a, b) => a + b, 0) / overs.length))} · มากสุด ${fmtDur(overs[overs.length - 1])})`
     : '';
-  $('lateTable').innerHTML = lateTableHtml(rows);
+  $('lateTable').innerHTML = lateCardsHtml(rows);
   dash.lastLate = rows;
 }
 // กดตัวเลข "ช้ากว่า SLA" ในตารางรายคน → ดูว่าเป็นแชทไหนบ้าง
 function openLateFor(email){
   const rows = lateWaits(email), who = email ? memberName(email) : 'ไม่มีผู้รับผิดชอบ';
   openModal(`ตอบช้ากว่า SLA — ${who} (${nf(rows.length)} ครั้ง)`,
-    `<div class="tbl-wrap">${lateTableHtml(rows, false)}</div>
-     <p class="txt-sm txt-muted mt-8">SLA ${settings.sla_minutes} นาที · นับตาม${clockMode === 'biz' ? 'เวลาทำการ' : 'เวลาจริง 24 ชม.'} · คลิกแถวเพื่อเปิดแชท</p>`,
+    lateCardsHtml(rows, false) +
+    `<p class="txt-sm txt-muted mt-8">SLA ${settings.sla_minutes} นาที · นับตาม${clockMode === 'biz' ? 'เวลาทำการ' : 'เวลาจริง 24 ชม.'} · คลิกการ์ดเพื่อเปิดแชท</p>`,
     `<button class="btn btn-outline" onclick="closeModal()">ปิด</button>`, { wide:true });
 }
-
 
 // ── ซัพพลายเออร์ที่ทักบ่อยสุด ──
 function renderTop(inR){
@@ -2606,11 +2649,22 @@ function linkCardHtml(){
       <button class="btn btn-gold" onclick="newLinkCode()">${mine.length ? '🔗 ผูก LINE อีกบัญชี' : '🔗 ขอรหัสผูก LINE'}</button>
     </div></div>`;
 }
+async function copyLinkCode(code){
+  try{ await navigator.clipboard.writeText(code); showToast('คัดลอกรหัสแล้ว ✓', 'success'); }
+  catch(_){ showToast('คัดลอกไม่ได้ — พิมพ์เองจากกล่องข้างบนได้', 'info'); }
+}
 async function newLinkCode(){
   try{
     const code = await rpc('pur_new_link_code'); const exp = Date.now() + 15*60*1000;
     $('linkCodeBox').innerHTML = `<div class="code-box">${esc(code)}</div>
-      <ol class="steps mt-12"><li>เพิ่มเพื่อนบัญชี <b>LINE จัดซื้อ</b> (ถ้ายังไม่ได้เพิ่ม)</li><li>เปิดแชท <b>1:1</b> กับ LINE จัดซื้อ แล้วส่งข้อความ <b>${esc(code)}</b></li><li>ระบบจะตอบยืนยัน แล้วหน้านี้จะขึ้น "ผูกแล้ว" เอง</li></ol>
+      <div class="row mt-12">
+        <a class="btn btn-gold" href="${oaChatUrl(code)}" target="_blank" rel="noopener">📱 เปิด LINE แล้วส่งรหัสนี้</a>
+        <a class="btn btn-outline" href="${oaAddUrl()}" target="_blank" rel="noopener">＋ เพิ่มเพื่อน LINE จัดซื้อ</a>
+        <button class="btn btn-outline" onclick="copyLinkCode('${esc(code)}')">📋 คัดลอกรหัส</button>
+      </div>
+      <div class="txt-sm txt-muted mt-8">กดปุ่มแรก — LINE จะเปิดแชทกับ <b>LINE จัดซื้อ</b> พร้อมรหัสในช่องพิมพ์ให้แล้ว แค่กดส่ง
+        <br>ยังไม่ได้เพิ่มเพื่อน? กดปุ่มกลางก่อน · ปุ่มไม่ทำงาน ส่งรหัส <b>${esc(code)}</b> ในแชท 1:1 กับ <b>${esc(LINE_OA_ID)}</b> เองก็ได้
+        <br>ระบบจะตอบยืนยัน แล้วหน้านี้จะขึ้น "ผูกแล้ว" เอง</div>
       <div class="txt-sm txt-muted mt-8" id="linkCountdown"></div>`;
     const tick = () => { const el = $('linkCountdown'); if(!el) return; const left = exp - Date.now(); if(left <= 0){ el.textContent = 'รหัสหมดอายุแล้ว — ขอรหัสใหม่ได้เลย'; return; } el.textContent = `รหัสใช้ได้อีก ${Math.floor(left/60000)}:${pad(Math.floor(left % 60000 / 1000))} นาที · ใช้ได้ครั้งเดียว`; setTimeout(tick, 1000); };
     tick();
