@@ -6,8 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.7</title>
+<title>Rattana Purchase Chat v1.8</title>
 <link rel="icon" id="favicon" type="image/png" href="">
+<link rel="apple-touch-icon" href="logo-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -37,13 +38,39 @@ a{color:inherit}
 
 /* ───────────── HEADER ───────────── */
 .app-hdr{background:var(--navy);color:#fff;padding:0 14px;padding-top:max(0px,env(safe-area-inset-top));height:calc(56px + max(0px,env(safe-area-inset-top)));display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--gold);flex-shrink:0;z-index:50}
-.brand-mark{display:block;flex-shrink:0;background:var(--mark) center/contain no-repeat;border-radius:50%}
+.brand-mark{display:block;flex-shrink:0;background:var(--mark) center/contain no-repeat}
 .logo-text{font-weight:700;font-size:15px;line-height:1.2;letter-spacing:.6px;white-space:nowrap}
 .logo-text span{color:var(--gold)}
 .logo-sub{font-size:10px;color:rgba(255,255,255,.5);font-weight:400;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
 .hdr-r{margin-left:auto;display:flex;gap:6px;align-items:center}
 .hdr-btn{width:34px;height:34px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,.18);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
 .hdr-btn:hover{background:rgba(255,255,255,.12)}
+/* ── ศูนย์แจ้งเตือน ── */
+.noti-wrap{position:relative;display:flex}
+.noti-dot{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:9px;background:var(--danger);color:#fff;font-size:10px;font-weight:800;line-height:16px;text-align:center;border:2px solid var(--navy);pointer-events:none}
+.noti-panel{display:none;position:fixed;top:64px;right:10px;left:auto;width:min(calc(100vw - 20px),370px);max-height:min(74vh,540px);background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 14px 36px rgba(0,0,0,.24);z-index:120;overflow:hidden;flex-direction:column}
+.noti-panel.open{display:flex}
+.noti-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border);background:linear-gradient(to right,rgba(201,168,76,.16),transparent);font-size:13px;flex-shrink:0}
+.noti-acts{margin-left:auto;display:flex;gap:4px}
+.noti-acts button{font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:3px 8px;background:var(--bg);min-height:26px}
+.noti-acts button:hover{border-color:var(--gold);color:var(--text)}
+.noti-off{padding:6px 12px;background:rgba(231,76,60,.12);color:var(--danger);font-size:11px;font-weight:600;flex-shrink:0}
+.noti-list{overflow:auto;flex:1;min-height:0}
+.noti-item{display:flex;gap:9px;width:100%;text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);align-items:flex-start}
+.noti-item:hover{background:var(--row-alt)}
+.noti-item.new{background:rgba(201,168,76,.12)}
+.noti-ic{flex-shrink:0;width:27px;height:27px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;border:1px solid var(--border)}
+.noti-ic.sla{background:rgba(231,76,60,.16);border-color:rgba(231,76,60,.45)}
+.noti-ic.warn{background:rgba(243,156,18,.16);border-color:rgba(243,156,18,.45)}
+.noti-tx{min-width:0;flex:1;display:flex;flex-direction:column;gap:2px}
+.noti-r1{display:flex;gap:6px;align-items:baseline;min-width:0}
+.noti-r1 b{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.noti-r1 i{margin-left:auto;font-style:normal;font-size:10px;color:var(--sub);flex-shrink:0}
+.noti-r2{font-size:12px;color:var(--muted);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.noti-r2 .k{color:var(--text);font-weight:700}
+.noti-empty{padding:28px 14px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}
+.noti-foot{width:100%;padding:9px;font-size:12px;font-weight:600;color:var(--muted);border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.noti-foot:hover{color:var(--text)}
 .top-tabs{display:none;background:var(--navy);border-bottom:3px solid var(--gold);padding:0 8px;gap:4px;flex-shrink:0}
 .tab-btn{background:transparent;color:rgba(255,255,255,.6);padding:10px 18px;font-size:13px;font-weight:600;border-bottom:3px solid transparent;margin-bottom:-3px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all .18s}
 .tab-btn:hover{color:#fff;background:rgba(255,255,255,.06)}
@@ -404,7 +431,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.7</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.8</div>
   </div>
 </div>
 
@@ -415,10 +442,14 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:34px;height:34px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.7</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.8</span>
   </div>
   <div class="hdr-r">
-    <button class="hdr-btn" id="bellBtn" onclick="toggleNotify()" title="เปิด/ปิดเสียงแจ้งเตือน">🔔</button>
+    <div class="noti-wrap" id="notiWrap">
+      <button class="hdr-btn" id="bellBtn" onclick="toggleNoti()" title="การแจ้งเตือน">🔔</button>
+      <span class="noti-dot" id="bellDot" style="display:none"></span>
+      <div class="noti-panel" id="notiPanel"></div>
+    </div>
     <button class="hdr-btn" id="refreshBtn" onclick="refreshAll()" title="โหลดข้อมูลใหม่">⟳</button>
     <button class="hdr-btn" onclick="toggleDark()" title="โหมดมืด/สว่าง">🌙</button>
     <button class="hdr-btn" onclick="doLogout()" title="ออกจากระบบ">⏻</button>
@@ -620,18 +651,18 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.7 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.8 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.7';
+const APP_VERSION   = '1.8';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
 const BUCKET  = 'pur-media';      // bucket ส่วนตัว เก็บรูป-ไฟล์ (เปิดผ่านลิงก์ลงนามเท่านั้น)
-const MARK    = 'data:image/png;base64,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';
+const MARK    = 'data:image/png;base64,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';
 const DEMO    = new URLSearchParams(location.search).get('demo') === '1';   // ?demo=1 = ข้อมูลสมมติ ไม่ต่อเน็ต
 const sb      = DEMO ? null : supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
@@ -644,7 +675,7 @@ let settings = null;
 let activeId = null, listFilter = 'all', searchQ = '', view = 'chat', quoting = null, started = false;
 const LS = { get(k){ try{ return localStorage.getItem(k); }catch(_){ return null; } }, set(k, v){ try{ localStorage.setItem(k, v); }catch(_){} } };
 let clockMode = LS.get('pur.clock') || 'biz';          // biz = เวลาทำการ · raw = 24 ชม.
-let notifyOn  = LS.get('pur.notifyOff') !== '1';
+// ค่าตั้งแจ้งเตือนอยู่ในบล็อก "การแจ้งเตือน" ด้านล่าง (notiPrefs)
 let listSort  = LS.get('pur.sort') === 'wait' ? 'wait' : 'recent';   // recent = แบบ LINE ข้อความล่าสุดบนสุด · wait = รอตอบนานสุดก่อน
 const msgMeta = {};                   // chatId → {hasMore, loading} โหลดข้อความทีละหน้า
 let openedAt  = 0;                    // เวลาเปิดแชทล่าสุด (กันโหลดหน้าเก่าเองตอนเพิ่งเปิด)
@@ -1286,36 +1317,206 @@ function onMsgUpdate(m){
   renderMsgs(list);
 }
 
-// ── NOTIFICATIONS ──
-function snapshot(){ const m = new Map(); chats.forEach(c => m.set(c.id, { u:c.unread_count || 0, t:c.last_inbound_at || '' })); return m; }
-function detectNew(before){
-  if(!before || !before.size) return;
-  const fresh = chats.filter(c => {
-    if(c.id === activeId && document.hasFocus()) return false;
-    const o = before.get(c.id); if(!o) return (c.unread_count || 0) > 0;
-    return (c.unread_count || 0) > o.u && (c.last_inbound_at || '') !== o.t;
-  });
-  if(!fresh.length || !notifyOn) return;
-  beep(); fresh.slice(0, 3).forEach(c => popNotification(chatName(c), c.last_message));
+// ═══════════════════════════════════════════════════════════
+//  การแจ้งเตือน — ศูนย์แจ้งเตือน + เสียง + popup ของเครื่อง + เฝ้า SLA
+//  ทำงานในเบราว์เซอร์ที่เปิดแอพค้างไว้ · ตั้งค่าแยกตามเครื่อง/คน
+// ═══════════════════════════════════════════════════════════
+const NOTI_MAX = 60;                                    // เก็บรายการล่าสุดกี่รายการ
+const NOTI_KINDS = {
+  msg:    { icon:'💬', label:'ข้อความใหม่',                   tone:[880, .12, .34] },
+  warn:   { icon:'🟠', label:'ใกล้ครบ SLA',                  tone:[660, .10, .30] },
+  sla:    { icon:'🔴', label:'เกิน SLA แล้ว',                 tone:[520, .16, .34] },
+  assign: { icon:'👤', label:'คุณเป็นผู้รับผิดชอบ',              tone:[740, .11, .30] },
+  orphan: { icon:'❓', label:'แชทใหม่ ยังไม่มีผู้รับผิดชอบ',      tone:[600, .10, .30] },
+};
+function defaultNotiPrefs(){
+  return { on:true, sound:true, popup:true, scope:isSup() ? 'all' : 'mine_none',
+           msg:true, warn:true, sla:true, assign:true, orphan:false, workOnly:false };
 }
-function beep(){
+let notiPrefs = defaultNotiPrefs();
+let notiList  = [];                  // [{id,kind,chat,name,text,at,read}]
+let notiFired = new Set();           // กันเตือนซ้ำเรื่องเดิม
+let notiOpen  = false, slaTimer = null;
+
+function notiLoad(){
+  try{ notiPrefs = { ...defaultNotiPrefs(), ...JSON.parse(LS.get('pur.noti') || '{}') }; }catch(_){ notiPrefs = defaultNotiPrefs(); }
+  if(LS.get('pur.notifyOff') === '1') notiPrefs.on = false;                   // ค่าเดิมจากรุ่นก่อน
+  try{ notiList  = (JSON.parse(LS.get('pur.notiList') || '[]') || []).slice(0, NOTI_MAX); }catch(_){ notiList = []; }
+  try{ notiFired = new Set(JSON.parse(LS.get('pur.notiFired') || '[]') || []); }catch(_){ notiFired = new Set(); }
+  renderBell();
+}
+function notiSave(){ LS.set('pur.noti', JSON.stringify(notiPrefs)); }
+function notiSaveList(){
+  LS.set('pur.notiList', JSON.stringify(notiList.slice(0, NOTI_MAX)));
+  LS.set('pur.notiFired', JSON.stringify([...notiFired].slice(-500)));
+}
+// แชทนี้อยู่ในขอบเขตที่เลือกไว้ไหม (ของฉัน / ของฉัน+ไม่มีเจ้าของ / ทุกแชท)
+function notiInScope(c){
+  if(!c || c.exclude_kpi) return false;
+  if(notiPrefs.scope === 'all') return true;
+  if(me && c.assignee_email === me.email) return true;
+  return notiPrefs.scope === 'mine_none' && !c.assignee_email;
+}
+function inWorkNow(){
+  if(!settings) return true;
+  const d = new Date(), dow = d.getDay() || 7;
+  if(!settings.work_days.includes(dow) || settings.holidaySet.has(ymd(d))) return false;
+  const hm = pad(d.getHours()) + ':' + pad(d.getMinutes());
+  return hm >= settings.work_start && hm <= settings.work_end;
+}
+// key = กันเตือนซ้ำเรื่องเดียวกัน (เช่น งานรอตอบชิ้นเดิมที่เกิน SLA ไปแล้ว)
+function pushNoti(kind, chat, text, key){
+  if(!notiPrefs.on || !notiPrefs[kind] || !notiInScope(chat)) return;
+  if(key){ if(notiFired.has(key)) return; notiFired.add(key); }
+  const k = NOTI_KINDS[kind] || NOTI_KINDS.msg;
+  const n = { id:'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), kind,
+              chat:chat.id, name:chatName(chat), text:String(text || '').slice(0, 160), at:Date.now(), read:false };
+  notiList.unshift(n); if(notiList.length > NOTI_MAX) notiList.length = NOTI_MAX;
+  notiSaveList(); renderBell(); if(notiOpen) renderNotiPanel();
+  if(notiPrefs.workOnly && !inWorkNow()) return;                              // นอกเวลาทำการ → เก็บเงียบๆ ในศูนย์แจ้งเตือน
+  if(notiPrefs.sound) beep(kind);
+  if(notiPrefs.popup) popNotification(`${k.icon} ${n.name}`, kind === 'msg' ? n.text : `${k.label} · ${n.text}`, n.id);
+}
+
+// ── กระดิ่งและแผงศูนย์แจ้งเตือน ──
+const notiUnread = () => notiList.filter(n => !n.read).length;
+function renderBell(){
+  const b = $('bellBtn'); if(!b) return;
+  b.textContent = notiPrefs.on ? '🔔' : '🔕';
+  const n = notiUnread(), e = $('bellDot');
+  if(e){ e.textContent = n > 99 ? '99+' : String(n || ''); e.style.display = n ? '' : 'none'; }
+  b.title = `ศูนย์แจ้งเตือน${n ? ` · ใหม่ ${n}` : ''}${notiPrefs.on ? '' : ' (ปิดอยู่)'}`;
+}
+function notiPanelHtml(){
+  const rows = notiList.length ? notiList.map(n => {
+    const k = NOTI_KINDS[n.kind] || NOTI_KINDS.msg;
+    return `<button class="noti-item ${n.read ? '' : 'new'}" onclick="openNoti('${n.id}')">
+      <span class="noti-ic ${n.kind}">${k.icon}</span>
+      <span class="noti-tx">
+        <span class="noti-r1"><b>${esc(n.name)}</b><i>${timeAgo(new Date(n.at).toISOString())}</i></span>
+        <span class="noti-r2">${n.kind === 'msg' ? '' : `<span class="k">${k.label}</span> · `}${esc(n.text)}</span>
+      </span></button>`;
+  }).join('') : `<div class="noti-empty">ยังไม่มีการแจ้งเตือน<br><span class="mini">ข้อความใหม่และงานที่ใกล้ครบ SLA จะขึ้นที่นี่</span></div>`;
+  const nu = notiUnread();
+  return `<div class="noti-head"><b>🔔 การแจ้งเตือน${nu ? ` (${nu})` : ''}</b>
+      <span class="noti-acts">
+        <button onclick="event.stopPropagation();toggleNotify()" title="${notiPrefs.on ? 'ปิดแจ้งเตือนชั่วคราว' : 'เปิดแจ้งเตือน'}">${notiPrefs.on ? '🔕 ปิด' : '🔔 เปิด'}</button>
+        <button onclick="event.stopPropagation();readAllNoti()" title="ทำเครื่องหมายอ่านแล้วทั้งหมด">✓ อ่านแล้ว</button>
+        <button onclick="event.stopPropagation();clearNoti()" title="ล้างรายการทั้งหมด">🗑</button>
+      </span></div>
+    ${notiPrefs.on ? '' : '<div class="noti-off">แจ้งเตือนถูกปิดอยู่ — จะไม่มีเสียงและ popup</div>'}
+    <div class="noti-list">${rows}</div>
+    <button class="noti-foot" onclick="event.stopPropagation();openNotiSettings()">⚙️ ตั้งค่าการแจ้งเตือน</button>`;
+}
+function renderNotiPanel(){ const p = $('notiPanel'); if(p) p.innerHTML = notiPanelHtml(); }
+// วางแผงใต้หัวแอพ ชิดขอบขวาของจอ — บนมือถือกระดิ่งไม่ได้ชิดขอบขวา ถ้ายึดกระดิ่งแผงจะล้นออกนอกจอ
+function placeNotiPanel(){
+  const p = $('notiPanel'), b = $('bellBtn'); if(!p || !b) return;
+  const top = Math.round(b.getBoundingClientRect().bottom + 8);
+  p.style.top = top + 'px';
+  p.style.maxHeight = Math.max(220, Math.round(window.innerHeight - top - 14)) + 'px';
+}
+window.addEventListener('resize', () => { if(notiOpen) placeNotiPanel(); });
+function toggleNoti(){ notiOpen ? closeNoti() : openNotiPanel(); }
+function openNotiPanel(){
+  document.querySelectorAll('.dd-panel.open').forEach(x => x.classList.remove('open'));
+  notiOpen = true; renderNotiPanel(); placeNotiPanel(); $('notiPanel').classList.add('open'); askNotifyPermission();
+}
+function closeNoti(){ notiOpen = false; $('notiPanel')?.classList.remove('open'); }
+function openNoti(id){
+  const n = notiList.find(x => x.id === id); if(!n) return;
+  n.read = true; notiSaveList(); renderBell(); closeNoti();
+  if(chatById.get(n.chat)){ setView('chat'); openChat(n.chat); }
+  else showToast('ไม่พบแชทนี้แล้ว', 'info');
+}
+function readAllNoti(){ notiList.forEach(n => n.read = true); notiSaveList(); renderBell(); renderNotiPanel(); }
+function clearNoti(){ notiList = []; notiSaveList(); renderBell(); renderNotiPanel(); }
+function openNotiSettings(){ closeNoti(); setView('set'); setTimeout(() => $('notiCard')?.scrollIntoView({ behavior:'smooth', block:'center' }), 150); }
+function toggleNotify(){
+  notiPrefs.on = !notiPrefs.on; notiSave(); LS.set('pur.notifyOff', notiPrefs.on ? '0' : '1');
+  renderBell(); renderNotiPanel(); if(view === 'set') renderSettings();
+  showToast(notiPrefs.on ? 'เปิดแจ้งเตือนแล้ว 🔔' : 'ปิดแจ้งเตือนแล้ว 🔕', 'info');
+  if(notiPrefs.on){ askNotifyPermission(); beep('msg'); }
+}
+document.addEventListener('click', e => { if(notiOpen && !e.target.closest('#notiWrap')) closeNoti(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && notiOpen) closeNoti(); });
+
+// ── เสียง / popup ──
+function beep(kind = 'msg'){
+  const [hz, vol, len] = (NOTI_KINDS[kind] || NOTI_KINDS.msg).tone;
   try{
-    const ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain();
-    o.connect(g); g.connect(ac.destination); o.type = 'sine'; o.frequency.value = 880;
-    g.gain.setValueAtTime(.0001, ac.currentTime); g.gain.exponentialRampToValueAtTime(.12, ac.currentTime + .02); g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + .35);
-    o.start(); o.stop(ac.currentTime + .36); setTimeout(() => ac.close(), 600);
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const ring = (f, t0, d) => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.connect(g); g.connect(ac.destination); o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, ac.currentTime + t0);
+      g.gain.exponentialRampToValueAtTime(vol, ac.currentTime + t0 + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + t0 + d);
+      o.start(ac.currentTime + t0); o.stop(ac.currentTime + t0 + d + .02);
+    };
+    ring(hz, 0, len);
+    if(kind === 'sla'){ ring(hz, .42, len); ring(hz, .84, len); }             // เกิน SLA = ดัง 3 จังหวะ
+    else if(kind === 'warn') ring(hz, .40, len);
+    setTimeout(() => ac.close(), kind === 'sla' ? 1700 : 900);
   }catch(_){}
 }
-function popNotification(title, body){
+function popNotification(title, body, tag){
   if(!('Notification' in window) || Notification.permission !== 'granted') return;
-  try{ const n = new Notification(title, { body:String(body || '').slice(0, 120), tag:title, icon:MARK }); n.onclick = () => { window.focus(); n.close(); }; setTimeout(() => n.close(), 8000); }catch(_){}
+  try{
+    const n = new Notification(title, { body:String(body || '').slice(0, 150), tag:tag || title, icon:MARK, badge:MARK });
+    n.onclick = () => { window.focus(); if(tag && /^n[a-z0-9]+$/i.test(tag)) openNoti(tag); n.close(); };
+    setTimeout(() => n.close(), 9000);
+  }catch(_){}
 }
-async function askNotifyPermission(){ if('Notification' in window && Notification.permission === 'default'){ try{ await Notification.requestPermission(); }catch(_){} } }
-function toggleNotify(){
-  notifyOn = !notifyOn; LS.set('pur.notifyOff', notifyOn ? '0' : '1');
-  $('bellBtn').textContent = notifyOn ? '🔔' : '🔕';
-  showToast(notifyOn ? 'เปิดแจ้งเตือนแล้ว 🔔' : 'ปิดแจ้งเตือนแล้ว 🔕', 'info');
-  if(notifyOn){ askNotifyPermission(); beep(); }
+async function askNotifyPermission(){
+  if(!('Notification' in window) || Notification.permission !== 'default') return;
+  if(!notiPrefs.on || !notiPrefs.popup) return;
+  try{ await Notification.requestPermission(); }catch(_){}
+}
+
+// ── ตรวจจับของใหม่จากรายการแชทที่เปลี่ยนไป ──
+function snapshot(){
+  const m = new Map();
+  chats.forEach(c => m.set(c.id, { u:c.unread_count || 0, t:c.last_inbound_at || '', a:c.assignee_email || '' }));
+  return m;
+}
+function detectNew(before){
+  if(!before || !before.size || !notiPrefs.on) return;
+  chats.forEach(c => {
+    const o = before.get(c.id);
+    if(!o){                                                                   // แชทที่เพิ่งโผล่มาใหม่
+      if(!c.assignee_email) pushNoti('orphan', c, c.last_message || 'มีแชทใหม่เข้ามา', `orphan|${c.id}`);
+      else if(me && c.assignee_email === me.email) pushNoti('assign', c, 'คุณเป็นผู้รับผิดชอบแชทนี้', `assign|${c.id}|${c.assignee_email}`);
+      if((c.unread_count || 0) > 0) notiNewMsg(c);
+      return;
+    }
+    if(me && c.assignee_email && c.assignee_email !== o.a && c.assignee_email === me.email)
+      pushNoti('assign', c, 'ถูกตั้งให้เป็นผู้รับผิดชอบแชทนี้', `assign|${c.id}|${c.assignee_email}`);
+    if((c.unread_count || 0) > o.u && (c.last_inbound_at || '') !== o.t) notiNewMsg(c);
+  });
+}
+function notiNewMsg(c){
+  if(c.id === activeId && document.hasFocus()) return;                        // กำลังอ่านแชทนี้อยู่
+  pushNoti('msg', c, c.last_message || 'ส่งข้อความใหม่', `msg|${c.id}|${c.last_inbound_at || c.last_message_at || ''}`);
+}
+
+// ── เฝ้า SLA — เตือนแม้ซัพพลายเออร์จะไม่ได้ทักมาใหม่ ──
+function slaWatch(){
+  if(DEMO || !settings || !notiPrefs.on || !chats.length) return;
+  const sla = slaSec(), warnAt = Math.round(sla * .8);
+  chats.forEach(c => {
+    if(!c.awaiting_since || c.status === 'resolved') return;
+    const age = elapsedSec(c.awaiting_since, null);
+    if(age >= sla)
+      pushNoti('sla', c, `ซัพพลายเออร์รอคำตอบมาแล้ว ${fmtDur(age)} (SLA ${settings.sla_minutes} นาที)`, `sla|${c.id}|${c.awaiting_since}`);
+    else if(age >= warnAt)
+      pushNoti('warn', c, `รอมาแล้ว ${fmtDur(age)} · อีก ${fmtDur(sla - age)} จะเกิน SLA`, `warn|${c.id}|${c.awaiting_since}`);
+  });
+}
+function startSlaWatch(){
+  if(slaTimer) clearInterval(slaTimer);
+  slaTimer = setInterval(slaWatch, 30000);
+  setTimeout(slaWatch, 4000);
 }
 </script>
 
@@ -1644,7 +1845,7 @@ let peopleQ = '';
 function renderSettings(){
   if(view !== 'set') return;
   const sup = isSup();
-  $('setContent').innerHTML = linkCardHtml() + (sup ? teamCardHtml() + peopleCardHtml() + hoursCardHtml() : '') + quickCardHtml(sup) + (sup ? ackCardHtml() : '') + quotaCardHtml() + (isAdmin() ? adminCardHtml() : '') + aboutCardHtml();
+  $('setContent').innerHTML = linkCardHtml() + notiCardHtml() + (sup ? teamCardHtml() + peopleCardHtml() + hoursCardHtml() : '') + quickCardHtml(sup) + (sup ? ackCardHtml() : '') + quotaCardHtml() + (isAdmin() ? adminCardHtml() : '') + aboutCardHtml();
   if(sup && peopleOpen) renderPeopleRows();
   if(sup && oaAdmins === null && !DEMO) loadOaAdmins();
 }
@@ -1683,6 +1884,60 @@ async function newLinkCode(){
     const tick = () => { const el = $('linkCountdown'); if(!el) return; const left = exp - Date.now(); if(left <= 0){ el.textContent = 'รหัสหมดอายุแล้ว — ขอรหัสใหม่ได้เลย'; return; } el.textContent = `รหัสใช้ได้อีก ${Math.floor(left/60000)}:${pad(Math.floor(left % 60000 / 1000))} นาที · ใช้ได้ครั้งเดียว`; setTimeout(tick, 1000); };
     tick();
   }catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
+}
+
+// ── ตั้งค่าการแจ้งเตือน (เก็บในเครื่องนี้) ──
+function notiCardHtml(){
+  const P = notiPrefs, sla = settings?.sla_minutes || 60;
+  const chk = (id, on, label, hint) => `<label class="check ${on ? 'on' : ''}" style="align-items:flex-start;width:100%;margin-bottom:6px">
+    <input type="checkbox" id="${id}" ${on ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on',this.checked);saveNotiPrefs()">
+    <span>${label}${hint ? `<br><span class="mini">${hint}</span>` : ''}</span></label>`;
+  return `<div class="card card-gold" id="notiCard"><div class="card-head"><h3>🔔 การแจ้งเตือน</h3>
+    <div class="acts"><button class="btn btn-outline btn-sm" onclick="testNoti()">🔊 ทดสอบ</button></div>
+    <div class="hint">ตั้งค่านี้เป็นของ<b>เครื่องนี้/เบราว์เซอร์นี้</b>คนเดียว ไม่กระทบคนอื่น · แจ้งเตือนทำงานเมื่อเปิดแอพค้างไว้ (เปิดเป็นแท็บทิ้งไว้ได้ ไม่ต้องอยู่หน้าจอ) · popup ของเครื่องต้องกด "อนุญาต" ให้เบราว์เซอร์ครั้งแรก</div></div>
+    <div class="card-body">
+      ${P.on ? '' : `<div class="mb-12"><span class="pill bad">แจ้งเตือนถูกปิดอยู่</span> <button class="btn btn-outline btn-sm" onclick="toggleNotify()">🔔 เปิดแจ้งเตือน</button></div>`}
+      <div class="field"><label>แจ้งเตือนแชทไหนบ้าง</label>
+        <select class="input" id="ntScope" onchange="saveNotiPrefs()">
+          <option value="mine" ${P.scope === 'mine' ? 'selected' : ''}>เฉพาะแชทที่ฉันรับผิดชอบ</option>
+          <option value="mine_none" ${P.scope === 'mine_none' ? 'selected' : ''}>แชทของฉัน + แชทที่ยังไม่มีผู้รับผิดชอบ</option>
+          <option value="all" ${P.scope === 'all' ? 'selected' : ''}>ทุกแชทของจัดซื้อ</option>
+        </select>
+        <span class="mini">ผู้รับผิดชอบมาจากรหัส PU ในชื่อแชท · แชทที่ตั้ง "ไม่นับสถิติ" ไว้จะไม่เตือน</span></div>
+      <div class="field"><label>เตือนเรื่องอะไรบ้าง</label>
+        ${chk('ntMsg', P.msg, '💬 ข้อความใหม่จากซัพพลายเออร์')}
+        ${chk('ntWarn', P.warn, '🟠 ใกล้ครบ SLA', `เตือนเมื่อรอมาแล้ว 80% ของ SLA (ตอนนี้ราว ${Math.round(sla * .8)} นาที)`)}
+        ${chk('ntSla', P.sla, '🔴 เกิน SLA แล้ว', `รอเกิน ${sla} นาทีแล้วยังไม่มีใครตอบ — เตือนเองแม้ซัพไม่ได้ทักมาใหม่`)}
+        ${chk('ntAssign', P.assign, '👤 มีคนตั้งให้ฉันเป็นผู้รับผิดชอบแชท')}
+        ${chk('ntOrphan', P.orphan, '❓ แชทใหม่ที่ยังไม่มีผู้รับผิดชอบ', 'เหมาะกับหัวหน้า — ถ้าเปิดไว้ตอนกำลังนำเข้าประวัติจะเตือนเยอะ')}
+      </div>
+      <div class="field"><label>ช่องทาง</label>
+        ${chk('ntSound', P.sound, '🔊 เสียงเตือน', 'เกิน SLA จะดัง 3 จังหวะให้สังเกตง่ายกว่าข้อความปกติ')}
+        ${chk('ntPopup', P.popup, '🖥 popup ของเครื่อง', 'เด้งแม้สลับไปแท็บ/โปรแกรมอื่น · กดที่ popup เพื่อเปิดแชทนั้นทันที')}
+        ${chk('ntWork', P.workOnly, '🕗 เงียบนอกเวลาทำการ', `ไม่มีเสียงและ popup นอก ${settings?.work_start || '08:00'}–${settings?.work_end || '17:00'} และวันหยุด (ยังเก็บไว้ในศูนย์แจ้งเตือนให้อ่านย้อนหลัง)`)}
+      </div>
+      <div class="mini">${notiPermLabel()}</div>
+    </div></div>`;
+}
+function notiPermLabel(){
+  if(!('Notification' in window)) return 'เบราว์เซอร์นี้ไม่รองรับ popup — ใช้เสียงและศูนย์แจ้งเตือน 🔔 บนหัวแอพแทนได้';
+  if(Notification.permission === 'granted') return 'สถานะ popup: <b>อนุญาตแล้ว ✓</b>';
+  if(Notification.permission === 'denied')  return 'สถานะ popup: <b>ถูกบล็อกไว้</b> — กดไอคอน 🔒 ข้างช่องที่อยู่เว็บ แล้วเปลี่ยน "การแจ้งเตือน" เป็นอนุญาต';
+  return 'สถานะ popup: <b>ยังไม่ได้ขออนุญาต</b> — กดปุ่ม 🔊 ทดสอบ แล้วกด "อนุญาต"';
+}
+function saveNotiPrefs(){
+  const g = (id, k) => { const e = $(id); if(e) notiPrefs[k] = e.type === 'checkbox' ? e.checked : e.value; };
+  g('ntScope', 'scope'); g('ntMsg', 'msg'); g('ntWarn', 'warn'); g('ntSla', 'sla'); g('ntAssign', 'assign'); g('ntOrphan', 'orphan');
+  g('ntSound', 'sound'); g('ntPopup', 'popup'); g('ntWork', 'workOnly');
+  notiSave(); renderBell();
+  if(notiPrefs.popup) askNotifyPermission();
+}
+async function testNoti(){
+  notiPrefs.on = true; LS.set('pur.notifyOff', '0'); notiSave();
+  await askNotifyPermission();
+  beep('msg'); popNotification('🔔 ทดสอบการแจ้งเตือน', 'ถ้าเห็นข้อความนี้ แปลว่า popup ใช้งานได้แล้วค่ะ');
+  renderBell(); renderSettings();
+  showToast('ส่งเสียงและ popup ทดสอบแล้ว ✓', 'success');
 }
 
 // ── ทีมจัดซื้อ ──
@@ -1931,10 +2186,11 @@ async function showApp(){
   showSpinner('กำลังโหลดข้อมูล…');
   try{
     if(DEMO) demoInit();
-    else { await Promise.all([loadMembers(), loadPeople(), loadSettings()]); await loadChats(); setupRealtime(); startAutoRefresh(); askNotifyPermission(); }
+    else { await Promise.all([loadMembers(), loadPeople(), loadSettings()]); await loadChats(); setupRealtime(); startAutoRefresh(); }
   }catch(e){ console.error('load failed:', e); showToast('โหลดข้อมูลไม่สำเร็จ: ' + e.message, 'error', 6000); }
   finally{ hideSpinner(); }
   $('hdrGreet').textContent = `สวัสดี ${me.nick || me.name || me.email} 👋 · ${roleLabel(me.role)}`;
+  notiLoad(); startSlaWatch(); askNotifyPermission();   // แจ้งเตือน: โหลดค่าตั้ง (scope ขึ้นกับสิทธิ์) แล้วเริ่มเฝ้า SLA
   setView(LS.get('pur.view') || 'chat');
   // ตัวเลข "รอมานาน" เดินตามเวลาจริง
   setInterval(() => { renderList(); if(activeId && chatById.get(activeId)) renderStrips(chatById.get(activeId)); if(view === 'dash' && dashLoadedOnce) renderDash(); }, 60000);
@@ -2060,7 +2316,7 @@ function demoDash(){
   let sx = 0, sy = 0; const cp = $('chatPane');   // ปัดขวาเพื่อปิดแชท (มือถือ)
   cp.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive:true });
   cp.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx, dy = Math.abs(e.changedTouches[0].clientY - sy); if(dx > 70 && dy < 50 && window.innerWidth < 768) closeChat(); }, { passive:true });
-  $('bellBtn').textContent = notifyOn ? '🔔' : '🔕';
+  notiLoad();
   renderSortBtn();
   $('msgsArea').addEventListener('scroll', () => {   // เลื่อนขึ้นบนสุด = โหลดข้อความเก่ากว่า · ลงล่างสุด = ซ่อนป้ายข้อความใหม่
     const a = $('msgsArea');
