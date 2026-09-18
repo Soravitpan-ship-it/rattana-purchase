@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.17</title>
+<title>Rattana Purchase Chat v1.18</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -370,6 +370,31 @@ body.dark .fx-bubble{background:#f7f8fb}
 .fx-btn.secondary{background:#fff;border:1px solid #c9ced9}
 .fx-btn.link{background:transparent;color:var(--navy);padding:8px 4px}
 .fx-btn.dim{opacity:.55;cursor:default}
+/* การ์ดผลงานรายคน — เทียบกันทั้งทีมได้ในหน้าเดียว ไม่ต้องเลือกทีละคน */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:10px}
+.mcard{display:block;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--st-good);
+  border-radius:12px;padding:11px 12px;transition:transform .12s,box-shadow .12s}
+.mcard:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(13,27,62,.13)}
+.mcard.warn{border-left-color:var(--st-warn)}
+.mcard.crit{border-left-color:var(--st-crit)}
+.mcard.none{border-left-color:var(--deemph);opacity:.72}   /* ยังไม่มีงานในช่วงนี้ — ไม่ใช่ทั้งดีและแย่ */
+.mcard.on{outline:2px solid var(--gold);outline-offset:1px}
+.mc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.mc-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  background:var(--navy);color:#fff;font-weight:700;font-size:12px}
+.mc-nm{flex:1;min-width:0;font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-sla{font-weight:800;font-size:15px;flex-shrink:0}
+.mc-bar{height:6px;border-radius:99px;background:var(--border);overflow:hidden;margin-bottom:9px}
+.mc-bar i{display:block;height:100%;border-radius:99px;background:var(--st-good)}
+.mcard.warn .mc-bar i{background:var(--st-warn)}
+.mcard.crit .mc-bar i{background:var(--st-crit)}
+.mc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 4px}
+.mc-grid div{min-width:0}
+.mc-grid b{display:block;font-size:14px;line-height:1.2}
+.mc-grid b.bad{color:var(--st-crit)}
+.mc-grid span{display:block;font-size:10px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:430px){.mgrid{grid-template-columns:1fr}}
 .bl-list{max-height:min(46vh,420px);overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
 .bl-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
 .bl-item:last-child{border-bottom:0}
@@ -532,7 +557,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.17 · 18/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.18 · 18/09/2569</div>
   </div>
 </div>
 
@@ -544,7 +569,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.17</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.18</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -670,6 +695,18 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
+          <h3>👥 ผลงานรายคน</h3>
+          <div class="acts"><button class="toggle-btn" data-alt="การ์ด" onclick="toggleTable('person')">ตาราง</button></div>
+          <div class="hint">นับตาม<b>ผู้รับผิดชอบ</b>ของงาน (ผู้รับผิดชอบแชทตอนที่งานเข้า หรือคนที่ตอบถ้ายังไม่มีผู้รับผิดชอบ) ·
+            แถบสีคือ<b>สัดส่วนที่ตอบทัน SLA</b> · <b>คลิกการ์ดเพื่อดูเฉพาะคนนั้น</b> คลิกซ้ำกลับมาดูทั้งทีม · ในตารางคลิกหัวคอลัมน์เพื่อเรียง</div>
+        </div>
+        <div class="card-body tight" id="personChart"></div>
+        <div class="tbl-wrap" id="personTable" hidden></div>
+      </div>
+
+
+      <div class="card card-gold">
+        <div class="card-head">
           <h3>📅 งานรอตอบรายวัน <span class="mini" id="dailyUnit"></span></h3>
           <div class="acts"><button class="toggle-btn" onclick="toggleTable('daily')">ตาราง</button></div>
           <div class="hint">นับตามวันที่ซัพพลายเออร์ทักเข้ามา · <b>ทันเวลา</b> = ตอบภายใน SLA · <b>ช้า</b> = ตอบแต่เกิน SLA · <b>ยังไม่ตอบ</b> = ค้างอยู่ตอนนี้ · ข้อความรับทราบ (ขอบคุณ/สติกเกอร์) ไม่นับ</div>
@@ -698,14 +735,6 @@ select.input{appearance:auto}
           <div class="card-body chart-wrap" id="heatChart"></div>
           <div class="card-body" id="heatTable" hidden></div>
         </div>
-      </div>
-
-      <div class="card card-gold">
-        <div class="card-head">
-          <h3>👥 ผลงานรายคน</h3>
-          <div class="hint">นับตาม<b>ผู้รับผิดชอบ</b>ของงาน (ผู้รับผิดชอบแชทตอนที่งานเข้า หรือคนที่ตอบถ้ายังไม่มีผู้รับผิดชอบ) · คลิกหัวตารางเพื่อเรียง</div>
-        </div>
-        <div class="tbl-wrap" id="personTable"></div>
       </div>
 
       <div class="card card-gold">
@@ -2098,7 +2127,12 @@ function setClock(c){
   if(activeId && chatById.get(activeId)) renderStrips(chatById.get(activeId));
 }
 function setKind(k){ dash.kind = k; document.querySelectorAll('#segKind button').forEach(b => b.classList.toggle('active', b.dataset.k === k)); renderDash(); }
-function setPerson(p){ dash.person = p || 'all'; renderDash(); }
+function setPerson(p){
+  dash.person = p || 'all';
+  const sel = $('dashPerson');                       // คลิกจากการ์ด — ให้ช่องเลือกด้านบนตรงกันด้วย
+  if(sel && sel.value !== dash.person) sel.value = dash.person;
+  renderDash();
+}
 function fillPersonDD(){
   if(!isSup()){ $('personWrap').style.display = 'none'; return; }
   $('personWrap').style.display = '';
@@ -2226,7 +2260,7 @@ function simpleTable(head, rows, textCols = []){
 function toggleTable(which){
   const chart = $(which + 'Chart'), table = $(which + 'Table'); const showTable = table.hidden;
   table.hidden = !showTable; chart.hidden = showTable;
-  const btn = chart.closest('.card').querySelector('.toggle-btn'); if(btn) btn.textContent = showTable ? 'กราฟ' : 'ตาราง';
+  const btn = chart.closest('.card').querySelector('.toggle-btn'); if(btn) btn.textContent = showTable ? (btn.dataset.alt || 'กราฟ') : 'ตาราง';
   if(!showTable && which === 'daily') renderDash();
 }
 
@@ -2338,6 +2372,34 @@ function renderPersons(inR, open, reps){
   $('personTable').innerHTML = `<table class="tbl" id="personTbl"><thead><tr>${cols.map(c => `<th class="${c[2] === 'num' ? 'num' : ''}" data-key="${c[0]}" data-type="${c[2]}">${c[1]}<span class="sort-ind">${personSort.key === c[0] ? (personSort.dir === 'asc' ? '▲' : '▼') : ''}</span></th>`).join('')}</tr></thead>
     <tbody>${sorted.length ? sorted.map(r => `<tr><td>${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</td><td class="num">${nf(r.total)}</td><td class="num">${nf(r.answered)}</td><td class="num">${r.openR ? `<span class="pill bad">${nf(r.openR)}</span>` : '0'}</td><td class="num">${nf(r.dis)}</td><td class="num">${r.openNow ? `<span class="pill bad">${nf(r.openNow)}</span>` : '0'}</td><td class="num">${slaPill(r.slaPct)}</td><td class="num" title="ตอบแล้วแต่ช้ากว่า SLA — คลิกดูว่าเป็นแชทไหนบ้าง">${r.late ? `<span class="pill bad drill" onclick="openLateFor('${r.email}')">${nf(r.late)}</span>` : '0'}</td><td class="num">${fmtDur(r.med)}</td><td class="num">${fmtDur(r.p90)}</td><td class="num">${nf(r.byOther)}</td><td class="num" title="แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}">${nf(r.reps)}</td></tr>`).join('') : `<tr class="empty-row"><td colspan="12">ไม่มีข้อมูลในช่วงนี้</td></tr>`}</tbody>
     <tfoot><tr><td>รวม</td><td class="num">${nf(T.total)}</td><td class="num">${nf(T.answered)}</td><td class="num">${nf(T.openR)}</td><td class="num">${nf(T.dis)}</td><td class="num">${nf(T.openNow)}</td><td class="num">${T.answered ? Math.round(T.ok / T.answered * 100) + '%' : '–'}</td><td class="num">${nf(T.late)}</td><td class="num">${fmtDur(quantile(allDurs, .5))}</td><td class="num">${fmtDur(quantile(allDurs, .9))}</td><td class="num">${nf(T.byOther)}</td><td class="num">${nf(T.reps)}</td></tr></tfoot></table>`;
+  // การ์ดรายคน — เห็นทั้งทีมพร้อมกันโดยไม่ต้องเลือกทีละคน
+  $('personChart').innerHTML = sorted.length
+    ? `<div class="mgrid">${sorted.map(r => {
+        const key  = r.email || 'none';
+        const on   = dash.person === key;
+        const p    = r.slaPct;
+        const tone = !r.total && !r.openNow && !r.reps          ? 'none'    // ยังไม่มีงานเลย อย่าให้ดูเหมือนผลงานดี
+                   : (p != null && p < .7) || r.openNow >= 10   ? 'crit'
+                   : (p != null && p < .9) || r.openNow > 0     ? 'warn' : '';
+        return `<button class="mcard ${tone}${on ? ' on' : ''}" onclick="setPerson('${on ? 'all' : key}')"
+            title="${on ? 'กำลังดูเฉพาะคนนี้ — คลิกเพื่อกลับมาดูทั้งทีม' : 'คลิกเพื่อดูเฉพาะ ' + esc(r.name)}">
+          <div class="mc-top">
+            <span class="mc-av">${esc(String(r.name || '?').trim().charAt(0))}</span>
+            <span class="mc-nm">${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</span>
+            <span class="mc-sla">${p == null ? '–' : Math.round(p * 100) + '%'}</span>
+          </div>
+          <div class="mc-bar"><i style="width:${p == null ? 0 : Math.round(p * 100)}%"></i></div>
+          <div class="mc-grid">
+            <div><b class="${r.openNow ? 'bad' : ''}">${nf(r.openNow)}</b><span>ค้างตอนนี้</span></div>
+            <div><b>${nf(r.total)}</b><span>งานรอตอบ</span></div>
+            <div><b>${nf(r.answered)}</b><span>ตอบแล้ว</span></div>
+            <div><b class="${r.late ? 'bad' : ''}">${nf(r.late)}</b><span>ช้ากว่า SLA</span></div>
+            <div><b>${fmtDur(r.med)}</b><span>มัธยฐาน</span></div>
+            <div><b>${nf(r.reps)}</b><span>ข้อความส่ง</span></div>
+          </div></button>`;
+      }).join('')}</div>`
+    : `<div class="txt-sm txt-muted" style="padding:6px 2px">ไม่มีข้อมูลในช่วงนี้</div>`;
+
   $('personTbl').querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
     const key = th.dataset.key, type = th.dataset.type;
     if(personSort.key === key) personSort.dir = personSort.dir === 'asc' ? 'desc' : 'asc'; else personSort = { key, dir:type === 'num' ? 'desc' : 'asc' };
