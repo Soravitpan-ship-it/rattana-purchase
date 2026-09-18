@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.14</title>
+<title>Rattana Purchase Chat v1.15</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -351,6 +351,25 @@ body.dark .pcard:hover{box-shadow:0 2px 5px rgba(0,0,0,.5), 0 20px 34px -12px rg
 .filter-pill.off{opacity:.45}
 .filter-pill:hover{opacity:1;border-color:var(--gold)}
 /* หน้าส่งข้อความหลายเจ้า */
+/* การ์ด Flex ของ LINE — ให้หน้าตาใกล้ของจริงที่สุด */
+.fx-bubble{width:min(300px,78vw);background:#fff;border-radius:12px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(13,27,62,.18);color:#111;font-size:13px;line-height:1.45;text-align:left}
+body.dark .fx-bubble{background:#f7f8fb}
+.fx-carousel{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.fx-header,.fx-body,.fx-footer{padding:12px}
+.fx-header{background:#f3f5f9;font-weight:700}
+.fx-footer{border-top:1px solid #e6e9f0}
+.fx-hero img{display:block;width:100%}
+.fx-t{min-width:0;word-break:break-word;white-space:pre-wrap}
+.fx-t a{color:#1a6fb8}
+.fx-sep{height:1px;background:#e6e9f0;margin:8px 0}
+.fx-img{max-width:100%;border-radius:6px;display:block}
+.fx-icon{width:16px;height:16px;object-fit:contain;flex-shrink:0}
+.fx-btn{display:block;text-align:center;padding:9px 12px;border-radius:8px;font-weight:700;font-size:13px;
+  background:#e8ebf2;color:#0d1b3e;text-decoration:none;margin-top:6px}
+.fx-btn.primary{background:var(--navy);color:#fff}
+.fx-btn.secondary{background:#fff;border:1px solid #c9ced9}
+.fx-btn.dim{opacity:.55;cursor:default}
 .bl-list{max-height:min(46vh,420px);overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
 .bl-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
 .bl-item:last-child{border-bottom:0}
@@ -513,7 +532,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.14</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.15</div>
   </div>
 </div>
 
@@ -525,7 +544,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.14</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.15</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -765,7 +784,7 @@ select.input{appearance:auto}
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.14';
+const APP_VERSION   = '1.15';
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const LINE_OA_ID = '@429hgoxl';   // ไอดี LINE OA จัดซื้อ (RTNPurchase) — ใช้ทำลิงก์เปิดแอพ LINE
@@ -1159,6 +1178,7 @@ function previewOf(m){
     case 'text': case 'location': return String(m.content || '').slice(0, 90);
     case 'sticker': return '[สติกเกอร์]'; case 'image': return '[รูปภาพ]'; case 'video': return '[วิดีโอ]';
     case 'audio': return '[ข้อความเสียง]'; case 'file': return `[ไฟล์] ${m.file_name || ''}`.trim();
+    case 'flex':  return String(m.content || '[การ์ด]').slice(0, 90);
     default: return `[${m.msg_type}]`;
   }
 }
@@ -1171,9 +1191,112 @@ function bubbleBody(m){
     case 'video':   return [`<video class="photo" ${mediaAttr(c)} controls preload="metadata"></video>`, true];
     case 'audio':   return [`<audio ${mediaAttr(c)} controls preload="metadata" style="max-width:240px"></audio>`, true];
     case 'file':    return [`<a href="#" ${mediaAttr(c, 'data-url')} onclick="openFile(event,this)">📎 ${esc(m.file_name || 'เปิดไฟล์แนบ')}</a>`, false];
+    // การ์ด Flex จากระบบภายใน (เช่น ระบบใบสั่งซื้อ) — วาดให้เหมือนที่ซัพพลายเออร์เห็นใน LINE
+    case 'flex': {
+      const h = m.card ? flexHtml(m.card) : '';
+      return h ? [h, true] : [linkify(esc(c)), false];   // ไม่มีเนื้อการ์ด → ถอยไปแสดง altText
+    }
     default:        return [linkify(esc(c)), false];
   }
 }
+
+// ══════════════════════════════════════════════════════════════
+//  วาดการ์ด Flex ของ LINE ในแชท
+//  ก้อน JSON มาจากระบบภายนอก → ถือว่าไม่น่าเชื่อถือ
+//  ทุกข้อความผ่าน esc() · รับเฉพาะลิงก์ http/https · ไม่รับสไตล์ดิบจากข้อมูล
+// ══════════════════════════════════════════════════════════════
+const FX_SIZE = { xxs:9, xs:10, sm:12, md:13, lg:15, xl:18, xxl:22, '3xl':26, '4xl':30, '5xl':36 };
+const FX_GAP  = { none:0, xs:2, sm:4, md:8, lg:12, xl:16, xxl:20 };
+const fxColor = v => /^#[0-9a-fA-F]{3,8}$/.test(String(v || '')) ? String(v) : null;
+const fxUrl   = v => /^https?:\/\//i.test(String(v || '')) ? String(v) : null;
+const fxNum   = v => Number.isFinite(+v) && +v >= 0 && +v <= 20 ? +v : null;
+
+function fxText(n){
+  const st = [];
+  const sz = FX_SIZE[n.size]; if(sz) st.push(`font-size:${sz}px`);
+  if(n.weight === 'bold') st.push('font-weight:700');
+  const col = fxColor(n.color); if(col) st.push(`color:${col}`);
+  if(['center','end'].includes(n.align)) st.push(`text-align:${n.align === 'end' ? 'right' : 'center'}`);
+  if(n.wrap === false) st.push('white-space:nowrap;overflow:hidden;text-overflow:ellipsis');
+  const fl = fxNum(n.flex); if(fl != null) st.push(`flex:${fl}`);
+  if(n.decoration === 'line-through') st.push('text-decoration:line-through');
+  // span ซ้อนในข้อความ (LINE ใช้ทำตัวหนา/สีในบรรทัดเดียว)
+  const inner = Array.isArray(n.contents) && n.contents.length
+    ? n.contents.map(s => {
+        const ss = []; const c2 = fxColor(s.color); if(c2) ss.push(`color:${c2}`);
+        if(s.weight === 'bold') ss.push('font-weight:700');
+        const z2 = FX_SIZE[s.size]; if(z2) ss.push(`font-size:${z2}px`);
+        return `<span style="${ss.join(';')}">${esc(String(s.text ?? ''))}</span>`;
+      }).join('')
+    : esc(String(n.text ?? ''));
+  return `<div class="fx-t" style="${st.join(';')}">${linkify(inner)}</div>`;
+}
+
+function fxBox(n, depth){
+  const horiz = n.layout === 'horizontal' || n.layout === 'baseline';
+  const st = [`display:flex`, `flex-direction:${horiz ? 'row' : 'column'}`, 'min-width:0'];
+  const gap = FX_GAP[n.spacing]; if(gap) st.push(`gap:${gap}px`);
+  if(horiz) st.push(n.layout === 'baseline' ? 'align-items:baseline' : 'align-items:flex-start');
+  const bg = fxColor(n.backgroundColor); if(bg) st.push(`background:${bg}`);
+  const bc = fxColor(n.borderColor); if(bc) st.push(`border:1px solid ${bc}`);
+  const mg = FX_GAP[n.margin]; if(mg) st.push(`margin-top:${mg}px`);
+  const pd = FX_GAP[n.paddingAll]; if(pd) st.push(`padding:${pd}px`);
+  const fl = fxNum(n.flex); if(fl != null) st.push(`flex:${fl}`);
+  if(n.cornerRadius) st.push('border-radius:8px');
+  const kids = (Array.isArray(n.contents) ? n.contents : []).map(k => fxNode(k, depth + 1)).join('');
+  return `<div style="${st.join(';')}">${kids}</div>`;
+}
+
+function fxNode(n, depth = 0){
+  if(!n || typeof n !== 'object' || depth > 25) return '';
+  switch(n.type){
+    case 'box':       return fxBox(n, depth);
+    case 'text':      return fxText(n);
+    case 'span':      return `<span>${esc(String(n.text ?? ''))}</span>`;
+    case 'separator': return `<div class="fx-sep"></div>`;
+    case 'spacer':    return `<div style="height:${FX_GAP[n.size] ?? 8}px"></div>`;
+    case 'filler':    return `<div style="flex:1"></div>`;
+    case 'icon': {
+      const u = fxUrl(n.url);
+      return u ? `<img class="fx-icon" src="${esc(u)}" alt="" loading="lazy">` : '';
+    }
+    case 'image': {
+      const u = fxUrl(n.url); if(!u) return '';
+      const act = fxUrl(n.action?.uri);
+      const img = `<img class="fx-img" src="${esc(u)}" alt="" loading="lazy">`;
+      return act ? `<a href="${esc(act)}" target="_blank" rel="noopener">${img}</a>` : img;
+    }
+    case 'button': {
+      const label = esc(String(n.action?.label ?? 'เปิด'));
+      const u = fxUrl(n.action?.uri);
+      const style = n.style === 'primary' ? 'fx-btn primary' : n.style === 'secondary' ? 'fx-btn secondary' : 'fx-btn';
+      // ปุ่มที่ไม่ใช่ลิงก์ (postback/message) กดในแอพไม่ได้ — แสดงเป็นปุ่มจางไว้ให้เห็นว่ามีอยู่
+      return u ? `<a class="${style}" href="${esc(u)}" target="_blank" rel="noopener">${label}</a>`
+               : `<span class="${style} dim" title="ปุ่มนี้ทำงานเฉพาะใน LINE">${label}</span>`;
+    }
+    default:
+      return Array.isArray(n.contents) ? n.contents.map(k => fxNode(k, depth + 1)).join('') : '';
+  }
+}
+
+function fxBubble(b, depth = 0){
+  if(!b || typeof b !== 'object') return '';
+  const parts = ['hero', 'header', 'body', 'footer']
+    .filter(k => b[k])
+    .map(k => `<div class="fx-${k}">${fxNode(b[k], depth + 1)}</div>`);
+  return `<div class="fx-bubble">${parts.join('')}</div>`;
+}
+
+// เข้าทางนี้ทางเดียว — รับได้ทั้ง bubble เดี่ยวและ carousel
+function flexHtml(card){
+  try{
+    if(!card || typeof card !== 'object') return '';
+    if(card.type === 'carousel' && Array.isArray(card.contents))
+      return `<div class="fx-carousel">${card.contents.slice(0, 12).map(b => fxBubble(b)).join('')}</div>`;
+    return fxBubble(card.type === 'bubble' ? card : (card.contents || card));
+  }catch(e){ console.warn('flex render:', e.message); return ''; }
+}
+
 function sendMark(m){
   if(m.status === 'sending') return '<span title="กำลังส่ง">🕘</span>';
   if(m.status === 'failed')  return `<span class="mk-fail" title="${esc(m.error || '')}">⚠️ ${esc(m.error || 'ส่งไม่สำเร็จ')}</span>`;
@@ -1467,7 +1590,7 @@ function onMsgUpdate(m){
   if(!x) return;
   // รวมกรณีไฟล์แนบที่เพิ่งดึงกลับมาจาก LINE (ป้ายข้อความ → รูป/ไฟล์จริง) และเครดิตคนตอบที่เพิ่งจับคู่ได้
   Object.assign(x, { status:m.status, error:m.error, unsent:m.unsent, line_msg_id:m.line_msg_id, quote_token:m.quote_token,
-                     msg_type:m.msg_type, content:m.content, file_name:m.file_name, staff_email:m.staff_email, sender_name:m.sender_name });
+                     msg_type:m.msg_type, content:m.content, file_name:m.file_name, card:m.card, staff_email:m.staff_email, sender_name:m.sender_name });
   renderMsgs(list);
 }
 
