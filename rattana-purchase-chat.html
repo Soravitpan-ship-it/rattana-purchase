@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.15</title>
+<title>Rattana Purchase Chat v1.16</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -352,23 +352,23 @@ body.dark .pcard:hover{box-shadow:0 2px 5px rgba(0,0,0,.5), 0 20px 34px -12px rg
 .filter-pill:hover{opacity:1;border-color:var(--gold)}
 /* หน้าส่งข้อความหลายเจ้า */
 /* การ์ด Flex ของ LINE — ให้หน้าตาใกล้ของจริงที่สุด */
-.fx-bubble{width:min(300px,78vw);background:#fff;border-radius:12px;overflow:hidden;
-  box-shadow:0 1px 3px rgba(13,27,62,.18);color:#111;font-size:13px;line-height:1.45;text-align:left}
+.fx-bubble{width:min(320px,84vw);background:#fff;border-radius:14px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(13,27,62,.18);color:#111;font-size:13px;line-height:1.5;text-align:left}
 body.dark .fx-bubble{background:#f7f8fb}
 .fx-carousel{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
-.fx-header,.fx-body,.fx-footer{padding:12px}
 .fx-header{background:#f3f5f9;font-weight:700}
 .fx-footer{border-top:1px solid #e6e9f0}
 .fx-hero img{display:block;width:100%}
 .fx-t{min-width:0;word-break:break-word;white-space:pre-wrap}
 .fx-t a{color:#1a6fb8}
-.fx-sep{height:1px;background:#e6e9f0;margin:8px 0}
+.fx-sep{height:1px;background:#e6e9f0;flex-shrink:0;align-self:stretch}
 .fx-img{max-width:100%;border-radius:6px;display:block}
 .fx-icon{width:16px;height:16px;object-fit:contain;flex-shrink:0}
-.fx-btn{display:block;text-align:center;padding:9px 12px;border-radius:8px;font-weight:700;font-size:13px;
-  background:#e8ebf2;color:#0d1b3e;text-decoration:none;margin-top:6px}
+.fx-btn{display:block;text-align:center;padding:10px 12px;border-radius:8px;font-weight:700;font-size:13px;
+  background:#e8ebf2;color:#0d1b3e;text-decoration:none;line-height:1.3}
 .fx-btn.primary{background:var(--navy);color:#fff}
 .fx-btn.secondary{background:#fff;border:1px solid #c9ced9}
+.fx-btn.link{background:transparent;color:var(--navy);padding:8px 4px}
 .fx-btn.dim{opacity:.55;cursor:default}
 .bl-list{max-height:min(46vh,420px);overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
 .bl-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
@@ -532,7 +532,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.15</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.16 · 18/09/2569</div>
   </div>
 </div>
 
@@ -544,7 +544,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.15</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.16</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -1205,86 +1205,172 @@ function bubbleBody(m){
 //  ก้อน JSON มาจากระบบภายนอก → ถือว่าไม่น่าเชื่อถือ
 //  ทุกข้อความผ่าน esc() · รับเฉพาะลิงก์ http/https · ไม่รับสไตล์ดิบจากข้อมูล
 // ══════════════════════════════════════════════════════════════
-const FX_SIZE = { xxs:9, xs:10, sm:12, md:13, lg:15, xl:18, xxl:22, '3xl':26, '4xl':30, '5xl':36 };
-const FX_GAP  = { none:0, xs:2, sm:4, md:8, lg:12, xl:16, xxl:20 };
+const FX_SIZE    = { xxs:9, xs:10, sm:12, md:13, lg:15, xl:18, xxl:22, '3xl':26, '4xl':30, '5xl':36 };
+const FX_GAP     = { none:0, xs:2, sm:4, md:8, lg:12, xl:16, xxl:20 };
+const FX_BORDER  = { none:0, light:1, normal:2, medium:3, semibold:4, bold:5 };
+const FX_IMG     = { xxs:40, xs:60, sm:80, md:100, lg:120, xl:140, xxl:160, '3xl':180, '4xl':200, '5xl':220 };
+const FX_BUBBLE  = { nano:150, micro:190, deca:230, hecto:260, kilo:300, mega:330, giga:376 };
+const FX_JUSTIFY = ['center','flex-start','flex-end','space-between','space-around','space-evenly'];
+const FX_ALIGNI  = ['center','flex-start','flex-end'];
+const FX_BLOCK_PAD = '16px';   // ระยะขอบในของ header/body/footer เมื่อการ์ดไม่ได้กำหนดมาเอง (LINE ก็มีค่าปริยายทำนองนี้)
+
 const fxColor = v => /^#[0-9a-fA-F]{3,8}$/.test(String(v || '')) ? String(v) : null;
 const fxUrl   = v => /^https?:\/\//i.test(String(v || '')) ? String(v) : null;
 const fxNum   = v => Number.isFinite(+v) && +v >= 0 && +v <= 20 ? +v : null;
 
-function fxText(n){
+// ระยะของ LINE ส่งมาได้ 2 แบบ: คำสำคัญ (md/lg/xl) หรือค่าตรงๆ ("8px" / "10%")
+// เดิมรองรับแค่คำสำคัญ การ์ดที่ตั้งเป็นพิกเซลจึงกลายเป็น "ไม่มีระยะ" ข้อความเลยติดขอบกล่อง
+function fxLen(v, map){
+  if(v === null || v === undefined) return null;
+  const t = String(v).trim();
+  if(map && map[t] !== undefined) return map[t] + 'px';
+  const m = /^(\d{1,4}(?:\.\d+)?)(px|%)$/.exec(t);
+  return m ? m[1] + m[2] : null;
+}
+// เลื่อนตำแหน่ง (offsetTop/Start/…) — ใช้ position:relative ไม่หลุดกรอบการ์ด
+function fxOffset(n){
+  const t = fxLen(n.offsetTop), b = fxLen(n.offsetBottom), a = fxLen(n.offsetStart), e = fxLen(n.offsetEnd);
+  if(!(t || b || a || e)) return [];
+  const out = ['position:relative'];
+  if(t) out.push(`top:${t}`);
+  if(b) out.push(`bottom:${b}`);
+  if(a) out.push(`left:${a}`);
+  if(e) out.push(`right:${e}`);
+  return out;
+}
+// margin ของ LINE คิดจาก "ด้านต้น" ของกล่องแม่ — แนวตั้งคือด้านบน แนวนอนคือด้านซ้าย
+const fxMargin = (n, horiz) => {
+  const m = fxLen(n.margin, FX_GAP);
+  return m ? [`${horiz ? 'margin-left' : 'margin-top'}:${m}`] : [];
+};
+
+function fxText(n, horiz){
   const st = [];
-  const sz = FX_SIZE[n.size]; if(sz) st.push(`font-size:${sz}px`);
+  const sz = fxLen(n.size, FX_SIZE);   if(sz) st.push(`font-size:${sz}`);
   if(n.weight === 'bold') st.push('font-weight:700');
-  const col = fxColor(n.color); if(col) st.push(`color:${col}`);
-  if(['center','end'].includes(n.align)) st.push(`text-align:${n.align === 'end' ? 'right' : 'center'}`);
-  if(n.wrap === false) st.push('white-space:nowrap;overflow:hidden;text-overflow:ellipsis');
-  const fl = fxNum(n.flex); if(fl != null) st.push(`flex:${fl}`);
+  if(n.style === 'italic') st.push('font-style:italic');
+  const col = fxColor(n.color);        if(col) st.push(`color:${col}`);
+  if(n.align === 'center' || n.align === 'end') st.push(`text-align:${n.align === 'end' ? 'right' : 'center'}`);
+  if(n.gravity === 'center' || n.gravity === 'bottom') st.push(`align-self:${n.gravity === 'bottom' ? 'flex-end' : 'center'}`);
+  const ls = fxLen(n.lineSpacing);     if(ls) st.push(`line-height:calc(1em + ${ls})`);
+  const fl = fxNum(n.flex);            if(fl !== null) st.push(`flex:${fl}`);
   if(n.decoration === 'line-through') st.push('text-decoration:line-through');
+  else if(n.decoration === 'underline') st.push('text-decoration:underline');
+  if(n.wrap === false) st.push('white-space:nowrap;overflow:hidden;text-overflow:ellipsis');
+  else if(fxNum(n.maxLines)) st.push(`display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:${fxNum(n.maxLines)};overflow:hidden`);
+  st.push(...fxMargin(n, horiz), ...fxOffset(n));
   // span ซ้อนในข้อความ (LINE ใช้ทำตัวหนา/สีในบรรทัดเดียว)
   const inner = Array.isArray(n.contents) && n.contents.length
-    ? n.contents.map(s => {
-        const ss = []; const c2 = fxColor(s.color); if(c2) ss.push(`color:${c2}`);
-        if(s.weight === 'bold') ss.push('font-weight:700');
-        const z2 = FX_SIZE[s.size]; if(z2) ss.push(`font-size:${z2}px`);
-        return `<span style="${ss.join(';')}">${esc(String(s.text ?? ''))}</span>`;
+    ? n.contents.map(sp => {
+        const ss = []; const c2 = fxColor(sp.color); if(c2) ss.push(`color:${c2}`);
+        if(sp.weight === 'bold') ss.push('font-weight:700');
+        const z2 = fxLen(sp.size, FX_SIZE); if(z2) ss.push(`font-size:${z2}`);
+        if(sp.decoration === 'line-through') ss.push('text-decoration:line-through');
+        return `<span style="${ss.join(';')}">${esc(String(sp.text ?? ''))}</span>`;
       }).join('')
     : esc(String(n.text ?? ''));
   return `<div class="fx-t" style="${st.join(';')}">${linkify(inner)}</div>`;
 }
 
-function fxBox(n, depth){
-  const horiz = n.layout === 'horizontal' || n.layout === 'baseline';
-  const st = [`display:flex`, `flex-direction:${horiz ? 'row' : 'column'}`, 'min-width:0'];
-  const gap = FX_GAP[n.spacing]; if(gap) st.push(`gap:${gap}px`);
-  if(horiz) st.push(n.layout === 'baseline' ? 'align-items:baseline' : 'align-items:flex-start');
-  const bg = fxColor(n.backgroundColor); if(bg) st.push(`background:${bg}`);
-  const bc = fxColor(n.borderColor); if(bc) st.push(`border:1px solid ${bc}`);
-  const mg = FX_GAP[n.margin]; if(mg) st.push(`margin-top:${mg}px`);
-  const pd = FX_GAP[n.paddingAll]; if(pd) st.push(`padding:${pd}px`);
-  const fl = fxNum(n.flex); if(fl != null) st.push(`flex:${fl}`);
-  if(n.cornerRadius) st.push('border-radius:8px');
-  const kids = (Array.isArray(n.contents) ? n.contents : []).map(k => fxNode(k, depth + 1)).join('');
-  return `<div style="${st.join(';')}">${kids}</div>`;
+// blockCls = header/body/footer/hero (บล็อกหลักของการ์ด) · defPad = ใส่ระยะขอบในปริยายถ้าการ์ดไม่ได้กำหนด
+function fxBox(n, depth, horiz, blockCls, defPad){
+  const self = n.layout === 'horizontal' || n.layout === 'baseline';
+  const st = ['display:flex', `flex-direction:${self ? 'row' : 'column'}`, 'min-width:0'];
+  const gap = fxLen(n.spacing, FX_GAP); if(gap) st.push(`gap:${gap}`);
+  if(self) st.push(n.layout === 'baseline' ? 'align-items:baseline' : 'align-items:flex-start');
+  if(FX_JUSTIFY.includes(n.justifyContent)) st.push(`justify-content:${n.justifyContent}`);
+  if(FX_ALIGNI.includes(n.alignItems))      st.push(`align-items:${n.alignItems}`);
+
+  const bg = fxColor(n.backgroundColor);    if(bg) st.push(`background:${bg}`);
+  const bc = fxColor(n.borderColor), bw = fxLen(n.borderWidth, FX_BORDER);
+  if(bc || bw) st.push(`border:${bw || '1px'} solid ${bc || '#e6e9f0'}`);
+  const cr = fxLen(n.cornerRadius, FX_GAP); if(cr) st.push(`border-radius:${cr}`);
+
+  // ระยะขอบใน — รองรับทั้ง paddingAll และแยกรายด้าน (เดิมรับแค่ paddingAll แบบคำสำคัญ)
+  const pa = fxLen(n.paddingAll, FX_GAP), dp = defPad ? FX_BLOCK_PAD : null;
+  const pt = fxLen(n.paddingTop, FX_GAP)    || pa || dp;
+  const pe = fxLen(n.paddingEnd, FX_GAP)    || pa || dp;
+  const pb = fxLen(n.paddingBottom, FX_GAP) || pa || dp;
+  const ps = fxLen(n.paddingStart, FX_GAP)  || pa || dp;
+  if(pt || pe || pb || ps) st.push(`padding:${pt || 0} ${pe || 0} ${pb || 0} ${ps || 0}`);
+
+  const fl = fxNum(n.flex);                 if(fl !== null) st.push(`flex:${fl}`);
+  const w = fxLen(n.width);                 if(w) st.push(`width:${w};flex-shrink:0`);
+  const h = fxLen(n.height);                if(h) st.push(`height:${h}`);
+  const mw = fxLen(n.maxWidth);             if(mw) st.push(`max-width:${mw}`);
+  st.push(...fxMargin(n, horiz), ...fxOffset(n));
+
+  const kids = (Array.isArray(n.contents) ? n.contents : []).map(k => fxNode(k, depth + 1, self)).join('');
+  return `<div${blockCls ? ` class="fx-${blockCls}"` : ''} style="${st.join(';')}">${kids}</div>`;
 }
 
-function fxNode(n, depth = 0){
+function fxNode(n, depth = 0, horiz = false){
   if(!n || typeof n !== 'object' || depth > 25) return '';
   switch(n.type){
-    case 'box':       return fxBox(n, depth);
-    case 'text':      return fxText(n);
-    case 'span':      return `<span>${esc(String(n.text ?? ''))}</span>`;
-    case 'separator': return `<div class="fx-sep"></div>`;
-    case 'spacer':    return `<div style="height:${FX_GAP[n.size] ?? 8}px"></div>`;
-    case 'filler':    return `<div style="flex:1"></div>`;
+    case 'box':  return fxBox(n, depth, horiz);
+    case 'text': return fxText(n, horiz);
+    case 'span': return `<span>${esc(String(n.text ?? ''))}</span>`;
+    case 'separator': {
+      const st = [...fxMargin(n, horiz)];
+      const c = fxColor(n.color); if(c) st.push(`background:${c}`);
+      if(horiz) st.push('width:1px;height:auto');
+      return `<div class="fx-sep" style="${st.join(';')}"></div>`;
+    }
+    case 'spacer': {
+      const sz = fxLen(n.size, FX_GAP) || '8px';
+      return `<div style="${horiz ? 'width' : 'height'}:${sz};flex-shrink:0"></div>`;
+    }
+    case 'filler': return `<div style="flex:1"></div>`;
     case 'icon': {
-      const u = fxUrl(n.url);
-      return u ? `<img class="fx-icon" src="${esc(u)}" alt="" loading="lazy">` : '';
+      const u = fxUrl(n.url); if(!u) return '';
+      const st = [...fxMargin(n, horiz)];
+      const sz = fxLen(n.size, FX_SIZE); if(sz) st.push(`width:${sz};height:${sz}`);
+      return `<img class="fx-icon" style="${st.join(';')}" src="${esc(u)}" alt="" loading="lazy">`;
     }
     case 'image': {
       const u = fxUrl(n.url); if(!u) return '';
+      const st = [...fxMargin(n, horiz)];
+      const w = n.size === 'full' ? '100%' : fxLen(n.size, FX_IMG); if(w) st.push(`width:${w}`);
+      if(n.aspectMode === 'cover') st.push('object-fit:cover');
+      if(n.align === 'center') st.push('margin-left:auto;margin-right:auto');
+      else if(n.align === 'end') st.push('margin-left:auto');
       const act = fxUrl(n.action?.uri);
-      const img = `<img class="fx-img" src="${esc(u)}" alt="" loading="lazy">`;
+      const img = `<img class="fx-img" style="${st.join(';')}" src="${esc(u)}" alt="" loading="lazy">`;
       return act ? `<a href="${esc(act)}" target="_blank" rel="noopener">${img}</a>` : img;
     }
     case 'button': {
       const label = esc(String(n.action?.label ?? 'เปิด'));
       const u = fxUrl(n.action?.uri);
-      const style = n.style === 'primary' ? 'fx-btn primary' : n.style === 'secondary' ? 'fx-btn secondary' : 'fx-btn';
+      const st = [...fxMargin(n, horiz)];
+      const col = fxColor(n.color);
+      if(col) st.push(n.style === 'link' ? `color:${col}` : `background:${col};color:#fff`);
+      if(n.height === 'sm') st.push('padding:7px 12px;font-size:12px');
+      const cls = 'fx-btn' + (n.style === 'primary' ? ' primary' : n.style === 'secondary' ? ' secondary'
+                            : n.style === 'link' ? ' link' : '');
       // ปุ่มที่ไม่ใช่ลิงก์ (postback/message) กดในแอพไม่ได้ — แสดงเป็นปุ่มจางไว้ให้เห็นว่ามีอยู่
-      return u ? `<a class="${style}" href="${esc(u)}" target="_blank" rel="noopener">${label}</a>`
-               : `<span class="${style} dim" title="ปุ่มนี้ทำงานเฉพาะใน LINE">${label}</span>`;
+      return u ? `<a class="${cls}" style="${st.join(';')}" href="${esc(u)}" target="_blank" rel="noopener">${label}</a>`
+               : `<span class="${cls} dim" style="${st.join(';')}" title="ปุ่มนี้ทำงานเฉพาะใน LINE">${label}</span>`;
     }
     default:
-      return Array.isArray(n.contents) ? n.contents.map(k => fxNode(k, depth + 1)).join('') : '';
+      return Array.isArray(n.contents) ? n.contents.map(k => fxNode(k, depth + 1, horiz)).join('') : '';
   }
 }
 
 function fxBubble(b, depth = 0){
   if(!b || typeof b !== 'object') return '';
-  const parts = ['hero', 'header', 'body', 'footer']
-    .filter(k => b[k])
-    .map(k => `<div class="fx-${k}">${fxNode(b[k], depth + 1)}</div>`);
-  return `<div class="fx-bubble">${parts.join('')}</div>`;
+  const sty = (b.styles && typeof b.styles === 'object') ? b.styles : {};
+  const parts = ['hero', 'header', 'body', 'footer'].filter(k => b[k]).map(k => {
+    const blk = b[k], bs = sty[k] || {};
+    let html = (k === 'hero' && blk.type !== 'box')
+      ? `<div class="fx-hero">${fxNode(blk, depth + 1)}</div>`
+      : fxBox(blk, depth + 1, false, k, k !== 'hero');
+    const bg = fxColor(bs.backgroundColor);
+    // สีพื้นจาก styles ใส่ไว้ต้นสตริง → ถ้ากล่องตั้งสีเองไว้จะทับทีหลังตามลำดับของ CSS
+    if(bg) html = html.replace('style="', `style="background:${bg};`);
+    return html;
+  });
+  const w = FX_BUBBLE[b.size];
+  return `<div class="fx-bubble"${w ? ` style="width:min(${w}px,84vw)"` : ''}>${parts.join('')}</div>`;
 }
 
 // เข้าทางนี้ทางเดียว — รับได้ทั้ง bubble เดี่ยวและ carousel
