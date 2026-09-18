@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.16</title>
+<title>Rattana Purchase Chat v1.17</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -532,7 +532,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.16 · 18/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.17 · 18/09/2569</div>
   </div>
 </div>
 
@@ -544,7 +544,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.16</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.17</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -784,7 +784,11 @@ select.input{appearance:auto}
 // ═══════════════════════════════════════════════════════════
 
 // ── CONFIG — แก้ 2 บรรทัดแรกถ้าใช้โปรเจกต์ Supabase อื่น ──
-const APP_VERSION   = '1.15';
+// เวอร์ชันของ "ไฟล์ที่กำลังรันอยู่" — อ่านจาก <title> ตอนโหลด (ก่อนโค้ดจะไปเปลี่ยนชื่อหน้าต่าง)
+// เขียนเลขไว้ที่เดียวพอ แก้ที่ <title> แล้วทุกอย่างตามเอง
+// เดิมแยกเป็นตัวแปรต่างหาก พอขึ้นเวอร์ชันแล้วลืมแก้ ตัวเช็คเห็นเลขไม่ตรงกันตลอด
+// แถบ "มีเวอร์ชันใหม่" เลยเด้งซ้ำไม่จบต่อให้กดอัปเดตกี่รอบ
+const APP_VERSION   = (/Rattana Purchase Chat v([0-9.]+)/.exec(document.title) || [, '0'])[1];
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const LINE_OA_ID = '@429hgoxl';   // ไอดี LINE OA จัดซื้อ (RTNPurchase) — ใช้ทำลิงก์เปิดแอพ LINE
