@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.19</title>
+<title>Rattana Purchase Chat v1.20</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -410,6 +410,33 @@ body.dark .fx-bubble{background:#f7f8fb}
 .mback{font:inherit;font-size:12px;font-weight:700;color:var(--navy);background:var(--bg);
   border:1px solid var(--border);border-radius:99px;padding:5px 12px;cursor:pointer;flex-shrink:0}
 .mback:hover{border-color:var(--gold)}
+/* ── ไอคอนเส้นแทนอิโมจิ — สีตามตัวอักษร คมทุกขนาด ── */
+.ic{width:1.1em;height:1.1em;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;vertical-align:-.18em}
+.hb{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;flex-shrink:0;
+  color:#a8872f;background:linear-gradient(145deg,rgba(201,168,76,.22),rgba(201,168,76,.07));
+  box-shadow:inset 0 0 0 1px rgba(201,168,76,.30)}
+.hb .ic{width:17px;height:17px;stroke-width:1.8;vertical-align:0}
+.hb.crit{color:var(--st-crit);background:linear-gradient(145deg,rgba(208,59,59,.17),rgba(208,59,59,.05));box-shadow:inset 0 0 0 1px rgba(208,59,59,.26)}
+.hb.warn{color:#c98a06;background:linear-gradient(145deg,rgba(250,178,25,.22),rgba(250,178,25,.06));box-shadow:inset 0 0 0 1px rgba(250,178,25,.32)}
+.hb.info{color:var(--s1);background:linear-gradient(145deg,rgba(42,120,214,.17),rgba(42,120,214,.05));box-shadow:inset 0 0 0 1px rgba(42,120,214,.26)}
+body.dark .hb{color:var(--gold-light)}
+.card-head h3{gap:9px}
+.tab-btn .ic{width:16px;height:16px}
+.bni-icon .ic{width:21px;height:21px;stroke-width:1.8}
+.hdr-btn .ic{width:17px;height:17px}
+.round-btn .ic{width:20px;height:20px}
+.send-btn .ic{margin-left:-2px}
+.chip .ic{width:14px;height:14px}
+.cei .ic{width:46px;height:46px;stroke-width:1.3;opacity:.5}
+.btn .ic{width:15px;height:15px;margin-right:2px}
+.pc-kind .ic{width:12px;height:12px;margin-right:2px}
+/* อ่านแล้ว — ใต้ข้อความขาออก */
+.rd{display:inline-flex;align-items:center;gap:3px;color:var(--sub)}
+.rd .ic{width:13px;height:13px;stroke-width:2.2}
+.rd.on{color:var(--line);font-weight:600}
+.rd-s .ic{width:12px;height:12px}
+.mk-fail .ic{width:13px;height:13px}
 .mc-grid span{display:block;font-size:10px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:430px){.mgrid{grid-template-columns:1fr}}
 .bl-list{max-height:min(46vh,420px);overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
@@ -574,7 +601,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.19 · 18/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.20 · 18/09/2569</div>
   </div>
 </div>
 
@@ -586,26 +613,26 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.19</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.20</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
-      <button class="hdr-btn" id="bellBtn" onclick="toggleNoti()" title="การแจ้งเตือน">🔔</button>
+      <button class="hdr-btn" id="bellBtn" onclick="toggleNoti()" title="การแจ้งเตือน"><span data-ic="bell"></span></button>
       <span class="noti-dot" id="bellDot" style="display:none"></span>
       <div class="noti-panel" id="notiPanel"></div>
     </div>
-    <button class="hdr-btn" id="refreshBtn" onclick="refreshAll()" title="โหลดข้อมูลใหม่">⟳</button>
-    <button class="hdr-btn" onclick="toggleDark()" title="โหมดมืด/สว่าง">🌙</button>
-    <button class="hdr-btn" onclick="doLogout()" title="ออกจากระบบ">⏻</button>
+    <button class="hdr-btn" id="refreshBtn" onclick="refreshAll()" title="โหลดข้อมูลใหม่"><span data-ic="refresh"></span></button>
+    <button class="hdr-btn" onclick="toggleDark()" title="โหมดมืด/สว่าง"><span data-ic="moon"></span></button>
+    <button class="hdr-btn" onclick="doLogout()" title="ออกจากระบบ"><span data-ic="logout"></span></button>
   </div>
 </header>
 
 <!-- DESKTOP TABS -->
 <nav class="top-tabs">
-  <button class="tab-btn active" data-v="chat" onclick="setView('chat')">💬 แชท <span class="nbadge" id="tb-chat"></span></button>
-  <button class="tab-btn" data-v="dash" onclick="setView('dash')">📊 แดชบอร์ด</button>
-  <button class="tab-btn" data-v="blast" onclick="setView('blast')">📤 ส่งข้อความ</button>
-  <button class="tab-btn" data-v="set" onclick="setView('set')">⚙️ ตั้งค่า</button>
+  <button class="tab-btn active" data-v="chat" onclick="setView('chat')"><span data-ic="chat"></span>แชท <span class="nbadge" id="tb-chat"></span></button>
+  <button class="tab-btn" data-v="dash" onclick="setView('dash')"><span data-ic="chart"></span>แดชบอร์ด</button>
+  <button class="tab-btn" data-v="blast" onclick="setView('blast')"><span data-ic="send"></span>ส่งข้อความ</button>
+  <button class="tab-btn" data-v="set" onclick="setView('set')"><span data-ic="settings"></span>ตั้งค่า</button>
 </nav>
 
 <div class="app-body">
@@ -619,19 +646,19 @@ select.input{appearance:auto}
       </div>
       <div class="chips" id="listChips">
         <button class="chip active" data-f="all" onclick="setListFilter('all')">ทั้งหมด <span class="n" id="cn-all"></span></button>
-        <button class="chip warn" data-f="awaiting" onclick="setListFilter('awaiting')">⏱ รอตอบ <span class="n" id="cn-awaiting"></span></button>
+        <button class="chip warn" data-f="awaiting" onclick="setListFilter('awaiting')"><span data-ic="clock"></span>รอตอบ <span class="n" id="cn-awaiting"></span></button>
         <button class="chip" data-f="mine" onclick="setListFilter('mine')">ของฉัน <span class="n" id="cn-mine"></span></button>
         <button class="chip" data-f="unassigned" onclick="setListFilter('unassigned')">ไม่มีผู้รับผิดชอบ <span class="n" id="cn-unassigned"></span></button>
         <button class="chip" data-f="group" onclick="setListFilter('group')">กลุ่ม <span class="n" id="cn-group"></span></button>
         <button class="chip" data-f="user" onclick="setListFilter('user')">1:1 <span class="n" id="cn-user"></span></button>
-        <button class="chip" data-f="resolved" onclick="setListFilter('resolved')">✓ เสร็จแล้ว <span class="n" id="cn-resolved"></span></button>
+        <button class="chip" data-f="resolved" onclick="setListFilter('resolved')"><span data-ic="check"></span>เสร็จแล้ว <span class="n" id="cn-resolved"></span></button>
       </div>
       <div class="conv-list" id="convList"><div class="conv-empty">กำลังโหลด…</div></div>
     </div>
 
     <div class="chat-pane" id="chatPane">
       <div class="chat-empty" id="chatEmpty">
-        <div class="cei">💬</div>
+        <div class="cei"><span data-ic="chat"></span></div>
         <div style="font-size:15px;font-weight:600">เลือกแชทจากรายการทางซ้าย</div>
         <div style="font-size:13px">เรียงแบบ LINE — แชทที่มีข้อความล่าสุดอยู่บนสุด · กดปุ่ม ⇅ ข้างช่องค้นหาเพื่อให้แชทที่รอตอบนานสุดขึ้นก่อน</div>
       </div>
@@ -644,7 +671,7 @@ select.input{appearance:auto}
             <div class="chat-cname" id="chatName"></div>
             <div class="chat-csub" id="chatSub"></div>
           </div>
-          <button class="hdr-btn" style="color:var(--muted);border-color:var(--border)" onclick="openEditChat()" title="แก้ชื่อซัพพลายเออร์ / โน้ต">✎</button>
+          <button class="hdr-btn" style="color:var(--muted);border-color:var(--border)" onclick="openEditChat()" title="แก้ชื่อซัพพลายเออร์ / โน้ต"><span data-ic="pencil"></span></button>
         </div>
         <div class="chat-tools" id="chatTools"></div>
         <div id="chatStrips"></div>
@@ -653,14 +680,14 @@ select.input{appearance:auto}
         <div class="qr-wrap" id="qrWrap"></div>
         <div class="quoting" id="quoting">
           <span>↩ ตอบกลับ:</span><span class="qtext" id="quoteText"></span>
-          <button class="btn btn-outline btn-sm" onclick="clearQuote()">✕</button>
+          <button class="btn btn-outline btn-sm" onclick="clearQuote()" title="ยกเลิกการอ้างถึง"><span data-ic="x"></span></button>
         </div>
         <div class="reply-note" id="replyNote"></div>
         <div class="reply-bar">
           <input type="file" id="imgInp" accept="image/*" hidden onchange="onPickImage(this)">
-          <button class="round-btn attach-btn" id="attachBtn" title="ส่งรูป" onclick="document.getElementById('imgInp').click()">🖼️</button>
+          <button class="round-btn attach-btn" id="attachBtn" title="ส่งรูป" onclick="document.getElementById('imgInp').click()"><span data-ic="image"></span></button>
           <textarea class="reply-inp" id="replyInp" placeholder="พิมพ์ข้อความ…" rows="1" onkeydown="onKey(event)" oninput="grow(this);syncSend()"></textarea>
-          <button class="round-btn send-btn" id="sendBtn" onclick="sendText()" title="ส่ง">➤</button>
+          <button class="round-btn send-btn" id="sendBtn" onclick="sendText()" title="ส่ง"><span data-ic="send"></span></button>
         </div>
       </div>
     </div>
@@ -702,7 +729,7 @@ select.input{appearance:auto}
             <select class="dash-sel" id="dashPerson" onchange="setPerson(this.value)" title="ดูเฉพาะงานของคนที่เลือก"></select>
           </span>
           <span style="flex:1"></span>
-          <button class="btn btn-outline btn-sm" onclick="exportDashExcel()" title="ส่งออก Excel">📥 Excel</button>
+          <button class="btn btn-outline btn-sm" onclick="exportDashExcel()" title="ส่งออก Excel"><span data-ic="download"></span>Excel</button>
         </div>
         <div class="txt-sm txt-muted" id="dashRangeLabel"></div>
         <div id="oaStale" style="width:100%"></div>
@@ -712,7 +739,7 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
-          <h3>👥 ผลงานรายคน</h3>
+          <h3><span class="hb" data-ic="users"></span>ผลงานรายคน</h3>
           <div class="acts"><button class="toggle-btn" data-alt="การ์ด" onclick="toggleTable('person')">ตาราง</button></div>
           <div class="hint">นับตาม<b>ผู้รับผิดชอบ</b>ของงาน (ผู้รับผิดชอบแชทตอนที่งานเข้า หรือคนที่ตอบถ้ายังไม่มีผู้รับผิดชอบ) ·
             เรียงจาก<b>คนที่น่ากังวลที่สุดลงมา</b> — ดูงานที่ค้างและเลย SLA แล้วก่อน แล้วค่อยดูงานค้างทั้งหมด ตามด้วยจำนวนครั้งที่ตอบช้า ·
@@ -725,7 +752,7 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
-          <h3>📅 งานรอตอบรายวัน <span class="mini" id="dailyUnit"></span></h3>
+          <h3><span class="hb info" data-ic="calendar"></span>งานรอตอบรายวัน <span class="mini" id="dailyUnit"></span></h3>
           <div class="acts"><button class="toggle-btn" onclick="toggleTable('daily')">ตาราง</button></div>
           <div class="hint">นับตามวันที่ซัพพลายเออร์ทักเข้ามา · <b>ทันเวลา</b> = ตอบภายใน SLA · <b>ช้า</b> = ตอบแต่เกิน SLA · <b>ยังไม่ตอบ</b> = ค้างอยู่ตอนนี้ · ข้อความรับทราบ (ขอบคุณ/สติกเกอร์) ไม่นับ</div>
         </div>
@@ -737,7 +764,7 @@ select.input{appearance:auto}
       <div class="grid-2">
         <div class="card card-gold">
           <div class="card-head">
-            <h3>⏱ กระจายเวลาตอบกลับ</h3>
+            <h3><span class="hb info" data-ic="timer"></span>กระจายเวลาตอบกลับ</h3>
             <div class="acts"><button class="toggle-btn" onclick="toggleTable('hist')">ตาราง</button></div>
             <div class="hint">เฉพาะงานที่ตอบแล้ว · นับตามนาฬิกาที่เลือกด้านบน</div>
           </div>
@@ -746,7 +773,7 @@ select.input{appearance:auto}
         </div>
         <div class="card card-gold">
           <div class="card-head">
-            <h3>🔥 ช่วงเวลาที่ซัพพลายเออร์ทักเข้ามา</h3>
+            <h3><span class="hb warn" data-ic="flame"></span>ช่วงเวลาที่ซัพพลายเออร์ทักเข้ามา</h3>
             <div class="acts"><button class="toggle-btn" onclick="toggleTable('heat')">ตาราง</button></div>
             <div class="hint">จำนวนงานรอตอบใหม่ แยกวันในสัปดาห์ × ชั่วโมง — ใช้วางแผนคนเฝ้าแชท</div>
           </div>
@@ -757,7 +784,7 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
-          <h3>🚨 งานค้างตอนนี้ <span class="mini" id="backlogCount"></span></h3>
+          <h3><span class="hb crit" data-ic="alert"></span>งานค้างตอนนี้ <span class="mini" id="backlogCount"></span></h3>
           <div class="acts" id="backlogSum"></div>
           <div class="hint">ทุกแชทที่ซัพพลายเออร์ทักแล้วยังไม่มีใครตอบ (ไม่จำกัดช่วงเวลา) · คลิกเพื่อเปิดแชท</div>
         </div>
@@ -766,7 +793,7 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
-          <h3>🐢 ตอบช้ากว่า SLA <span class="mini" id="lateCount"></span></h3>
+          <h3><span class="hb warn" data-ic="hourglass"></span>ตอบช้ากว่า SLA <span class="mini" id="lateCount"></span></h3>
           <div class="hint">งานที่<b>ตอบแล้ว</b>แต่ใช้เวลาเกิน SLA ในช่วงที่เลือก · คอลัมน์ "เกินไป" = ช้ากว่ากำหนดเท่าไหร่ · คลิกเพื่อเปิดแชท</div>
         </div>
         <div class="card-body" id="lateTable"></div>
@@ -774,7 +801,7 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
-          <h3>❓ แชทที่ยังไม่มีผู้รับผิดชอบ <span class="mini" id="noOwnerCount"></span></h3>
+          <h3><span class="hb warn" data-ic="userx"></span>แชทที่ยังไม่มีผู้รับผิดชอบ <span class="mini" id="noOwnerCount"></span></h3>
           <div class="acts" id="noOwnerSum"></div>
           <div class="hint">นับทุกแชทที่ยังเปิดอยู่ (ไม่ขึ้นกับช่วงเวลาที่เลือก) · ส่วนใหญ่แก้ได้ด้วยการใส่รหัส <b>PU1#ชื่อร้าน</b> ในชื่อแชทที่ OA Manager แล้วระบบยกให้เอง · คลิกเพื่อเปิดแชท</div>
         </div>
@@ -783,7 +810,7 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
-          <h3>🏷 ซัพพลายเออร์ที่ทักบ่อยสุด</h3>
+          <h3><span class="hb" data-ic="tag"></span>ซัพพลายเออร์ที่ทักบ่อยสุด</h3>
           <div class="hint">จำนวนงานรอตอบในช่วงที่เลือก · คลิกเพื่อเปิดแชท</div>
         </div>
         <div class="card-body" id="topChats"></div>
@@ -803,10 +830,10 @@ select.input{appearance:auto}
 
 <!-- BOTTOM NAV (mobile) -->
 <nav class="bottom-nav">
-  <button class="bni active" data-v="chat" onclick="setView('chat')"><div class="bni-icon">💬</div><span class="bni-label">แชท</span><span class="nbadge" id="bn-chat"></span></button>
-  <button class="bni" data-v="dash" onclick="setView('dash')"><div class="bni-icon">📊</div><span class="bni-label">แดชบอร์ด</span></button>
-  <button class="bni" data-v="blast" onclick="setView('blast')"><div class="bni-icon">📤</div><span class="bni-label">ส่งข้อความ</span></button>
-  <button class="bni" data-v="set" onclick="setView('set')"><div class="bni-icon">⚙️</div><span class="bni-label">ตั้งค่า</span></button>
+  <button class="bni active" data-v="chat" onclick="setView('chat')"><div class="bni-icon"><span data-ic="chat"></span></div><span class="bni-label">แชท</span><span class="nbadge" id="bn-chat"></span></button>
+  <button class="bni" data-v="dash" onclick="setView('dash')"><div class="bni-icon"><span data-ic="chart"></span></div><span class="bni-label">แดชบอร์ด</span></button>
+  <button class="bni" data-v="blast" onclick="setView('blast')"><div class="bni-icon"><span data-ic="send"></span></div><span class="bni-label">ส่งข้อความ</span></button>
+  <button class="bni" data-v="set" onclick="setView('set')"><div class="bni-icon"><span data-ic="settings"></span></div><span class="bni-label">ตั้งค่า</span></button>
 </nav>
 
 <button id="backToTop" onclick="scrollTopActive()" title="กลับขึ้นบน">↑</button>
@@ -836,6 +863,44 @@ select.input{appearance:auto}
 // เดิมแยกเป็นตัวแปรต่างหาก พอขึ้นเวอร์ชันแล้วลืมแก้ ตัวเช็คเห็นเลขไม่ตรงกันตลอด
 // แถบ "มีเวอร์ชันใหม่" เลยเด้งซ้ำไม่จบต่อให้กดอัปเดตกี่รอบ
 const APP_VERSION   = (/Rattana Purchase Chat v([0-9.]+)/.exec(document.title) || [, '0'])[1];
+
+// ── ไอคอนเส้นแทนอิโมจิ ──
+// วาดด้วย SVG ในตัว (ลายเส้นแบบ Lucide, MIT) ไม่โหลดอะไรจากข้างนอก สีตามตัวอักษรของที่ที่มันอยู่
+// อิโมจิหน้าตาเปลี่ยนตามเครื่อง (iPhone/Android/Windows ไม่เหมือนกัน) — ไอคอนชุดนี้เหมือนกันทุกเครื่อง
+const ICON_PATHS = {
+  bell:      '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  belloff:   '<path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5"/><path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="m2 2 20 20"/>',
+  moon:      '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  chat:      '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+  chart:     '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  send:      '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+  settings:  '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+  clock:     '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  check:     '<path d="M20 6 9 17l-5-5"/>',
+  checkcheck:'<path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/>',
+  pencil:    '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>',
+  x:         '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  image:     '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/>',
+  download:  '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+  users:     '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  user:      '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  calendar:  '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
+  timer:     '<path d="M10 2h4"/><path d="M12 14l3-3"/><circle cx="12" cy="14" r="8"/>',
+  flame:     '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  alert:     '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  hourglass: '<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',
+  userx:     '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 8 5 5"/><path d="m22 8-5 5"/>',
+  tag:       '<path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/>',
+  refresh:   '<path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/>',
+  logout:    '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+};
+const ic = (name, cls = '') => ICON_PATHS[name]
+  ? `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" aria-hidden="true">${ICON_PATHS[name]}</svg>` : '';
+// ส่วนหน้าจอที่เขียนไว้ใน HTML ใส่ data-ic="ชื่อ" แล้วเติมไอคอนตอนโหลด
+function fillIcons(root = document){
+  root.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = ic(el.dataset.ic); el.removeAttribute('data-ic'); });
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => fillIcons()); else fillIcons();
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
 const LINE_OA_ID = '@429hgoxl';   // ไอดี LINE OA จัดซื้อ (RTNPurchase) — ใช้ทำลิงก์เปิดแอพ LINE
@@ -1435,9 +1500,30 @@ function flexHtml(card){
 }
 
 function sendMark(m){
-  if(m.status === 'sending') return '<span title="กำลังส่ง">🕘</span>';
-  if(m.status === 'failed')  return `<span class="mk-fail" title="${esc(m.error || '')}">⚠️ ${esc(m.error || 'ส่งไม่สำเร็จ')}</span>`;
-  return m.via === 'app' ? '<span title="ส่งถึง LINE แล้ว">✓✓</span>' : '';
+  if(m.status === 'sending') return `<span class="rd-s" title="กำลังส่ง">${ic('clock')}</span>`;
+  if(m.status === 'failed')  return `<span class="mk-fail" title="${esc(m.error || '')}">${ic('alert')} ${esc(m.error || 'ส่งไม่สำเร็จ')}</span>`;
+  // ช่องสถานะอ่าน — เติมทีหลังด้วย paintReadMarks() จะได้อัปเดตได้โดยไม่ต้องวาดแชทใหม่ทั้งห้อง
+  return `<span class="rd" data-at="${Date.parse(m.sent_at) || 0}" data-app="${m.via === 'app' ? 1 : 0}"></span>`;
+}
+
+// "อ่านแล้ว" — OA Manager บอกว่าอีกฝั่งอ่านถึงเวลาไหน (pur_chats.peer_read_at)
+// ข้อความขาออกที่ส่งก่อนเวลานั้น = อ่านแล้ว · กลุ่ม = มีสมาชิกอ่านแล้วอย่างน้อย 1 คน
+function paintReadMarks(){
+  const area = $('msgsArea'), c = chatById.get(activeId); if(!area) return;
+  const rt = c && c.peer_read_at ? Date.parse(c.peer_read_at) : 0;
+  const grp = c && c.kind !== 'user';
+  area.querySelectorAll('.rd').forEach(el => {
+    const at = +el.dataset.at || 0, app = el.dataset.app === '1';
+    if(rt && at && at <= rt){
+      el.className = 'rd on';
+      el.innerHTML = ic('checkcheck') + 'อ่านแล้ว';
+      el.title = grp ? 'มีสมาชิกในกลุ่มเปิดอ่านแล้ว' : 'อีกฝั่งเปิดอ่านแล้ว';
+    } else {
+      el.className = 'rd';
+      el.innerHTML = app ? ic('check') : '';
+      el.title = app ? 'ส่งถึง LINE แล้ว — ยังไม่อ่าน' : '';
+    }
+  });
 }
 function renderMsgs(msgs){
   const area = $('msgsArea'); const c = chatById.get(activeId);
@@ -1469,6 +1555,7 @@ function renderMsgs(msgs){
   });
   area.innerHTML = html;
   resolveMedia(area);
+  paintReadMarks();
 }
 function scrollBottom(){ setTimeout(() => { const a = $('msgsArea'); a.scrollTop = a.scrollHeight; }, 60); }
 function jumpBottom(){ $('newPill').classList.remove('show'); scrollBottom(); }
@@ -1680,7 +1767,9 @@ function setupRealtime(){
     if(p.eventType === 'DELETE'){ const id = p.old?.id; if(id){ chats = chats.filter(c => c.id !== id); chatById.delete(id); if(activeId === id) closeChat(); schedulePaint(); } return; }
     const r = p.new; if(!r?.id) return;
     if(!paintSnap) paintSnap = snapshot();   // เก็บภาพก่อนหน้าครั้งเดียวต่อรอบ ไม่ใช่ทุกเหตุการณ์
+    const prevRead = chatById.get(r.id)?.peer_read_at;
     upsertChat(r);
+    if(activeId === r.id && r.peer_read_at !== prevRead) paintReadMarks();   // อีกฝั่งเพิ่งเปิดอ่าน → ขึ้น "อ่านแล้ว" ทันที
     if(activeId === r.id && r.unread_count > 0 && document.hasFocus()){ r.unread_count = 0; chatById.get(r.id).unread_count = 0; }
     if(activeId === r.id) paintHeader = true;
     schedulePaint();
@@ -1796,7 +1885,7 @@ function pushNoti(kind, chat, text, key){
 const notiUnread = () => notiList.filter(n => !n.read).length;
 function renderBell(){
   const b = $('bellBtn'); if(!b) return;
-  b.textContent = notiPrefs.on ? '🔔' : '🔕';
+  b.innerHTML = ic(notiPrefs.on ? 'bell' : 'belloff');
   const n = notiUnread(), e = $('bellDot');
   if(e){ e.textContent = n > 99 ? '99+' : String(n || ''); e.style.display = n ? '' : 'none'; }
   b.title = `ศูนย์แจ้งเตือน${n ? ` · ใหม่ ${n}` : ''}${notiPrefs.on ? '' : ' (ปิดอยู่)'}`;
@@ -1814,7 +1903,7 @@ function notiPanelHtml(){
   const nu = notiUnread();
   return `<div class="noti-head"><b>🔔 การแจ้งเตือน${nu ? ` (${nu})` : ''}</b>
       <span class="noti-acts">
-        <button onclick="event.stopPropagation();toggleNotify()" title="${notiPrefs.on ? 'ปิดแจ้งเตือนชั่วคราว' : 'เปิดแจ้งเตือน'}">${notiPrefs.on ? '🔕 ปิด' : '🔔 เปิด'}</button>
+        <button onclick="event.stopPropagation();toggleNotify()" title="${notiPrefs.on ? 'ปิดแจ้งเตือนชั่วคราว' : 'เปิดแจ้งเตือน'}">${notiPrefs.on ? ic('belloff') + ' ปิด' : ic('bell') + ' เปิด'}</button>
         <button onclick="event.stopPropagation();readAllNoti()" title="ทำเครื่องหมายอ่านแล้วทั้งหมด">✓ อ่านแล้ว</button>
         <button onclick="event.stopPropagation();clearNoti()" title="ล้างรายการทั้งหมด">🗑</button>
       </span></div>
@@ -2154,9 +2243,9 @@ function setPerson(p){
 function fillPersonDD(){
   if(!isSup()){ $('personWrap').style.display = 'none'; return; }
   $('personWrap').style.display = '';
-  const list = [...members.values()].sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1) || (a.nick || a.name || '').localeCompare(b.nick || b.name || '', 'th'));
+  const list = [...members.values()].filter(m => m.role !== 'admin').sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1) || (a.nick || a.name || '').localeCompare(b.nick || b.name || '', 'th'));
   const sel = $('dashPerson'), cur = dash.person || 'all';
-  sel.innerHTML = `<option value="all">👤 ทุกคน</option><option value="none">ไม่มีผู้รับผิดชอบ</option>` +
+  sel.innerHTML = `<option value="all">ทุกคน</option><option value="none">ไม่มีผู้รับผิดชอบ</option>` +
     list.map(m => `<option value="${esc(m.email)}">${esc(m.nick || m.name || m.email)}${m.active ? '' : ' (พ้นสภาพ)'}</option>`).join('');
   sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'all';
 }
@@ -2382,8 +2471,10 @@ function renderPersons(inR, open, reps){
   const slaNow = slaSec();
   open.forEach(w => { const r = get(w.owner_email || ''); r.openNow++; if(w._age > slaNow) r.openLate++; });
   reps.forEach(r => { if(!r.staff_email) return; const p = get(r.staff_email); if(r.via === 'app') p.repApp += Number(r.replies); else if(r.via === 'oa') p.repOa += Number(r.replies); else p.repLine += Number(r.replies); });
-  if(isSup() && dash.person === 'all') [...members.values()].filter(m => m.active).forEach(m => get(m.email));
+  if(isSup() && dash.person === 'all') [...members.values()].filter(m => m.active && m.role !== 'admin').forEach(m => get(m.email));
   const list = [...rows.values()].map(r => { r.durs.sort((a, b) => a - b); r.med = quantile(r.durs, .5); r.p90 = quantile(r.durs, .9); r.slaPct = r.answered ? r.ok / r.answered : null; r.reps = r.repApp + r.repLine + r.repOa; return r; });
+  // ผู้ดูแลระบบไม่ได้ตอบแชทซัพ — ไม่ขึ้นในผลงานรายคน (ทั้งการ์ดและตาราง)
+  for(let i = list.length - 1; i >= 0; i--) if(list[i].email && members.get(list[i].email)?.role === 'admin') list.splice(i, 1);
   const cols = [['name', 'ผู้รับผิดชอบ', 'str'], ['total', 'งานรอตอบ', 'num'], ['answered', 'ตอบแล้ว', 'num'], ['openR', 'ยังไม่ตอบ', 'num'], ['dis', 'ไม่ต้องตอบ', 'num'], ['openNow', 'ค้างตอนนี้', 'num'], ['slaPct', 'ทัน SLA', 'num'], ['late', 'ช้ากว่า SLA', 'num'], ['med', 'มัธยฐาน', 'num'], ['p90', 'P90', 'num'], ['byOther', 'คนอื่นช่วยตอบ', 'num'], ['reps', 'ข้อความส่ง', 'num']];
   const sorted = sortRows(list, personSort.key, personSort.dir);
   const T = list.reduce((t, r) => { t.total += r.total; t.answered += r.answered; t.openR += r.openR; t.dis += r.dis; t.openNow += r.openNow; t.ok += r.ok; t.late += r.late; t.byOther += r.byOther; t.reps += r.reps; return t; }, { total:0, answered:0, openR:0, dis:0, openNow:0, ok:0, late:0, byOther:0, reps:0 });
@@ -2393,7 +2484,7 @@ function renderPersons(inR, open, reps){
     <tfoot><tr><td>รวม</td><td class="num">${nf(T.total)}</td><td class="num">${nf(T.answered)}</td><td class="num">${nf(T.openR)}</td><td class="num">${nf(T.dis)}</td><td class="num">${nf(T.openNow)}</td><td class="num">${T.answered ? Math.round(T.ok / T.answered * 100) + '%' : '–'}</td><td class="num">${nf(T.late)}</td><td class="num">${fmtDur(quantile(allDurs, .5))}</td><td class="num">${fmtDur(quantile(allDurs, .9))}</td><td class="num">${nf(T.byOther)}</td><td class="num">${nf(T.reps)}</td></tr></tfoot></table>`;
   // ── เรียงตาม "ความน่ากังวล" ──
   // กติกาอธิบายได้ตรงๆ ไม่ใช้คะแนนลับ: งานค้างที่เลย SLA แล้ว > งานค้างทั้งหมด > จำนวนครั้งที่ตอบช้า > สัดส่วนทัน SLA
-  const ranked = [...list].sort((a, b) =>
+  const ranked = list.filter(r => r.email).sort((a, b) =>
     (b.openLate - a.openLate) || (b.openNow - a.openNow) || (b.late - a.late) ||
     ((a.slaPct == null ? 1 : a.slaPct) - (b.slaPct == null ? 1 : b.slaPct)) ||
     String(a.name).localeCompare(String(b.name), 'th'));
@@ -2406,7 +2497,7 @@ function renderPersons(inR, open, reps){
 
   if(dash.person !== 'all'){
     // กดเลือกคนใดคนหนึ่งแล้ว — กางข้อมูลของเขาแบบเต็ม (กราฟทั้งหน้าก็กรองตามอยู่แล้ว)
-    const r = ranked[0];
+    const r = list.find(x => (x.email || 'none') === dash.person) || list[0];
     $('personChart').innerHTML = r ? `<div class="mdetail">
       <div class="md-top">
         <span class="mc-av">${mAv(r)}</span>
@@ -2480,7 +2571,7 @@ function pcardHtml({ c, tone, onclick, main, sub, meta, msg, foot }){
     <div class="pc-top">${avatarHtml(c, 42)}
       <div class="pc-id">
         <div class="pc-nm">${esc(chatName(c))}</div>
-        <div class="pc-kind">${c.kind === 'user' ? '👤 แชท 1:1' : `👥 กลุ่ม · ${nf(c.member_count || 1)} คน`}</div>
+        <div class="pc-kind">${c.kind === 'user' ? ic('user') + 'แชท 1:1' : ic('users') + `กลุ่ม · ${nf(c.member_count || 1)} คน`}</div>
       </div></div>
     <div class="pc-wait">${main}${sub ? `<span>${sub}</span>` : ''}</div>
     ${meta ? `<div class="pc-meta">${meta}</div>` : ''}
