@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.18</title>
+<title>Rattana Purchase Chat v1.19</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -393,6 +393,23 @@ body.dark .fx-bubble{background:#f7f8fb}
 .mc-grid div{min-width:0}
 .mc-grid b{display:block;font-size:14px;line-height:1.2}
 .mc-grid b.bad{color:var(--st-crit)}
+.mc-grid b,.mc-two b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-rank{flex-shrink:0;width:18px;font-size:11px;font-weight:800;color:var(--sub);text-align:right}
+.mc-two{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.mc-two div{min-width:0}
+.mc-two b{display:block;font-size:22px;line-height:1.15;font-weight:800}
+.mc-two b.bad{color:var(--st-crit)}
+.mc-two b.zero{color:var(--sub);font-weight:700}
+.mc-two span{display:block;font-size:11px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-two em{display:block;font-size:10px;font-style:normal;color:var(--st-crit);white-space:nowrap}
+/* แผงรายละเอียดตอนกดเลือกคนใดคนหนึ่ง */
+.mdetail{border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:12px;padding:13px 14px;background:var(--card-bg)}
+.md-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.md-nm{flex:1;min-width:0;font-weight:800;font-size:16px}
+.md-sla{font-weight:800;font-size:20px}
+.mback{font:inherit;font-size:12px;font-weight:700;color:var(--navy);background:var(--bg);
+  border:1px solid var(--border);border-radius:99px;padding:5px 12px;cursor:pointer;flex-shrink:0}
+.mback:hover{border-color:var(--gold)}
 .mc-grid span{display:block;font-size:10px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:430px){.mgrid{grid-template-columns:1fr}}
 .bl-list{max-height:min(46vh,420px);overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
@@ -557,7 +574,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.18 · 18/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.19 · 18/09/2569</div>
   </div>
 </div>
 
@@ -569,7 +586,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.18</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.19</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -698,7 +715,8 @@ select.input{appearance:auto}
           <h3>👥 ผลงานรายคน</h3>
           <div class="acts"><button class="toggle-btn" data-alt="การ์ด" onclick="toggleTable('person')">ตาราง</button></div>
           <div class="hint">นับตาม<b>ผู้รับผิดชอบ</b>ของงาน (ผู้รับผิดชอบแชทตอนที่งานเข้า หรือคนที่ตอบถ้ายังไม่มีผู้รับผิดชอบ) ·
-            แถบสีคือ<b>สัดส่วนที่ตอบทัน SLA</b> · <b>คลิกการ์ดเพื่อดูเฉพาะคนนั้น</b> คลิกซ้ำกลับมาดูทั้งทีม · ในตารางคลิกหัวคอลัมน์เพื่อเรียง</div>
+            เรียงจาก<b>คนที่น่ากังวลที่สุดลงมา</b> — ดูงานที่ค้างและเลย SLA แล้วก่อน แล้วค่อยดูงานค้างทั้งหมด ตามด้วยจำนวนครั้งที่ตอบช้า ·
+            <b>คลิกการ์ดเพื่อกางข้อมูลของคนนั้น</b> (กราฟและรายการทั้งหน้าจะเปลี่ยนตามด้วย) · ในตารางคลิกหัวคอลัมน์เพื่อเรียง</div>
         </div>
         <div class="card-body tight" id="personChart"></div>
         <div class="tbl-wrap" id="personTable" hidden></div>
@@ -2359,9 +2377,10 @@ function sortRows(rows, key, dir){
 }
 function renderPersons(inR, open, reps){
   const rows = new Map();
-  const get = k => { if(!rows.has(k)) rows.set(k, { email:k, name:k ? memberName(k) : 'ไม่มีผู้รับผิดชอบ', total:0, answered:0, ok:0, late:0, openR:0, dis:0, byOther:0, openNow:0, durs:[], repApp:0, repLine:0, repOa:0 }); return rows.get(k); };
+  const get = k => { if(!rows.has(k)) rows.set(k, { email:k, name:k ? memberName(k) : 'ไม่มีผู้รับผิดชอบ', total:0, answered:0, ok:0, late:0, openR:0, dis:0, byOther:0, openNow:0, openLate:0, durs:[], repApp:0, repLine:0, repOa:0 }); return rows.get(k); };
   inR.forEach(w => { const r = get(w.owner_email || ''); r.total++; if(w._answered){ r.answered++; if(w._ok) r.ok++; else r.late++; r.durs.push(w._dur); if(w.closed_by && w.closed_by !== w.owner_email) r.byOther++; } else if(w._dismissed) r.dis++; else r.openR++; });
-  open.forEach(w => { get(w.owner_email || '').openNow++; });
+  const slaNow = slaSec();
+  open.forEach(w => { const r = get(w.owner_email || ''); r.openNow++; if(w._age > slaNow) r.openLate++; });
   reps.forEach(r => { if(!r.staff_email) return; const p = get(r.staff_email); if(r.via === 'app') p.repApp += Number(r.replies); else if(r.via === 'oa') p.repOa += Number(r.replies); else p.repLine += Number(r.replies); });
   if(isSup() && dash.person === 'all') [...members.values()].filter(m => m.active).forEach(m => get(m.email));
   const list = [...rows.values()].map(r => { r.durs.sort((a, b) => a - b); r.med = quantile(r.durs, .5); r.p90 = quantile(r.durs, .9); r.slaPct = r.answered ? r.ok / r.answered : null; r.reps = r.repApp + r.repLine + r.repOa; return r; });
@@ -2372,40 +2391,78 @@ function renderPersons(inR, open, reps){
   $('personTable').innerHTML = `<table class="tbl" id="personTbl"><thead><tr>${cols.map(c => `<th class="${c[2] === 'num' ? 'num' : ''}" data-key="${c[0]}" data-type="${c[2]}">${c[1]}<span class="sort-ind">${personSort.key === c[0] ? (personSort.dir === 'asc' ? '▲' : '▼') : ''}</span></th>`).join('')}</tr></thead>
     <tbody>${sorted.length ? sorted.map(r => `<tr><td>${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</td><td class="num">${nf(r.total)}</td><td class="num">${nf(r.answered)}</td><td class="num">${r.openR ? `<span class="pill bad">${nf(r.openR)}</span>` : '0'}</td><td class="num">${nf(r.dis)}</td><td class="num">${r.openNow ? `<span class="pill bad">${nf(r.openNow)}</span>` : '0'}</td><td class="num">${slaPill(r.slaPct)}</td><td class="num" title="ตอบแล้วแต่ช้ากว่า SLA — คลิกดูว่าเป็นแชทไหนบ้าง">${r.late ? `<span class="pill bad drill" onclick="openLateFor('${r.email}')">${nf(r.late)}</span>` : '0'}</td><td class="num">${fmtDur(r.med)}</td><td class="num">${fmtDur(r.p90)}</td><td class="num">${nf(r.byOther)}</td><td class="num" title="แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}">${nf(r.reps)}</td></tr>`).join('') : `<tr class="empty-row"><td colspan="12">ไม่มีข้อมูลในช่วงนี้</td></tr>`}</tbody>
     <tfoot><tr><td>รวม</td><td class="num">${nf(T.total)}</td><td class="num">${nf(T.answered)}</td><td class="num">${nf(T.openR)}</td><td class="num">${nf(T.dis)}</td><td class="num">${nf(T.openNow)}</td><td class="num">${T.answered ? Math.round(T.ok / T.answered * 100) + '%' : '–'}</td><td class="num">${nf(T.late)}</td><td class="num">${fmtDur(quantile(allDurs, .5))}</td><td class="num">${fmtDur(quantile(allDurs, .9))}</td><td class="num">${nf(T.byOther)}</td><td class="num">${nf(T.reps)}</td></tr></tfoot></table>`;
-  // การ์ดรายคน — เห็นทั้งทีมพร้อมกันโดยไม่ต้องเลือกทีละคน
-  $('personChart').innerHTML = sorted.length
-    ? `<div class="mgrid">${sorted.map(r => {
-        const key  = r.email || 'none';
-        const on   = dash.person === key;
-        const p    = r.slaPct;
-        const tone = !r.total && !r.openNow && !r.reps          ? 'none'    // ยังไม่มีงานเลย อย่าให้ดูเหมือนผลงานดี
-                   : (p != null && p < .7) || r.openNow >= 10   ? 'crit'
-                   : (p != null && p < .9) || r.openNow > 0     ? 'warn' : '';
-        return `<button class="mcard ${tone}${on ? ' on' : ''}" onclick="setPerson('${on ? 'all' : key}')"
-            title="${on ? 'กำลังดูเฉพาะคนนี้ — คลิกเพื่อกลับมาดูทั้งทีม' : 'คลิกเพื่อดูเฉพาะ ' + esc(r.name)}">
-          <div class="mc-top">
-            <span class="mc-av">${esc(String(r.name || '?').trim().charAt(0))}</span>
-            <span class="mc-nm">${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</span>
-            <span class="mc-sla">${p == null ? '–' : Math.round(p * 100) + '%'}</span>
-          </div>
-          <div class="mc-bar"><i style="width:${p == null ? 0 : Math.round(p * 100)}%"></i></div>
-          <div class="mc-grid">
-            <div><b class="${r.openNow ? 'bad' : ''}">${nf(r.openNow)}</b><span>ค้างตอนนี้</span></div>
-            <div><b>${nf(r.total)}</b><span>งานรอตอบ</span></div>
-            <div><b>${nf(r.answered)}</b><span>ตอบแล้ว</span></div>
-            <div><b class="${r.late ? 'bad' : ''}">${nf(r.late)}</b><span>ช้ากว่า SLA</span></div>
-            <div><b>${fmtDur(r.med)}</b><span>มัธยฐาน</span></div>
-            <div><b>${nf(r.reps)}</b><span>ข้อความส่ง</span></div>
-          </div></button>`;
-      }).join('')}</div>`
+  // ── เรียงตาม "ความน่ากังวล" ──
+  // กติกาอธิบายได้ตรงๆ ไม่ใช้คะแนนลับ: งานค้างที่เลย SLA แล้ว > งานค้างทั้งหมด > จำนวนครั้งที่ตอบช้า > สัดส่วนทัน SLA
+  const ranked = [...list].sort((a, b) =>
+    (b.openLate - a.openLate) || (b.openNow - a.openNow) || (b.late - a.late) ||
+    ((a.slaPct == null ? 1 : a.slaPct) - (b.slaPct == null ? 1 : b.slaPct)) ||
+    String(a.name).localeCompare(String(b.name), 'th'));
+
+  const mTone = r => !r.total && !r.openNow && !r.reps          ? 'none'    // ยังไม่มีงานเลย อย่าให้ดูเหมือนผลงานดี
+                   : r.openLate > 0 || (r.slaPct != null && r.slaPct < .7) ? 'crit'
+                   : r.openNow > 0  || (r.slaPct != null && r.slaPct < .9) ? 'warn' : '';
+  const mPct = r => r.slaPct == null ? '–' : Math.round(r.slaPct * 100) + '%';
+  const mAv  = r => esc(String(r.name || '?').trim().charAt(0));
+
+  if(dash.person !== 'all'){
+    // กดเลือกคนใดคนหนึ่งแล้ว — กางข้อมูลของเขาแบบเต็ม (กราฟทั้งหน้าก็กรองตามอยู่แล้ว)
+    const r = ranked[0];
+    $('personChart').innerHTML = r ? `<div class="mdetail">
+      <div class="md-top">
+        <span class="mc-av">${mAv(r)}</span>
+        <span class="md-nm">${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</span>
+        <span class="md-sla">${mPct(r)}</span>
+        <button class="mback" onclick="setPerson('all')">◀ กลับไปดูทั้งทีม</button>
+      </div>
+      <div class="mc-bar" style="margin-bottom:12px"><i style="width:${r.slaPct == null ? 0 : Math.round(r.slaPct * 100)}%;background:var(--${mTone(r) === 'crit' ? 'st-crit' : mTone(r) === 'warn' ? 'st-warn' : 'st-good'})"></i></div>
+      <div class="mc-grid">
+        <div><b class="${r.openNow ? 'bad' : ''}">${nf(r.openNow)}</b><span>ค้างตอนนี้</span></div>
+        <div><b class="${r.openLate ? 'bad' : ''}">${nf(r.openLate)}</b><span>ค้างและเลย SLA</span></div>
+        <div><b class="${r.late ? 'bad' : ''}">${nf(r.late)}</b><span>ตอบช้ากว่า SLA</span></div>
+        <div><b>${nf(r.total)}</b><span>งานรอตอบ</span></div>
+        <div><b>${nf(r.answered)}</b><span>ตอบแล้ว</span></div>
+        <div><b>${nf(r.dis)}</b><span>ไม่ต้องตอบ</span></div>
+        <div><b>${fmtDur(r.med)}</b><span>มัธยฐาน</span></div>
+        <div><b>${fmtDur(r.p90)}</b><span>P90</span></div>
+        <div><b>${nf(r.reps)}</b><span>ข้อความส่ง</span></div>
+      </div>
+      <div class="hint" style="margin-top:10px">ข้อความส่ง — แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}${r.byOther ? ` · คนอื่นช่วยตอบ ${nf(r.byOther)} งาน` : ''}</div>
+    </div>` : `<div class="txt-sm txt-muted" style="padding:6px 2px">ไม่มีข้อมูลในช่วงนี้ <button class="mback" onclick="setPerson('all')">◀ กลับไปดูทั้งทีม</button></div>`;
+    dash.lastPersons = list;
+    bindPersonSort();
+    return;
+  }
+
+  // การ์ดรายคน — เห็นทั้งทีมพร้อมกัน เรียงคนน่ากังวลสุดขึ้นก่อน โชว์แค่ตัวเลขที่ต้องรีบดู
+  $('personChart').innerHTML = ranked.length
+    ? `<div class="mgrid">${ranked.map((r, i) => `<button class="mcard ${mTone(r)}" onclick="setPerson('${r.email || 'none'}')"
+          title="คลิกเพื่อดูข้อมูลของ ${esc(r.name)}">
+        <div class="mc-top">
+          <span class="mc-rank">${i + 1}</span>
+          <span class="mc-av">${mAv(r)}</span>
+          <span class="mc-nm">${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</span>
+          <span class="mc-sla">${mPct(r)}</span>
+        </div>
+        <div class="mc-bar"><i style="width:${r.slaPct == null ? 0 : Math.round(r.slaPct * 100)}%"></i></div>
+        <div class="mc-two">
+          <div><b class="${r.openNow ? 'bad' : 'zero'}">${nf(r.openNow)}</b><span>ค้างตอนนี้</span>${r.openLate ? `<em>เลย SLA แล้ว ${nf(r.openLate)}</em>` : ''}</div>
+          <div><b class="${r.late ? 'bad' : 'zero'}">${nf(r.late)}</b><span>ตอบช้ากว่า SLA</span></div>
+        </div></button>`).join('')}</div>`
     : `<div class="txt-sm txt-muted" style="padding:6px 2px">ไม่มีข้อมูลในช่วงนี้</div>`;
 
-  $('personTbl').querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+
+
+  bindPersonSort();
+  dash.lastPersons = list;
+}
+
+function bindPersonSort(){
+  const t = $('personTbl'); if(!t) return;
+  t.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
     const key = th.dataset.key, type = th.dataset.type;
     if(personSort.key === key) personSort.dir = personSort.dir === 'asc' ? 'desc' : 'asc'; else personSort = { key, dir:type === 'num' ? 'desc' : 'asc' };
     renderDash();
   }));
-  dash.lastPersons = list;
 }
 
 // ── ตัวสร้างการ์ดที่ใช้ร่วมกันทุกที่ ──
