@@ -8,14 +8,16 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.20</title>
+<title>Rattana Purchase Chat v1.21</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- ตรึงเลขเวอร์ชันเต็ม (เดิม @2 ลอยตามรุ่นล่าสุด — รุ่นใหม่ที่พัง/ถูกแทรกโค้ดจะเข้าแอพเองโดยไม่มีใครรู้) · 2.116.0 = ไฟล์เดียวกับที่ @2 ชี้อยู่ ณ 21/09/2569
+     จะขยับรุ่น: แก้เลขตรงนี้แล้วทดสอบล็อกอิน/realtime ก่อนปล่อย · ยังไม่ใส่ integrity/CSP โดยตั้งใจ (hash ผิดนิดเดียวแอพดับทั้งแอพ) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
 /* ───────────── DESIGN TOKENS (Rattana navy/gold) ───────────── */
@@ -225,7 +227,8 @@ button.older-bar:hover{border-color:var(--gold);color:var(--text)}
 .quoting .qtext{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:3px solid var(--gold);padding-left:8px;color:var(--text)}
 .reply-note{display:none;align-items:center;gap:8px;padding:9px 12px;background:rgba(243,156,18,.12);border-top:1px solid rgba(243,156,18,.35);font-size:12px;line-height:1.5}
 .reply-note.show{display:flex}
-.reply-bar{padding:8px 10px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:var(--card-bg);border-top:1px solid var(--border);display:flex;align-items:flex-end;gap:8px;flex-shrink:0}
+/* safe-area ล่าง: บนมือถือ .bottom-nav รับไปแล้ว (ใส่ซ้ำ = ช่องว่างเกิน ~26px บน iPhone) — ใส่เฉพาะจอ ≥768px ที่ nav ถูกซ่อน (ดูบล็อก DESKTOP) */
+.reply-bar{padding:8px 10px;background:var(--card-bg);border-top:1px solid var(--border);display:flex;align-items:flex-end;gap:8px;flex-shrink:0}
 .reply-inp{flex:1;min-height:42px;max-height:120px;padding:10px 14px;border-radius:21px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:16px;line-height:1.4;resize:none;overflow-y:auto;transition:border-color .15s}
 .reply-inp:focus{border-color:var(--gold)}
 .reply-inp:disabled{opacity:.5}
@@ -420,7 +423,8 @@ body.dark .fx-bubble{background:#f7f8fb}
 .hb.crit{color:var(--st-crit);background:linear-gradient(145deg,rgba(208,59,59,.17),rgba(208,59,59,.05));box-shadow:inset 0 0 0 1px rgba(208,59,59,.26)}
 .hb.warn{color:#c98a06;background:linear-gradient(145deg,rgba(250,178,25,.22),rgba(250,178,25,.06));box-shadow:inset 0 0 0 1px rgba(250,178,25,.32)}
 .hb.info{color:var(--s1);background:linear-gradient(145deg,rgba(42,120,214,.17),rgba(42,120,214,.05));box-shadow:inset 0 0 0 1px rgba(42,120,214,.26)}
-body.dark .hb{color:var(--gold-light)}
+/* โหมดมืด: ให้สีทองเฉพาะ .hb ธรรมดา — ไม่ทับสีแดง/ส้ม/ฟ้าของ crit/warn/info (ความหมายระดับเร่งด่วนหาย) */
+body.dark .hb:not(.crit):not(.warn):not(.info){color:var(--gold-light)}
 .card-head h3{gap:9px}
 .tab-btn .ic{width:16px;height:16px}
 .bni-icon .ic{width:21px;height:21px;stroke-width:1.8}
@@ -572,6 +576,7 @@ select.input{appearance:auto}
   .bottom-nav{display:none}
   .list-pane{position:static;width:340px;border-right:1px solid var(--border);flex-shrink:0}
   .chat-pane{position:static;transform:none;flex:1}
+  .reply-bar{padding-bottom:max(8px,env(safe-area-inset-bottom))}  /* nav ถูกซ่อน → ช่องพิมพ์ติดขอบจอจริง (iPad/iPhone แนวนอน) */
   .back-btn{display:none}
   .msg-grp{max-width:72%}
   .logo-sub{max-width:none}
@@ -601,7 +606,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.20 · 18/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.21 · 21/09/2569</div>
   </div>
 </div>
 
@@ -613,7 +618,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.20</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.21</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -841,7 +846,7 @@ select.input{appearance:auto}
 <!-- MODAL (generic) -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this) closeModal()">
   <div class="modal">
-    <div class="modal-head"><h3 id="modalTitle"></h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-head"><h3 id="modalTitle"></h3><button class="modal-close" onclick="closeModal()" aria-label="ปิด" title="ปิด">×</button></div>
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-foot" id="modalFoot"></div>
   </div>
@@ -852,7 +857,7 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.9 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.21 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -1062,12 +1067,21 @@ async function loadMembers(){ const rows = await fetchAll('pur_members', q => q.
 async function loadPeople(){ const rows = await fetchAll('pur_people', q => q.order('last_seen_at', { ascending:false })); people = new Map(rows.map(r => [r.line_user_id, r])); }
 async function loadSettings(){ const { data, error } = await sb.from('pur_settings').select('*').eq('id', 1).maybeSingle(); if(error) throw new Error(error.message); applySettings(data); }
 async function loadChats(){
-  const before = snapshot();
+  // ถ้ามีเหตุการณ์ realtime ค้างรอวาดอยู่ (schedulePaint 250ms) ให้ใช้ภาพ "ก่อนเหตุการณ์" ของมัน
+  // ไม่งั้นภาพที่ถ่ายตรงนี้มีข้อความใหม่อยู่แล้ว + บรรทัดล้าง paintSnap ข้างล่าง = การแจ้งเตือนของข้อความนั้นหาย
+  const before = paintSnap || snapshot();
   const rows = await fetchAll('pur_chats', q => q.order('last_message_at', { ascending:false, nullsFirst:false }));
   chats = rows; chatById = new Map(rows.map(r => [r.id, r]));
   if(typeof paintSnap !== 'undefined') paintSnap = null;
   detectNew(before); renderList(); updateBadges();
   if(activeId && chatById.get(activeId)) renderChatHeader(chatById.get(activeId));
+  // แชทที่เปิดอยู่หายไปจากฐานข้อมูล (ถูกรวม/ลบ ตอน realtime หลุด) → ปิดแชท ไม่ปล่อยให้หัวแชทเก่าค้างแล้วกดส่งเงียบ
+  // ถามซ้ำเฉพาะแถวนั้นก่อน — กันกรณีแถวตกหล่นระหว่างหน้าของ fetchAll (ลำดับเปลี่ยนกลางคัน) ไม่ให้ปิดแชทที่ยังอยู่จริง
+  else if(activeId){
+    const id = activeId;
+    const { data, error } = await sb.from('pur_chats').select('id').eq('id', id).maybeSingle();
+    if(!error && !data && activeId === id){ closeChat(); showToast('แชทนี้ถูกรวมกับแชทอื่นหรือถูกลบแล้ว — เลือกแชทจากรายการอีกครั้ง', 'info', 4500); }
+  }
 }
 // ข้อความโหลดทีละหน้าแบบ LINE: เปิดแชทเห็นข้อความล่าสุดด้านล่าง เลื่อนขึ้นบนสุดเพื่อโหลดข้อความเก่ากว่า
 const MSG_PAGE = 120;
@@ -1093,6 +1107,13 @@ async function loadMsgs(chatId){
   msgCache[chatId] = [...older, ...rows, ...tmp];
   return msgCache[chatId];
 }
+// โหลดข้อความของแชทที่เปิดอยู่ใหม่ — จำ id ไว้ก่อน await แล้วเช็คซ้ำหลัง await
+// (ระหว่างรอ ผู้ใช้อาจเปิดแชทอื่นไปแล้ว → ห้ามวาดข้อความของแชทเก่าลงใต้หัวแชทใหม่)
+async function refreshActiveMsgs(){
+  const id = activeId; if(!id) return;
+  const msgs = await loadMsgs(id);
+  if(activeId === id) renderMsgs(msgs);
+}
 async function refreshAll(){
   const b = $('refreshBtn'); b.disabled = true; b.style.transition = 'transform .6s'; b.style.transform = 'rotate(360deg)';
   try{
@@ -1100,7 +1121,7 @@ async function refreshAll(){
     else {
       await Promise.all([loadMembers(), loadPeople(), loadSettings()]);
       await loadChats();
-      if(activeId) renderMsgs(await loadMsgs(activeId));
+      await refreshActiveMsgs();
       if(view === 'dash') await loadDash();
       if(view === 'set'){ oaAdmins = null; renderSettings(); }
     }
@@ -1126,9 +1147,12 @@ async function callFn(body){
 }
 
 // ── CHAT LIST ──
+// "งานรอตอบ" ที่นับบนแท็บ / ไอคอนแอพ / ตัวกรอง "รอตอบ" — สูตรเดียวกับ waitingCount ใน pur-push
+// (ตัดแชทที่เสร็จแล้ว + แชท "ไม่นับสถิติ") ไม่งั้นเลขบนไอคอนกระโดดไปมาระหว่างเลขที่แอพตั้งเองกับเลขที่ push ตั้งให้
+const isWaiting = c => !!c.awaiting_since && c.status !== 'resolved' && !c.exclude_kpi;
 function chipCounts(){
   const open = chats.filter(c => c.status !== 'resolved');
-  return { all: chats.length, awaiting: chats.filter(c => c.awaiting_since).length,
+  return { all: chats.length, awaiting: chats.filter(isWaiting).length,
            mine: open.filter(c => c.assignee_email === me?.email).length, unassigned: open.filter(c => !c.assignee_email).length,
            group: open.filter(c => c.kind !== 'user').length, user: open.filter(c => c.kind === 'user').length,
            resolved: chats.filter(c => c.status === 'resolved').length };
@@ -1138,7 +1162,7 @@ function filteredChats(){
   return chats.filter(c => {
     const open = c.status !== 'resolved';
     switch(listFilter){
-      case 'awaiting':   if(!c.awaiting_since) return false; break;
+      case 'awaiting':   if(!isWaiting(c)) return false; break;      // ให้รายการตรงกับเลขบนชิป/แท็บ
       case 'mine':       if(!open || c.assignee_email !== me?.email) return false; break;
       case 'unassigned': if(!open || c.assignee_email) return false; break;
       case 'group':      if(!open || c.kind === 'user') return false; break;
@@ -1157,10 +1181,13 @@ function filteredChats(){
     return recent;
   });
 }
+// รูปโปรไฟล์มาจากภายนอก (LINE/OA) แล้วถูกฝังใน style="…url('…')" — esc() กัน HTML ได้ แต่ไม่กัน ) \ ที่หลุดออกจาก url() ของ CSS
+// รับเฉพาะ http(s) ที่ไม่มี ' " ( ) \ < > ช่องว่าง (ยังต้อง esc ซ้ำ กัน &…; ถูกถอดใน attribute) · ไม่ผ่าน = โชว์อักษรตัวแรกตามเดิม
+const safeImg = u => /^https?:\/\/[^\s'"()\\<>]+$/i.test(String(u || '')) ? String(u) : null;
 function avatarHtml(c, size){
-  const grp = c.kind !== 'user'; const name = chatName(c);
-  const bg = c.avatar_url ? `${avCol(name)} url('${esc(c.avatar_url)}') center/cover no-repeat` : avCol(name);
-  return `<div class="av ${grp ? 'group' : ''}" style="background:${bg};${size ? `width:${size}px;height:${size}px;font-size:${Math.round(size*.36)}px` : ''}">${c.avatar_url ? '' : (grp ? '👥' : esc(name.charAt(0)))}</div>`;
+  const grp = c.kind !== 'user'; const name = chatName(c); const av = safeImg(c.avatar_url);
+  const bg = av ? `${avCol(name)} url('${esc(av)}') center/cover no-repeat` : avCol(name);
+  return `<div class="av ${grp ? 'group' : ''}" style="background:${bg};${size ? `width:${size}px;height:${size}px;font-size:${Math.round(size*.36)}px` : ''}">${av ? '' : (grp ? '👥' : esc(name.charAt(0)))}</div>`;
 }
 const LIST_STEP = 80;            // วาดทีละเท่านี้ เลื่อนถึงท้ายค่อยต่อ — 438 รายการรวดเดียวหนักเกินไปสำหรับมือถือ
 let listShown = LIST_STEP;
@@ -1204,7 +1231,7 @@ function renderSortBtn(){
 }
 function filterConv(q){ searchQ = q; resetList(); renderList(); }
 function updateBadges(){
-  const n = chats.filter(c => c.awaiting_since).length;
+  const n = chats.filter(isWaiting).length;
   ['tb-chat', 'bn-chat'].forEach(id => { const e = $(id); if(e) e.textContent = n || ''; });
   document.title = (n ? `(${n}) ` : '') + `Rattana Purchase Chat v${APP_VERSION}`;
   setAppBadge(n);
@@ -1237,7 +1264,15 @@ async function openChat(id){
   try{ const msgs = await loadMsgs(id); if(activeId !== id) return; renderMsgs(msgs); renderList(); scrollBottom(); }
   catch(e){ showToast('โหลดข้อความไม่ได้: ' + e.message, 'error'); }
 }
-function closeChat(){ $('chatPane').classList.remove('open'); activeId = null; renderList(); }
+function closeChat(){
+  $('chatPane').classList.remove('open'); activeId = null; clearQuote(); renderList();
+  // คืนหน้าว่าง — บนจอกว้างแผงแชทไม่เลื่อนออก ถ้าไม่ซ่อนจะเห็นแชทเก่าค้าง (เช่น แชทถูกรวม/ลบ) แล้วกดส่งเงียบ
+  // บนมือถือรอให้แผงเลื่อนออกจอก่อน (transition .28s) ไม่ให้เนื้อหาหายวาบกลางแอนิเมชัน
+  const reset = () => { if(activeId) return;               // เปิดแชทอื่นไปแล้วระหว่างรอ → ไม่ทับ
+    $('chatContent').style.display = 'none'; $('chatEmpty').style.display = '';
+    $('msgsArea').innerHTML = ''; $('newPill').classList.remove('show'); };
+  if(window.innerWidth < 768) setTimeout(reset, 300); else reset();
+}
 function renderChatHeader(c){
   $('chatName').textContent = chatName(c);
   const parts = [c.kind === 'user' ? 'แชท 1:1' : c.kind === 'group' ? 'กลุ่ม LINE' : 'ห้องแชทรวม'];
@@ -1275,13 +1310,19 @@ function renderStrips(c){
   }
   $('chatStrips').innerHTML = h;
 }
+// แชทที่ส่วนขยายดึงมาจาก OA Manager แต่แอพยังไม่รู้รหัส LINE จริง (line_id = 'oa:…') — Messaging API ส่งหาไม่ได้
+// pur-send ปฏิเสธอยู่แล้ว · ฝั่งแอพปิดช่องพิมพ์ไว้เลย จะได้ไม่พิมพ์ยาวแล้วค่อยรู้ว่าส่งไม่ได้ (ไม่มีปุ่ม "ลองส่งดูอยู่ดี" เพราะส่งไม่ได้แน่)
+const isOaOnly = c => String(c?.line_id || '').startsWith('oa:');
+const OA_ONLY_MSG = 'แชทนี้แอพยังไม่รู้รหัส LINE จริง — ตอบใน LINE OA Manager ไปก่อน';
 function applyReplyState(c){
-  const blocked = !c.is_active && !forceReply.has(c.id);
+  const oaOnly = isOaOnly(c);
+  const blocked = oaOnly || (!c.is_active && !forceReply.has(c.id));
   const note = $('replyNote');
-  note.innerHTML = blocked ? `⚠️ ส่งจากหน้านี้ไม่ได้ในตอนนี้ <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="forceReply.add(activeId);applyReplyState(chatById.get(activeId))">ลองส่งดูอยู่ดี</button>` : '';
+  note.innerHTML = oaOnly ? `<span>⚠️ ${OA_ONLY_MSG} <span class="txt-muted">(ระบบจะได้รหัสเองเมื่อซัพทักเข้ามาหรือมีการส่งใบสั่งสินค้า)</span></span>`
+    : blocked ? `⚠️ ส่งจากหน้านี้ไม่ได้ในตอนนี้ <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="forceReply.add(activeId);applyReplyState(chatById.get(activeId))">ลองส่งดูอยู่ดี</button>` : '';
   note.classList.toggle('show', blocked);
   $('replyInp').disabled = blocked; $('sendBtn').disabled = blocked; $('attachBtn').disabled = blocked;
-  $('replyInp').placeholder = blocked ? 'ส่งไม่ได้ในตอนนี้' : 'พิมพ์ข้อความ…';
+  $('replyInp').placeholder = oaOnly ? 'ตอบใน LINE OA Manager' : blocked ? 'ส่งไม่ได้ในตอนนี้' : 'พิมพ์ข้อความ…';
 }
 function renderQuick(){
   const el = $('qrWrap'); if(!el) return;
@@ -1332,7 +1373,8 @@ const FX_BLOCK_PAD = '16px';   // ระยะขอบในของ header/bo
 
 const fxColor = v => /^#[0-9a-fA-F]{3,8}$/.test(String(v || '')) ? String(v) : null;
 const fxUrl   = v => /^https?:\/\//i.test(String(v || '')) ? String(v) : null;
-const fxNum   = v => Number.isFinite(+v) && +v >= 0 && +v <= 20 ? +v : null;
+// รับเฉพาะตัวเลข/สตริงตัวเลขจริง — +null, +'' , +[] ได้ 0 ทั้งหมด → "flex": null ในการ์ดจะกลายเป็น flex:0 (ข้อความถูกบีบจนตัดทุกคำ)
+const fxNum   = v => (typeof v === 'number' || (typeof v === 'string' && v.trim() !== '')) && Number.isFinite(+v) && +v >= 0 && +v <= 20 ? +v : null;
 
 // ระยะของ LINE ส่งมาได้ 2 แบบ: คำสำคัญ (md/lg/xl) หรือค่าตรงๆ ("8px" / "10%")
 // เดิมรองรับแค่คำสำคัญ การ์ดที่ตั้งเป็นพิกเซลจึงกลายเป็น "ไม่มีระยะ" ข้อความเลยติดขอบกล่อง
@@ -1634,6 +1676,7 @@ async function sendText(){
   if(!text || !activeId) return;
   const c = chatById.get(activeId); if(!c) return;
   if(DEMO){ demoBlock(); return; }
+  if(isOaOnly(c)){ showToast(OA_ONLY_MSG, 'warning', 4500); return; }     // ช่องพิมพ์ถูกปิดอยู่แล้ว — กันทางลัดอื่น (เช่น แถวแชทเพิ่งเปลี่ยนสถานะ)
   const chatId = activeId; inp.value = ''; grow(inp); syncSend();
   const q = quoting; clearQuote();
   const local = { id:'tmp-' + Date.now(), tmp:true, chat_id:chatId, via:'app', direction:'out', sender_type:'staff', staff_email:me.email,
@@ -1664,6 +1707,7 @@ async function sendImage(file){
   if(!activeId) return; const chatId = activeId;
   if(!/^image\//.test(file.type)){ showToast('เลือกได้เฉพาะไฟล์รูปภาพ', 'warning'); return; }
   if(DEMO){ demoBlock(); return; }
+  if(isOaOnly(chatById.get(chatId))){ showToast(OA_ONLY_MSG, 'warning', 4500); return; }
   const blobUrl = URL.createObjectURL(file);
   const local = { id:'tmp-' + Date.now(), tmp:true, chat_id:chatId, via:'app', direction:'out', sender_type:'staff', staff_email:me.email,
                   sender_name:me.nick, msg_type:'image', content:blobUrl, status:'sending', sent_at:new Date().toISOString() };
@@ -1713,7 +1757,8 @@ function dismissWait(){
 }
 async function doDismiss(){
   closeModal(); const id = activeId;
-  try{ await rpc('pur_dismiss_wait', { p_chat:id }); patchChat(id, { awaiting_since:null, open_wait_id:null }); showToast('ปิดงานรอตอบแล้ว', 'success'); if(activeId === id) renderMsgs(await loadMsgs(id)); }
+  try{ await rpc('pur_dismiss_wait', { p_chat:id }); patchChat(id, { awaiting_since:null, open_wait_id:null }); showToast('ปิดงานรอตอบแล้ว', 'success');
+    if(activeId === id){ const msgs = await loadMsgs(id); if(activeId === id) renderMsgs(msgs); } }   // เช็คซ้ำหลัง await — ผู้ใช้อาจเปิดแชทอื่นไปแล้ว
   catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
 async function toggleResolve(){
@@ -1764,13 +1809,16 @@ function schedulePaint(){
 }
 function setupRealtime(){
   sb.channel('pur-chats').on('postgres_changes', { event:'*', schema:'public', table:'pur_chats' }, p => {
-    if(p.eventType === 'DELETE'){ const id = p.old?.id; if(id){ chats = chats.filter(c => c.id !== id); chatById.delete(id); if(activeId === id) closeChat(); schedulePaint(); } return; }
+    if(p.eventType === 'DELETE'){ const id = p.old?.id; if(id){ chats = chats.filter(c => c.id !== id); chatById.delete(id);
+      // บอกเหตุผลด้วย — ไม่งั้นบนจอกว้างผู้ใช้เห็นแค่แชทหายไปเฉยๆ (toast อยู่ที่นี่ ไม่ใช่ใน closeChat เพราะกดกลับปกติไม่ควรมี)
+      if(activeId === id){ closeChat(); showToast('แชทนี้ถูกรวมกับแชทอื่นหรือถูกลบแล้ว — เลือกแชทจากรายการอีกครั้ง', 'info', 4500); }
+      schedulePaint(); } return; }
     const r = p.new; if(!r?.id) return;
     if(!paintSnap) paintSnap = snapshot();   // เก็บภาพก่อนหน้าครั้งเดียวต่อรอบ ไม่ใช่ทุกเหตุการณ์
     const prevRead = chatById.get(r.id)?.peer_read_at;
     upsertChat(r);
     if(activeId === r.id && r.peer_read_at !== prevRead) paintReadMarks();   // อีกฝั่งเพิ่งเปิดอ่าน → ขึ้น "อ่านแล้ว" ทันที
-    if(activeId === r.id && r.unread_count > 0 && document.hasFocus()){ r.unread_count = 0; chatById.get(r.id).unread_count = 0; }
+    if(activeId === r.id && r.unread_count > 0 && viewingChat()){ r.unread_count = 0; chatById.get(r.id).unread_count = 0; }
     if(activeId === r.id) paintHeader = true;
     schedulePaint();
   }).subscribe();
@@ -1804,12 +1852,25 @@ function onMsgInsert(m){
   renderMsgs(list);
   if(atBottom || tmp) scrollBottom();                       // อ่านอยู่ล่างสุด → เลื่อนตามข้อความใหม่เหมือน LINE
   else { area.scrollTop = top0; if(list[list.length - 1] === m && !m.is_history) showNewPill(); }
-  if(m.direction === 'in' && !m.is_history && !DEMO){
-    const c = chatById.get(activeId); if(c){ c.unread_count = 0; }
-    rpc('pur_mark_read', { p_chat:activeId }).catch(() => {});
-    if(c && c.kind === 'user') callFn({ action:'markRead', chatId:activeId });
-  }
+  // อ่านแล้ว — เฉพาะตอนผู้ใช้เห็นข้อความจริง · แท็บที่ซ่อน/ไม่โฟกัสปล่อยให้ unread ค้างไว้ แล้ว markActiveRead ทำงานตอนกลับมา
+  if(m.direction === 'in' && !m.is_history) markActiveRead(true);
 }
+// "กำลังดูแชทที่เปิดอยู่จริงไหม" = อยู่หน้าแชท + แท็บมองเห็น + หน้าต่างโฟกัส (เกณฑ์เดียวใช้ทุกจุด)
+// unread_count เป็นค่ากลางของทั้งทีม และ markRead ทำให้ซัพเห็น "อ่านแล้ว" ใน LINE → ห้ามยิงจากแท็บที่ซ่อนอยู่/หน้าอื่น
+const viewingChat = () => view === 'chat' && !document.hidden && document.hasFocus();
+// force = เพิ่งมีข้อความเข้าแชทนี้ (เหตุการณ์ pur_chats ที่เพิ่ม unread อาจยังมาไม่ถึง จึงไม่รอดู unread_count ในเครื่อง)
+function markActiveRead(force){
+  if(DEMO || !viewingChat()) return;
+  const c = activeId && chatById.get(activeId); if(!c) return;
+  const had = c.unread_count > 0;
+  if(force !== true && !had) return;          // ล้างในเครื่องก่อนยิง → focus + visibilitychange ที่มาติดกันไม่ยิงซ้ำ
+  c.unread_count = 0; if(had) renderList();
+  rpc('pur_mark_read', { p_chat:c.id }).catch(() => {});
+  if(c.kind === 'user') callFn({ action:'markRead', chatId:c.id });
+}
+// กลับมาที่แอพ (สลับแท็บกลับ / คลิกหน้าต่าง) แล้วแชทที่เปิดค้างไว้มีข้อความยังไม่อ่าน → ค่อยนับว่าอ่านตอนนี้
+window.addEventListener('focus', () => markActiveRead());
+document.addEventListener('visibilitychange', () => { if(!document.hidden) markActiveRead(); });
 function onMsgUpdate(m){
   if(!m || m.chat_id !== activeId) return;
   const list = msgCache[activeId] || []; const x = list.find(y => y.id === m.id);
@@ -1999,7 +2060,7 @@ function detectNew(before){
   });
 }
 function notiNewMsg(c){
-  if(c.id === activeId && document.hasFocus()) return;                        // กำลังอ่านแชทนี้อยู่
+  if(c.id === activeId && viewingChat()) return;                              // กำลังอ่านแชทนี้อยู่ (เกณฑ์เดียวกับ markActiveRead)
   pushNoti('msg', c, c.last_message || 'ส่งข้อความใหม่', `msg|${c.id}|${c.last_inbound_at || c.last_message_at || ''}`);
 }
 
@@ -2198,7 +2259,7 @@ function pushCardHtml(){
 //  หน่วยนับ = "งานรอตอบ" (pur_waits): ซัพพลายเออร์ทัก 1 รอบ = ต้องตอบ 1 ครั้ง
 //  ระยะเวลาคำนวณในเบราว์เซอร์ตามนาฬิกาที่เลือก (เวลาทำการ / 24 ชม.)
 // ═══════════════════════════════════════════════════════════
-const dash = { preset:'7d', from:null, to:null, kind:'all', person:'all', loading:false, data:{ waits:[], replies:[] } };
+const dash = { preset:'7d', from:null, to:null, kind:'all', person:'all', seq:0, data:{ waits:[], replies:[] } };
 let dashLoadedOnce = false;
 let personSort = { key:'total', dir:'desc' };
 
@@ -2250,10 +2311,17 @@ function fillPersonDD(){
   sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'all';
 }
 
-async function loadDash(){
-  if(dash.loading) return; dash.loading = true;
+// ป้ายใต้ตัวกรอง — เรียกทั้งตอนเริ่มโหลด (ให้ตรงกับปุ่มช่วงเวลาทันที) และทุกครั้งที่วาดแดชบอร์ดใหม่ (เปลี่ยนนาฬิกา/SLA แล้วป้ายต้องตาม)
+function renderRangeLabel(){
   const [from, to] = currentRange();
   $('dashRangeLabel').textContent = `ช่วง ${thDate(from)} – ${thDate(addDays(to, -1))} · นับตาม${clockMode === 'biz' ? 'เวลาทำการ' : 'เวลาจริง 24 ชม.'} · SLA ${settings?.sla_minutes ?? '–'} นาที`;
+}
+async function loadDash(){
+  // เลขลำดับคำขอ — เดิมทิ้งคำขอที่ซ้อนกันทั้งก้อน แต่ปุ่มช่วงเวลา/dash.preset เปลี่ยนไปแล้ว → ข้อมูลช่วงเก่าถูกวาดบนแกนช่วงใหม่
+  // ตอนนี้คำขอใหม่วิ่งได้เลย ส่วนผล (และ error) ของคำขอเก่าที่กลับมาทีหลังถูกทิ้ง
+  const seq = dash.seq = (dash.seq || 0) + 1;
+  const [from, to] = currentRange();
+  renderRangeLabel();
   const content = $('viewDash').querySelector('.content'); if(dashLoadedOnce) content.classList.add('dim');
   try{
     if(DEMO){ dash.data = demoDash(); }
@@ -2263,13 +2331,14 @@ async function loadDash(){
         fetchAll('pur_waits', q => q.is('closed_at', null).order('started_at')),
         sb.rpc('pur_reply_counts', { p_from:from.toISOString(), p_to:to.toISOString() }),
       ]);
+      if(seq !== dash.seq) return;                          // มีคำขอใหม่กว่าแล้ว — ทิ้งผลชุดนี้
       if(rc.error) throw new Error(rc.error.message);
       const map = new Map(); [...w1, ...w2].forEach(w => map.set(w.id, w));
       dash.data = { waits:[...map.values()], replies:rc.data || [] };
     }
     dashLoadedOnce = true; renderDash(); checkOaFresh();
-  }catch(e){ showToast('โหลดแดชบอร์ดไม่สำเร็จ: ' + e.message, 'error'); }
-  finally{ dash.loading = false; content.classList.remove('dim'); }
+  }catch(e){ if(seq === dash.seq) showToast('โหลดแดชบอร์ดไม่สำเร็จ: ' + e.message, 'error'); }
+  finally{ if(seq === dash.seq) content.classList.remove('dim'); }   // คำขอเก่าจบก่อน ห้ามปลด dim ขณะคำขอล่าสุดยังวิ่ง
 }
 
 // คำตอบที่ทีมพิมพ์ใน OA Manager เข้าระบบได้ทางส่วนขยาย Chrome ทางเดียว
@@ -2316,13 +2385,18 @@ const tile = (label, value, sub, cls = '') => `<div class="stat-card ${cls}"><di
 
 function renderDash(){
   if(!dashLoadedOnce) return;
+  renderRangeLabel();                       // เปลี่ยนนาฬิกา/SLA แล้วป้าย "นับตาม…" ต้องตามตัวเลขด้วย
   const all = visibleWaits(); const [from, to] = currentRange(); const sla = slaSec();
   const inR = all.filter(w => w._inRange), open = all.filter(w => w._open);
   const answered = inR.filter(w => w._answered), dismissed = inR.filter(w => w._dismissed), openInR = inR.filter(w => w._open);
   const durs = answered.map(w => w._dur).sort((a, b) => a - b);
   const med = quantile(durs, .5), p90 = quantile(durs, .9), mean = durs.length ? durs.reduce((a, b) => a + b, 0) / durs.length : null;
   const okN = answered.filter(w => w._ok).length, breach = open.filter(w => w._age > sla), oldest = open.length ? Math.max(...open.map(w => w._age)) : 0;
-  const reps = dash.data.replies.filter(r => dash.person === 'all' || r.staff_email === dash.person);
+  // ข้อความที่ทีมส่ง: กรองประเภทแชทแบบเดียวกับ visibleWaits (กลุ่ม = รวม room) ให้เทียบกับการ์ดอื่นได้
+  // r.kind มาจาก pur_reply_counts รุ่นที่คืน kind — ฐานข้อมูลรุ่นเก่ายังไม่มี → ถอยเป็นไม่กรอง แล้วบอกไว้ใต้การ์ดว่านับทุกประเภท (ไม่ปล่อยให้เป็น 0 เงียบๆ)
+  const kindOk = r => dash.kind === 'all' || r.kind == null || (dash.kind === 'user') === (r.kind === 'user');
+  const reps = dash.data.replies.filter(r => kindOk(r) && (dash.person === 'all' || r.staff_email === dash.person));
+  const repsAllKinds = dash.kind !== 'all' && reps.some(r => r.kind == null);
   const repApp = sumReplies(reps.filter(r => r.via === 'app')), repLine = sumReplies(reps.filter(r => r.via === 'line')), repOa = sumReplies(reps.filter(r => r.via === 'oa'));
   const needReply = answered.length + openInR.length;
 
@@ -2332,7 +2406,7 @@ function renderDash(){
     tile('อัตราการตอบ', pct(answered.length, needReply), `ตอบแล้ว ${nf(answered.length)} จาก ${nf(needReply)} งาน`, needReply && answered.length === needReply ? 'good' : (openInR.length ? 'danger' : '')),
     tile('เวลาตอบ (มัธยฐาน)', fmtDur(med), durs.length ? `P90 ${fmtDur(p90)} · เฉลี่ย ${fmtDur(mean)}` : 'ยังไม่มีงานที่ตอบ'),
     tile(`ตอบทัน SLA ${settings.sla_minutes} นาที`, pct(okN, answered.length), answered.length ? `ช้ากว่า SLA ${nf(answered.length - okN)} งาน` : 'ยังไม่มีงานที่ตอบ', answered.length ? (okN / answered.length < .8 ? 'danger' : 'good') : ''),
-    tile('ข้อความที่ทีมส่ง', nf(repApp + repLine + repOa), `แอป ${nf(repApp)} · LINE ส่วนตัว ${nf(repLine)} · OA Manager ${nf(repOa)}`),
+    tile('ข้อความที่ทีมส่ง', nf(repApp + repLine + repOa), `แอป ${nf(repApp)} · LINE ส่วนตัว ${nf(repLine)} · OA Manager ${nf(repOa)}${repsAllKinds ? ' · <b>นับทุกประเภทแชท</b>' : ''}`),
   ].join('');
 
   renderDaily(inR, from, to); renderHist(answered); renderHeat(inR);
@@ -2349,6 +2423,7 @@ function tipMove(e){
 }
 function tipHide(){ $('chartTip').classList.remove('show'); }
 function bindTips(container, selector, htmlFn){
+  tipHide();      // กราฟเพิ่งถูกวาดใหม่ — แท่งที่เมาส์ชี้อยู่ถูกลบไปแล้ว pointerleave จะไม่ยิง ทูลทิปเลยค้างบนจอ
   container.querySelectorAll(selector).forEach(el => {
     el.addEventListener('pointerenter', e => tipShow(e, htmlFn(el)));
     el.addEventListener('pointermove', tipMove);
@@ -2480,7 +2555,7 @@ function renderPersons(inR, open, reps){
   const T = list.reduce((t, r) => { t.total += r.total; t.answered += r.answered; t.openR += r.openR; t.dis += r.dis; t.openNow += r.openNow; t.ok += r.ok; t.late += r.late; t.byOther += r.byOther; t.reps += r.reps; return t; }, { total:0, answered:0, openR:0, dis:0, openNow:0, ok:0, late:0, byOther:0, reps:0 });
   const allDurs = inR.filter(w => w._answered).map(w => w._dur).sort((a, b) => a - b);
   $('personTable').innerHTML = `<table class="tbl" id="personTbl"><thead><tr>${cols.map(c => `<th class="${c[2] === 'num' ? 'num' : ''}" data-key="${c[0]}" data-type="${c[2]}">${c[1]}<span class="sort-ind">${personSort.key === c[0] ? (personSort.dir === 'asc' ? '▲' : '▼') : ''}</span></th>`).join('')}</tr></thead>
-    <tbody>${sorted.length ? sorted.map(r => `<tr><td>${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</td><td class="num">${nf(r.total)}</td><td class="num">${nf(r.answered)}</td><td class="num">${r.openR ? `<span class="pill bad">${nf(r.openR)}</span>` : '0'}</td><td class="num">${nf(r.dis)}</td><td class="num">${r.openNow ? `<span class="pill bad">${nf(r.openNow)}</span>` : '0'}</td><td class="num">${slaPill(r.slaPct)}</td><td class="num" title="ตอบแล้วแต่ช้ากว่า SLA — คลิกดูว่าเป็นแชทไหนบ้าง">${r.late ? `<span class="pill bad drill" onclick="openLateFor('${r.email}')">${nf(r.late)}</span>` : '0'}</td><td class="num">${fmtDur(r.med)}</td><td class="num">${fmtDur(r.p90)}</td><td class="num">${nf(r.byOther)}</td><td class="num" title="แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}">${nf(r.reps)}</td></tr>`).join('') : `<tr class="empty-row"><td colspan="12">ไม่มีข้อมูลในช่วงนี้</td></tr>`}</tbody>
+    <tbody>${sorted.length ? sorted.map(r => `<tr><td>${esc(r.name)}${r.email && r.email === me?.email ? ' <span class="pill gold">คุณ</span>' : ''}</td><td class="num">${nf(r.total)}</td><td class="num">${nf(r.answered)}</td><td class="num">${r.openR ? `<span class="pill bad">${nf(r.openR)}</span>` : '0'}</td><td class="num">${nf(r.dis)}</td><td class="num">${r.openNow ? `<span class="pill bad">${nf(r.openNow)}</span>` : '0'}</td><td class="num">${slaPill(r.slaPct)}</td><td class="num" title="ตอบแล้วแต่ช้ากว่า SLA — คลิกดูว่าเป็นแชทไหนบ้าง">${r.late ? `<span class="pill bad drill" data-e="${esc(r.email)}" onclick="openLateFor(this.dataset.e)">${nf(r.late)}</span>` : '0'}</td><td class="num">${fmtDur(r.med)}</td><td class="num">${fmtDur(r.p90)}</td><td class="num">${nf(r.byOther)}</td><td class="num" title="แอป ${nf(r.repApp)} · LINE ส่วนตัว ${nf(r.repLine)} · OA Manager ${nf(r.repOa)}">${nf(r.reps)}</td></tr>`).join('') : `<tr class="empty-row"><td colspan="12">ไม่มีข้อมูลในช่วงนี้</td></tr>`}</tbody>
     <tfoot><tr><td>รวม</td><td class="num">${nf(T.total)}</td><td class="num">${nf(T.answered)}</td><td class="num">${nf(T.openR)}</td><td class="num">${nf(T.dis)}</td><td class="num">${nf(T.openNow)}</td><td class="num">${T.answered ? Math.round(T.ok / T.answered * 100) + '%' : '–'}</td><td class="num">${nf(T.late)}</td><td class="num">${fmtDur(quantile(allDurs, .5))}</td><td class="num">${fmtDur(quantile(allDurs, .9))}</td><td class="num">${nf(T.byOther)}</td><td class="num">${nf(T.reps)}</td></tr></tfoot></table>`;
   // ── เรียงตาม "ความน่ากังวล" ──
   // กติกาอธิบายได้ตรงๆ ไม่ใช้คะแนนลับ: งานค้างที่เลย SLA แล้ว > งานค้างทั้งหมด > จำนวนครั้งที่ตอบช้า > สัดส่วนทัน SLA
@@ -2526,7 +2601,7 @@ function renderPersons(inR, open, reps){
 
   // การ์ดรายคน — เห็นทั้งทีมพร้อมกัน เรียงคนน่ากังวลสุดขึ้นก่อน โชว์แค่ตัวเลขที่ต้องรีบดู
   $('personChart').innerHTML = ranked.length
-    ? `<div class="mgrid">${ranked.map((r, i) => `<button class="mcard ${mTone(r)}" onclick="setPerson('${r.email || 'none'}')"
+    ? `<div class="mgrid">${ranked.map((r, i) => `<button class="mcard ${mTone(r)}" data-e="${esc(r.email || 'none')}" onclick="setPerson(this.dataset.e)"
           title="คลิกเพื่อดูข้อมูลของ ${esc(r.name)}">
         <div class="mc-top">
           <span class="mc-rank">${i + 1}</span>
@@ -2647,8 +2722,12 @@ function blastCandidates(){
                                                     || memberPu(c.assignee_email) === blast.pu);
   const q = blast.q.trim().toLowerCase();
   if(q) list = list.filter(c => chatName(c).toLowerCase().includes(q));
+  // แชทที่แอพยังไม่รู้รหัส LINE จริง (line_id 'oa:…') ส่งจากแอพไม่ได้ → ตัดออก และจำจำนวนไว้บอกผู้ใช้ใต้รายการ
+  const n0 = list.length; list = list.filter(c => !isOaOnly(c)); blast.oaCut = n0 - list.length;
   return list.sort((a, b) => chatName(a).localeCompare(chatName(b), 'th'));
 }
+// ผู้รับที่จะส่งจริง — ไม่รวมแชท 'oa:…' ที่อาจค้างอยู่ใน picked (เช่น เลือกไว้ก่อนแถวแชทเปลี่ยน)
+const blastIds = () => [...blast.picked].filter(id => { const c = chatById.get(id); return c && !isOaOnly(c); });
 const memberPu = e => { const m = e ? members.get(e) : null; return m?.pu_code ? m.pu_code.toUpperCase() : ''; };
 // กลุ่ม 1 ข้อความ = ใช้โควตาเท่าจำนวนสมาชิก (กติกาของ LINE)
 const blastQuota = ids => [...ids].reduce((n, id) => {
@@ -2699,8 +2778,10 @@ function blastMatch(){
   blast.match = new Map(); blast.unmatched = [];
   if(!blast.sheet || !blast.nameCol) return;
   const norm = s => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
-  const exact = new Map(), loose = [];
+  const exact = new Map(), loose = [], oaNames = new Set();
   chats.forEach(c => {
+    // แชท 'oa:…' ส่งจากแอพไม่ได้ → ไม่เอามาจับคู่ (ถ้ามีแชทฝาแฝดที่มีรหัส LINE จริงชื่อเดียวกัน จะได้จับคู่กับตัวนั้นแทน) · จำชื่อไว้บอกเหตุผล
+    if(isOaOnly(c)){ [c.supplier_name, c.title].filter(Boolean).forEach(n => oaNames.add(norm(n))); return; }
     [c.supplier_name, c.title].filter(Boolean).forEach(n => { if(!exact.has(norm(n))) exact.set(norm(n), c); });
     loose.push({ c, n:norm(chatName(c)) });
   });
@@ -2713,7 +2794,7 @@ function blastMatch(){
       if(cands.length === 1) hit = cands[0].c;                 // เจอตัวเดียวถึงจะกล้าใช้ — เจอหลายตัวให้คนเลือกเอง
     }
     if(hit && !blast.match.has(hit.id)){ blast.match.set(hit.id, row); blast.picked.add(hit.id); }
-    else blast.unmatched.push({ i, raw, row, why: hit ? 'ซ้ำกับแถวก่อนหน้า' : 'ไม่พบแชทที่ชื่อตรงกัน' });
+    else blast.unmatched.push({ i, raw, row, why: hit ? 'ซ้ำกับแถวก่อนหน้า' : oaNames.has(key) ? 'แอพยังไม่รู้รหัส LINE จริงของแชทนี้ — ส่งจากแอพไม่ได้ ตอบใน LINE OA Manager' : 'ไม่พบแชทที่ชื่อตรงกัน' });
   });
 }
 function blastAssignRow(idx, chatId){
@@ -2742,7 +2823,7 @@ const clearAttach = () => { blast.attach = null; renderBlast(); };
 
 // ── ตรวจก่อนส่ง ──
 function blastPreview(){
-  const ids = [...blast.picked].filter(id => chatById.has(id));
+  const ids = blastIds();
   if(!ids.length) return showToast('ยังไม่ได้เลือกผู้รับ', 'info');
   if(!blast.text.trim() && !blast.attach) return showToast('ยังไม่ได้พิมพ์ข้อความ', 'info');
 
@@ -2781,7 +2862,7 @@ function blastPreview(){
 // ── ส่งจริง ──
 async function blastSend(){
   closeModal();
-  const ids = [...blast.picked].filter(id => chatById.has(id));
+  const ids = blastIds();
   blast.sending = true; blast.stop = false; blast.result = { ok:0, fail:0, errors:[] };
   renderBlast();
   for(let i = 0; i < ids.length; i++){
@@ -2830,7 +2911,8 @@ function insertVar(v){
 function puFilterChips(){
   const list = [...members.values()].filter(m => m.active && m.pu_code)
     .sort((a, b) => a.pu_code.localeCompare(b.pu_code, undefined, { numeric:true }));
-  const chip = (v, label) => `<button class="chip ${blast.pu === v ? 'active' : ''}" onclick="setBlastPu('${v}')">${label}</button>`;
+  // ค่าที่มาจากข้อมูล (อีเมล/รหัส PU/หัวคอลัมน์) ห้ามฝังใน onclick="f('…')" — มี ' หรือ " แล้วปุ่มพัง/รันโค้ดได้ → ใช้ data-* + esc
+  const chip = (v, label) => `<button class="chip ${blast.pu === v ? 'active' : ''}" data-v="${esc(v)}" onclick="setBlastPu(this.dataset.v)">${label}</button>`;
   return chip('all', 'ทุกแชท') + chip('mine', 'ของฉัน')
        + list.map(m => chip(m.pu_code.toUpperCase(), `${esc(m.pu_code)} · ${esc(m.nick || m.name || m.email)}`)).join('')
        + chip('none', 'ไม่มีผู้รับผิดชอบ');
@@ -2849,9 +2931,10 @@ function renderBlastList(){
   }).join('') : `<div class="conv-empty">${blast.mode === 'sheet' ? 'ยังไม่มีแชทที่จับคู่กับชีทได้' : 'ไม่พบแชทตามตัวกรอง'}</div>`;
   const n = list.filter(c => blast.picked.has(c.id)).length;
   $('blPickInfo').textContent = `เลือกแล้ว ${nf(n)} จาก ${nf(list.length)} แชทที่แสดงอยู่`;
+  const cut = $('blOaCut'); if(cut) cut.textContent = blast.oaCut ? `ℹ️ ตัดออก ${nf(blast.oaCut)} แชทที่แอพยังไม่รู้รหัส LINE จริง — ส่งจากแอพไม่ได้ ต้องตอบใน LINE OA Manager ไปก่อน` : '';
 }
 function renderBlastBar(){
-  const ids = [...blast.picked].filter(id => chatById.has(id));
+  const ids = blastIds();
   const el = $('blBar'); if(!el) return;
   el.innerHTML = `<div><b>${nf(ids.length)}</b> แชท · ใช้โควตา <b>${nf(blastQuota(ids))}</b> ข้อความ
       ${blast.attach ? `· แนบ <b>${esc(blast.attach.name)}</b>` : ''}</div>
@@ -2889,11 +2972,11 @@ function renderBlast(){
           <div class="tbl-wrap mt-8" style="max-height:230px">${S.unmatched.map((u, i) => `<div class="row" style="padding:4px 0;gap:8px">
             <span style="flex:1;min-width:120px">${esc(u.raw || '(ว่าง)')} <span class="mini">แถว ${u.i + 2} · ${esc(u.why)}</span></span>
             <select class="input input-sm" style="max-width:260px" onchange="blastAssignRow(${i}, this.value)">
-              <option value="">— เลือกแชท —</option>${chats.filter(c => !S.match.has(c.id)).sort((a, b) => chatName(a).localeCompare(chatName(b), 'th')).map(c => `<option value="${c.id}">${esc(chatName(c))}</option>`).join('')}
+              <option value="">— เลือกแชท —</option>${chats.filter(c => !S.match.has(c.id) && !isOaOnly(c)).sort((a, b) => chatName(a).localeCompare(chatName(b), 'th')).map(c => `<option value="${c.id}">${esc(chatName(c))}</option>`).join('')}
             </select></div>`).join('')}</div></div>` : ''}` : ''}` : ''}
 
         <div class="field"><label>${sheetOn ? '3' : '2'}. ข้อความ</label>
-          ${sheetOn && S.sheet ? `<div class="row mb-8" style="gap:5px">${S.sheet.headers.map(h => `<button class="qchip" onclick="insertVar('${esc(h).replace(/'/g, "\\'")}')">+ {{${esc(h)}}}</button>`).join('')}</div>` : ''}
+          ${sheetOn && S.sheet ? `<div class="row mb-8" style="gap:5px">${S.sheet.headers.map(h => `<button class="qchip" data-v="${esc(h)}" onclick="insertVar(this.dataset.v)">+ {{${esc(h)}}}</button>`).join('')}</div>` : ''}
           <textarea class="input" id="blText" rows="5" placeholder="${sheetOn ? 'เรียนคุณ {{ชื่อ}} ค่ะ ใบสั่งซื้อ {{PO}} กำหนดส่ง {{วันที่ส่ง}} รบกวนยืนยันด้วยนะคะ' : 'พิมพ์ข้อความที่จะส่งให้ทุกเจ้า'}" oninput="setBlastText(this.value)">${esc(S.text)}</textarea>
           <span class="mini">สูงสุด 5,000 ตัวอักษร${sheetOn ? ' · กดปุ่มด้านบนเพื่อแทรกข้อมูลจากคอลัมน์ในชีท' : ''}</span>
         </div>
@@ -2919,6 +3002,7 @@ function renderBlast(){
       <div class="card-body" style="padding-top:0">
         <input class="input" placeholder="ค้นหาชื่อ…" oninput="blastSearch(this.value)" value="${esc(S.q)}">
         <div id="blList" class="bl-list mt-8"></div>
+        <div id="blOaCut" class="mini mt-8"></div>
       </div>
     </div>
 
@@ -3022,9 +3106,10 @@ function lateWaits(email){
     .map(w => ({ ...w, _over:w._dur - sla }))
     .sort((a, b) => b._over - a._over);
 }
-function lateCardsHtml(rows, showOwner = true){
+// limit = Infinity ใช้ใน modal รายคน: โชว์ครบทุกใบ ไม่มีปุ่ม "แสดงเพิ่ม" (ปุ่มนั้นสั่งวาดแดชบอร์ด ไม่ได้วาด modal → กดแล้วเงียบ)
+function lateCardsHtml(rows, showOwner = true, limit = pcShown.late){
   if(!rows.length) return `<div class="conv-empty">ไม่มีงานที่ตอบช้ากว่า SLA 🎉</div>`;
-  return `<div class="pcards">${rows.slice(0, pcShown.late).map(w => {
+  return `<div class="pcards">${rows.slice(0, limit).map(w => {
     const c = chatById.get(w.chat_id); if(!c) return '';
     const byOther = w.closed_by && w.owner_email && w.closed_by !== w.owner_email;
     return pcardHtml({
@@ -3038,7 +3123,7 @@ function lateCardsHtml(rows, showOwner = true){
           + (w.closed_by && (byOther || !showOwner || !w.owner_email)
               ? `<span class="pill ${byOther ? 'gold' : 'grey'}">✍️ ตอบโดย ${esc(memberName(w.closed_by))}</span>` : ''),
     });
-  }).join('')}</div>${pcMoreBtn('late', rows.length)}`;
+  }).join('')}</div>${limit === Infinity ? '' : pcMoreBtn('late', rows.length)}`;
 }
 function renderLate(){
   const rows = lateWaits();
@@ -3053,7 +3138,7 @@ function renderLate(){
 function openLateFor(email){
   const rows = lateWaits(email), who = email ? memberName(email) : 'ไม่มีผู้รับผิดชอบ';
   openModal(`ตอบช้ากว่า SLA — ${who} (${nf(rows.length)} ครั้ง)`,
-    lateCardsHtml(rows, false) +
+    lateCardsHtml(rows, false, Infinity) +
     `<p class="txt-sm txt-muted mt-8">SLA ${settings.sla_minutes} นาที · นับตาม${clockMode === 'biz' ? 'เวลาทำการ' : 'เวลาจริง 24 ชม.'} · คลิกการ์ดเพื่อเปิดแชท</p>`,
     `<button class="btn btn-outline" onclick="closeModal()">ปิด</button>`, { wide:true });
 }
@@ -3130,6 +3215,7 @@ async function copyLinkCode(code){
   try{ await navigator.clipboard.writeText(code); showToast('คัดลอกรหัสแล้ว ✓', 'success'); }
   catch(_){ showToast('คัดลอกไม่ได้ — พิมพ์เองจากกล่องข้างบนได้', 'info'); }
 }
+let linkTimer = null;             // ตัวนับถอยหลังของรหัสผูก LINE — มีได้ตัวเดียว
 async function newLinkCode(){
   try{
     const code = await rpc('pur_new_link_code'); const exp = Date.now() + 15*60*1000;
@@ -3137,13 +3223,14 @@ async function newLinkCode(){
       <div class="row mt-12">
         <a class="btn btn-gold" href="${oaChatUrl(code)}" target="_blank" rel="noopener">📱 เปิด LINE แล้วส่งรหัสนี้</a>
         <a class="btn btn-outline" href="${oaAddUrl()}" target="_blank" rel="noopener">＋ เพิ่มเพื่อน LINE จัดซื้อ</a>
-        <button class="btn btn-outline" onclick="copyLinkCode('${esc(code)}')">📋 คัดลอกรหัส</button>
+        <button class="btn btn-outline" data-v="${esc(code)}" onclick="copyLinkCode(this.dataset.v)">📋 คัดลอกรหัส</button>
       </div>
       <div class="txt-sm txt-muted mt-8">กดปุ่มแรก — LINE จะเปิดแชทกับ <b>LINE จัดซื้อ</b> พร้อมรหัสในช่องพิมพ์ให้แล้ว แค่กดส่ง
         <br>ยังไม่ได้เพิ่มเพื่อน? กดปุ่มกลางก่อน · ปุ่มไม่ทำงาน ส่งรหัส <b>${esc(code)}</b> ในแชท 1:1 กับ <b>${esc(LINE_OA_ID)}</b> เองก็ได้
         <br>ระบบจะตอบยืนยัน แล้วหน้านี้จะขึ้น "ผูกแล้ว" เอง</div>
       <div class="txt-sm txt-muted mt-8" id="linkCountdown"></div>`;
-    const tick = () => { const el = $('linkCountdown'); if(!el) return; const left = exp - Date.now(); if(left <= 0){ el.textContent = 'รหัสหมดอายุแล้ว — ขอรหัสใหม่ได้เลย'; return; } el.textContent = `รหัสใช้ได้อีก ${Math.floor(left/60000)}:${pad(Math.floor(left % 60000 / 1000))} นาที · ใช้ได้ครั้งเดียว`; setTimeout(tick, 1000); };
+    const tick = () => { const el = $('linkCountdown'); if(!el) return; const left = exp - Date.now(); if(left <= 0){ el.textContent = 'รหัสหมดอายุแล้ว — ขอรหัสใหม่ได้เลย'; return; } el.textContent = `รหัสใช้ได้อีก ${Math.floor(left/60000)}:${pad(Math.floor(left % 60000 / 1000))} นาที · ใช้ได้ครั้งเดียว`; linkTimer = setTimeout(tick, 1000); };
+    clearTimeout(linkTimer);      // ขอรหัสซ้ำ → หยุดตัวนับของรหัสเก่า ไม่งั้นสองตัวเขียนทับบรรทัดเดียวกันสลับกันทุกวินาที
     tick();
   }catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
@@ -3409,6 +3496,9 @@ function setView(v){
   const ids = { chat:'viewChat', dash:'viewDash', blast:'viewBlast', set:'viewSet' };
   document.querySelectorAll('.view').forEach(s => s.classList.toggle('active', s.id === ids[v]));
   LS.set('pur.view', v); tipHide();
+  // กลับมาหน้าแชท → แชทที่เปิดค้างไว้มีข้อความเข้าระหว่างอยู่หน้าอื่น ค่อยนับว่าอ่านตอนนี้
+  // (หน่วง 1 จังหวะ: ผู้เรียกแบบ setView('chat'); openChat(id) จะสลับแชทก่อน — ไม่นับแชทเก่าที่ผู้ใช้ไม่ได้เห็น)
+  if(v === 'chat') setTimeout(markActiveRead, 0);
   if(v === 'dash'){ fillPersonDD(); if(!dashLoadedOnce) loadDash(); else renderDash(); }
   if(v === 'blast') renderBlast();
   if(v === 'set') renderSettings();
@@ -3473,7 +3563,7 @@ function startAutoRefresh(){
   if(refreshTimer) return;
   const tick = async () => {
     if(document.hidden || refreshing || DEMO) return; refreshing = true;
-    try{ await loadChats(); if(activeId) renderMsgs(await loadMsgs(activeId)); if(view === 'dash') await loadDash(); }
+    try{ await loadChats(); await refreshActiveMsgs(); if(view === 'dash') await loadDash(); }   // refreshActiveMsgs เช็ค activeId ซ้ำหลัง await — ไม่วาดข้อความแชทเก่าทับแชทที่เพิ่งเปิด
     catch(e){ console.warn('auto refresh:', e.message); } finally{ refreshing = false; }
   };
   refreshTimer = setInterval(tick, REFRESH_MS);
@@ -3574,8 +3664,9 @@ function demoMsgs(c, rnd){
 }
 function demoDash(){
   const [from, to] = currentRange(); const agg = new Map();
-  demoWaits.forEach(w => { if(w.closed_reason !== 'answered' || !w.closed_by) return; const s = Date.parse(w.started_at); if(s < from || s >= to) return; const k = w.closed_by + '|' + w.answer_via; agg.set(k, (agg.get(k) || 0) + 1 + (Math.random() < .6 ? 1 : 0)); });
-  return { waits:demoWaits, replies:[...agg.entries()].map(([k, n]) => { const [e, v] = k.split('|'); return { staff_email:e, via:v, replies:n }; }) };
+  demoWaits.forEach(w => { if(w.closed_reason !== 'answered' || !w.closed_by) return; const s = Date.parse(w.started_at); if(s < from || s >= to) return; const k = w.closed_by + '|' + w.answer_via + '|' + (w.chat_kind || 'group'); agg.set(k, (agg.get(k) || 0) + 1 + (Math.random() < .6 ? 1 : 0)); });
+  // มี kind ด้วย — ให้ตัวกรอง "กลุ่ม / 1:1" ของการ์ด "ข้อความที่ทีมส่ง" ทำงานในโหมดตัวอย่างเหมือนของจริง
+  return { waits:demoWaits, replies:[...agg.entries()].map(([k, n]) => { const [e, v, kd] = k.split('|'); return { staff_email:e, via:v, kind:kd, replies:n }; }) };
 }
 
 // ── เริ่มทำงาน (ต้องอยู่ท้ายสุด หลังประกาศตัวแปรทั้งหมด) ──
