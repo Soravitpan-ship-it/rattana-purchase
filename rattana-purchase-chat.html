@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="RTN Chat Hub">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.0">
-<title>RTN Chat Hub v2.0</title>
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.01">
+<title>RTN Chat Hub v2.01</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -641,7 +641,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.0 · 22/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.01 · 22/09/2569</div>
   </div>
 </div>
 
@@ -665,7 +665,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
     <div class="logo-text">RTN <span>Chat Hub</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.0</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.01</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -738,7 +738,7 @@ select.input{appearance:auto}
         <div class="reply-bar">
           <input type="file" id="imgInp" accept="image/*" hidden onchange="onPickImage(this)">
           <button class="round-btn attach-btn" id="attachBtn" title="ส่งรูป" onclick="document.getElementById('imgInp').click()"><span data-ic="image"></span></button>
-          <textarea class="reply-inp" id="replyInp" placeholder="พิมพ์ข้อความ…" rows="1" onkeydown="onKey(event)" oninput="grow(this);syncSend()"></textarea>
+          <textarea class="reply-inp" id="replyInp" placeholder="พิมพ์ข้อความ…" rows="1" onkeydown="onKey(event)" oninput="grow(this);syncSend();warmSend()"></textarea>
           <button class="round-btn send-btn" id="sendBtn" onclick="sendText()" title="ส่ง"><span data-ic="send"></span></button>
         </div>
       </div>
@@ -904,8 +904,9 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  RTN Chat Hub v2.0 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  RTN Chat Hub v2.01 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
+//  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -965,6 +966,9 @@ const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // pub
 const LINE_OA_ID = '@429hgoxl';   // ไอดี LINE OA จัดซื้อ (RTNPurchase) — ค่าสำรอง · บัญชีที่เปิดอยู่ใช้ acct.oa_id
 const VAPID_PUBLIC = 'BLein9hi9x50rwGAK_dWnUcP69vIoKzTPx14DWzQSZ8Sg65QUcgGbwgIYPNgeZXWNYiWNtRFK05sV9EMIQnV8aw';        // กุญแจสาธารณะ Web Push — เติมด้วย node tools/make_vapid.mjs (เปิดเผยได้ตามสเปก)
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
+// ฐานข้อมูลอยู่โตเกียว — ให้ pur-send รันที่โตเกียวด้วย (ปกติ Supabase เลือกภูมิภาคใกล้ผู้ใช้ = สิงคโปร์
+// แล้วทุกคำสั่งในฟังก์ชันต้องวิ่งข้ามไปโตเกียวแล้วกลับ ~10 รอบ ส่งหนึ่งข้อความช้าไปเกือบวินาที)
+const FN_REGION = 'ap-northeast-1';
 const BUCKET  = 'pur-media';      // bucket ส่วนตัว เก็บรูป-ไฟล์ (เปิดผ่านลิงก์ลงนามเท่านั้น)
 const MARK    = 'data:image/png;base64,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';
 const DEMO    = new URLSearchParams(location.search).get('demo') === '1';   // ?demo=1 = ข้อมูลสมมติ ไม่ต่อเน็ต
@@ -1209,7 +1213,7 @@ async function callFn(body){
   try{
     const { data:{ session } } = await sb.auth.getSession();
     if(!session) return { ok:false, error:'กรุณาเข้าสู่ระบบใหม่' };
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/${FN_SEND}`, {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/${FN_SEND}?forceFunctionRegion=${FN_REGION}`, {
       method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${session.access_token}` },
       body: JSON.stringify(body),
     });
@@ -1218,6 +1222,16 @@ async function callFn(body){
     if(!res.ok && !j.error) j.error = 'HTTP ' + res.status;
     return j;
   }catch(e){ return { ok:false, error:e.message }; }
+}
+// ปลุก pur-send ตอนเริ่มพิมพ์ (ไม่รอผล) — เครื่องที่ว่างนานต้องบูตใหม่ + ขอ token LINE ใหม่ กดส่งแล้วรอเป็นวินาที
+// ทำไว้ระหว่างที่ยังพิมพ์อยู่ พอกดส่งจริงจะเร็ว · เว้นอย่างน้อย 1 นาทีต่อบัญชี ไม่ยิงทุกตัวอักษร
+let warmAt = 0, warmAcct = 0;
+function warmSend(){
+  if(DEMO || !acct) return;
+  const now = Date.now();
+  if(warmAcct === acct.id && now - warmAt < 60000) return;
+  warmAt = now; warmAcct = acct.id;
+  callFn({ action:'warm', accountId:acct.id });
 }
 
 // ── CHAT LIST ──
@@ -1799,7 +1813,7 @@ async function sendImage(file){
 function onKey(e){ if(e.key === 'Enter' && !e.shiftKey && window.innerWidth >= 768){ e.preventDefault(); sendText(); } }
 function grow(el){ el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
 function syncSend(){ $('sendBtn').classList.toggle('lit', $('replyInp').value.trim().length > 0); }
-function useQuick(btn){ const i = $('replyInp'); i.value = btn.textContent.trim(); i.focus(); grow(i); syncSend(); }
+function useQuick(btn){ const i = $('replyInp'); i.value = btn.textContent.trim(); i.focus(); grow(i); syncSend(); warmSend(); }
 
 // ── CHAT ACTIONS (RPC) ──
 function patchChat(id, patch){ const c = chatById.get(id); if(!c) return; Object.assign(c, patch); renderList(); updateBadges(); if(activeId === id) renderChatHeader(c); }
