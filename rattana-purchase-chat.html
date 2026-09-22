@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Purchase Chat">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.21</title>
+<title>Rattana Purchase Chat v1.22</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -606,7 +606,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.21 · 21/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.22 · 22/09/2569</div>
   </div>
 </div>
 
@@ -618,7 +618,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0">
     <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.21</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.22</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -857,7 +857,7 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.21 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  Rattana Purchase Chat v1.22 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -898,6 +898,8 @@ const ICON_PATHS = {
   tag:       '<path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/>',
   refresh:   '<path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/>',
   logout:    '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+  paperclip: '<path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',
+  activity:  '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
 };
 const ic = (name, cls = '') => ICON_PATHS[name]
   ? `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" aria-hidden="true">${ICON_PATHS[name]}</svg>` : '';
@@ -2692,10 +2694,12 @@ function renderBacklog(open){
 function openChatFromDash(id){ setView('chat'); openChat(id); }
 
 // ══════════════════════════════════════════════════════════════
-//  ส่งข้อความหาซัพพลายเออร์หลายเจ้าพร้อมกัน (จากชีท / ข้อความเดียวกัน)
+//  ส่งข้อความหาซัพพลายเออร์หลายเจ้าพร้อมกัน (ข้อความเดียวกัน / เติมจากชีท — ตอนนี้ปิดโหมดชีทไว้)
 //  ส่งออกไปแล้วเรียกคืนไม่ได้ → ทุกเส้นทางต้องผ่านหน้า "ตรวจก่อนส่ง" เสมอ
 //  ส่งทีละข้อความผ่าน pur-send ตัวเดิม (ผ่านกติกา/โควตา/บันทึกลงแชทเหมือนพิมพ์เอง)
 // ══════════════════════════════════════════════════════════════
+// โหมด "เติมข้อมูลจากชีท" — ผู้ใช้ขอเอาออกไปก่อน (22/09/2569) · โค้ดยังอยู่ครบ เปลี่ยนเป็น true แล้วปุ่มกลับมาเหมือนเดิม
+const BLAST_SHEET = false;
 const blast = {
   mode: 'same',            // same = ข้อความเดียวกันทุกเจ้า · sheet = เติมข้อมูลจากชีท
   pu: 'all',               // กรองผู้รับตามรหัส PU
@@ -2924,14 +2928,14 @@ function renderBlastList(){
     return `<label class="bl-item ${on ? 'on' : ''}">
       <input type="checkbox" ${on ? 'checked' : ''} onchange="blastToggle('${c.id}')">
       <span class="bl-nm">${esc(chatName(c))}</span>
-      <span class="tag">${c.kind === 'user' ? '1:1' : `👥 ${c.member_count || 1}`}</span>
+      <span class="tag">${c.kind === 'user' ? '1:1' : `${ic('users')} ${c.member_count || 1}`}</span>
       ${c.assignee_email ? `<span class="tag assg">${esc(memberName(c.assignee_email))}</span>` : '<span class="tag none">ไม่มีผู้รับผิดชอบ</span>'}
       ${row ? `<span class="tag" title="${esc(Object.entries(row).slice(0, 6).map(([k, v]) => k + ': ' + v).join(' · '))}">📄 มีข้อมูลในชีท</span>` : ''}
     </label>`;
   }).join('') : `<div class="conv-empty">${blast.mode === 'sheet' ? 'ยังไม่มีแชทที่จับคู่กับชีทได้' : 'ไม่พบแชทตามตัวกรอง'}</div>`;
   const n = list.filter(c => blast.picked.has(c.id)).length;
   $('blPickInfo').textContent = `เลือกแล้ว ${nf(n)} จาก ${nf(list.length)} แชทที่แสดงอยู่`;
-  const cut = $('blOaCut'); if(cut) cut.textContent = blast.oaCut ? `ℹ️ ตัดออก ${nf(blast.oaCut)} แชทที่แอพยังไม่รู้รหัส LINE จริง — ส่งจากแอพไม่ได้ ต้องตอบใน LINE OA Manager ไปก่อน` : '';
+  const cut = $('blOaCut'); if(cut) cut.innerHTML = blast.oaCut ? `${ic('alert')} ตัดออก ${nf(blast.oaCut)} แชทที่แอพยังไม่รู้รหัส LINE จริง — ส่งจากแอพไม่ได้ ต้องตอบใน LINE OA Manager ไปก่อน` : '';
 }
 function renderBlastBar(){
   const ids = blastIds();
@@ -2942,21 +2946,23 @@ function renderBlastBar(){
 }
 function renderBlast(){
   if(view !== 'blast') return;
-  const S = blast, sheetOn = S.mode === 'sheet';
+  const S = blast, sheetOn = BLAST_SHEET && S.mode === 'sheet';
+  let step = 0; const no = () => ++step;               // เลขข้อรันเอง — ข้อที่ซ่อนอยู่ไม่กินเลข
   $('blastContent').innerHTML = `
-    <div class="card card-gold"><div class="card-head"><h3>📤 ส่งข้อความหาซัพพลายเออร์หลายเจ้า</h3>
+    <div class="card card-gold"><div class="card-head"><h3><span class="hb">${ic('send')}</span>ส่งข้อความหาซัพพลายเออร์หลายเจ้า</h3>
       <div class="hint">ส่งผ่านบัญชี LINE จัดซื้อเหมือนพิมพ์ในแชทเอง · ข้อความจะไปอยู่ในแชทนั้นให้ทีมเห็นด้วย ·
         <b>ส่งแล้วเรียกคืนไม่ได้</b> ทุกครั้งจะมีหน้าตรวจก่อนส่งให้อ่านก่อนเสมอ</div></div>
       <div class="card-body">
-        <div class="field"><label>1. รูปแบบข้อความ</label>
+        ${BLAST_SHEET ? `
+        <div class="field"><label>${no()}. รูปแบบข้อความ</label>
           <div class="seg">
             <button class="${!sheetOn ? 'active' : ''}" onclick="setBlastMode('same')">ข้อความเดียวกันทุกเจ้า</button>
             <button class="${sheetOn ? 'active' : ''}" onclick="setBlastMode('sheet')">เติมข้อมูลจากชีท</button>
           </div>
-        </div>
+        </div>` : ''}
 
         ${sheetOn ? `
-        <div class="field"><label>2. ลิงก์ Google Sheets</label>
+        <div class="field"><label>${no()}. ลิงก์ Google Sheets</label>
           <div class="row"><input class="input" id="blUrl" style="flex:2;min-width:240px" placeholder="https://docs.google.com/spreadsheets/d/..." value="${esc(S.sheet?.url || '')}">
             <button class="btn btn-outline" id="blLoad" onclick="blastLoadSheet()">โหลดชีท</button></div>
           <span class="mini">ที่ Google Sheets กด <b>แชร์</b> › <b>ทุกคนที่มีลิงก์</b> › ผู้อ่าน ก่อน แล้วก๊อปลิงก์จากช่องที่อยู่เว็บมาวาง ·
@@ -2975,16 +2981,16 @@ function renderBlast(){
               <option value="">— เลือกแชท —</option>${chats.filter(c => !S.match.has(c.id) && !isOaOnly(c)).sort((a, b) => chatName(a).localeCompare(chatName(b), 'th')).map(c => `<option value="${c.id}">${esc(chatName(c))}</option>`).join('')}
             </select></div>`).join('')}</div></div>` : ''}` : ''}` : ''}
 
-        <div class="field"><label>${sheetOn ? '3' : '2'}. ข้อความ</label>
+        <div class="field"><label>${no()}. ข้อความ</label>
           ${sheetOn && S.sheet ? `<div class="row mb-8" style="gap:5px">${S.sheet.headers.map(h => `<button class="qchip" data-v="${esc(h)}" onclick="insertVar(this.dataset.v)">+ {{${esc(h)}}}</button>`).join('')}</div>` : ''}
           <textarea class="input" id="blText" rows="5" placeholder="${sheetOn ? 'เรียนคุณ {{ชื่อ}} ค่ะ ใบสั่งซื้อ {{PO}} กำหนดส่ง {{วันที่ส่ง}} รบกวนยืนยันด้วยนะคะ' : 'พิมพ์ข้อความที่จะส่งให้ทุกเจ้า'}" oninput="setBlastText(this.value)">${esc(S.text)}</textarea>
           <span class="mini">สูงสุด 5,000 ตัวอักษร${sheetOn ? ' · กดปุ่มด้านบนเพื่อแทรกข้อมูลจากคอลัมน์ในชีท' : ''}</span>
         </div>
 
-        <div class="field"><label>${sheetOn ? '4' : '3'}. ไฟล์แนบ (ไม่บังคับ)</label>
+        <div class="field"><label>${no()}. ไฟล์แนบ (ไม่บังคับ)</label>
           <div class="row">
-            <button class="btn btn-outline btn-sm" onclick="blastPickFile('image')">🖼 แนบรูป</button>
-            <button class="btn btn-outline btn-sm" onclick="blastPickFile('file')">📎 แนบไฟล์</button>
+            <button class="btn btn-outline btn-sm" onclick="blastPickFile('image')">${ic('image')}แนบรูป</button>
+            <button class="btn btn-outline btn-sm" onclick="blastPickFile('file')">${ic('paperclip')}แนบไฟล์</button>
             ${S.attach ? `<span class="pill gold">${esc(S.attach.name)} · ${(S.attach.size / 1024 / 1024).toFixed(1)} MB</span>
               <button class="btn btn-outline btn-sm" onclick="clearAttach()">เอาออก</button>` : ''}
           </div>
@@ -2994,7 +3000,7 @@ function renderBlast(){
       </div>
     </div>
 
-    <div class="card card-gold"><div class="card-head"><h3>👥 ผู้รับ <span class="mini" id="blPickInfo"></span></h3>
+    <div class="card card-gold"><div class="card-head"><h3><span class="hb">${ic('users')}</span>ผู้รับ <span class="mini" id="blPickInfo"></span></h3>
       <div class="acts"><button class="btn btn-outline btn-sm" onclick="blastPickAll(true)">เลือกทั้งหมดที่แสดง</button>
         <button class="btn btn-outline btn-sm" onclick="blastPickAll(false)">ล้างที่แสดง</button></div>
       <div class="hint">กรองตามรหัส PU เพื่อส่งเฉพาะเจ้าที่คนนั้นดูแล${sheetOn ? ' · โหมดชีทจะแสดงเฉพาะแชทที่จับคู่กับชีทได้' : ''}</div></div>
@@ -3006,7 +3012,7 @@ function renderBlast(){
       </div>
     </div>
 
-    ${S.sending || S.result ? `<div class="card card-gold"><div class="card-head"><h3>📡 ผลการส่ง</h3></div>
+    ${S.sending || S.result ? `<div class="card card-gold"><div class="card-head"><h3><span class="hb info">${ic('activity')}</span>ผลการส่ง</h3></div>
       <div class="card-body">
         <div class="bl-prog"><div id="blProg" style="width:${S.sending ? '0' : '100'}%"></div></div>
         <div class="mini mt-8" id="blProgTxt">${S.result ? `สำเร็จ ${nf(S.result.ok)} · ไม่สำเร็จ ${nf(S.result.fail)}` : ''}</div>
