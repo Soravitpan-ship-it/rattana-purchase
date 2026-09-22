@@ -6,9 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Purchase Chat">
+<meta name="apple-mobile-web-app-title" content="RTN Chat Hub">
 <meta name="theme-color" content="#0d1b3e">
-<title>Rattana Purchase Chat v1.22</title>
+<!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.0">
+<title>RTN Chat Hub v2.0</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -581,6 +583,39 @@ select.input{appearance:auto}
   .msg-grp{max-width:72%}
   .logo-sub{max-width:none}
 }
+/* ── v2.0 หลายบัญชี: หน้าเลือกบัญชี + เมนูสลับบัญชีบนหัวแอพ ── */
+#acctGate{position:fixed;inset:0;z-index:9400;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+#acctGate.hide{display:none}
+.acct-card{background:var(--card-bg);border-radius:var(--radius-xl);border-top:4px solid var(--gold);padding:20px 18px;width:100%;max-width:430px;box-shadow:0 8px 30px rgba(0,0,0,.35);margin:auto}
+.acct-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.acct-top b{display:block;font-size:17px}
+.acct-top span{display:block;font-size:12px;color:var(--muted)}
+.acct-top .hdr-btn{margin-left:auto;color:var(--muted);border-color:var(--border)}
+.acct-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;border:1px solid var(--border);border-radius:14px;background:var(--card-bg);margin-bottom:10px;cursor:pointer;font:inherit;color:inherit}
+.acct-item:hover{border-color:var(--gold)}
+.acct-av{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:700;font-size:14px;flex-shrink:0}
+.acct-meta{flex:1;min-width:0;display:block}
+.acct-meta b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acct-meta small{display:block;font-size:11.5px;color:var(--muted)}
+.acct-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.acct-pills .pill{font-size:11px}
+.acct-chev{color:var(--muted);display:inline-flex}
+.acct-menu{position:fixed;z-index:300;width:300px;max-width:calc(100vw - 20px);background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);padding:6px;display:none}
+.acct-menu.open{display:block}
+.acct-menu button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px;border-radius:10px;font:inherit;color:inherit;background:none;cursor:pointer}
+.acct-menu button:hover{background:var(--row-alt)}
+.acct-menu .acct-av{width:34px;height:34px;border-radius:10px;font-size:12px}
+.acct-menu .am-foot{border-top:1px solid var(--border);margin-top:4px;padding-top:4px}
+.acct-menu .am-foot button{color:var(--muted);font-size:13px}
+.hdr-acct{cursor:pointer}
+.hdr-acct .logo-sub .ic{width:12px;height:12px;vertical-align:-2px;margin-left:2px}
+/* สีประจำบัญชี — ตัวอักษรเข้มบนพื้นอ่อน อ่านได้ทั้งโหมดสว่างและมืด */
+.ac-teal{background:#E1F5EE;color:#085041}.ac-purple{background:#EEEDFE;color:#3C3489}.ac-coral{background:#FAECE7;color:#712B13}
+.ac-pink{background:#FBEAF0;color:#72243E}.ac-blue{background:#E6F1FB;color:#0C447C}.ac-amber{background:#FAEEDA;color:#633806}
+.acct-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)}
+.acct-row:last-child{border-bottom:0}
+.acct-url{display:flex;gap:6px;align-items:center;margin-top:6px}
+.acct-url code{flex:1;min-width:0;font-size:11px;background:var(--row-alt);border:1px solid var(--border);border-radius:8px;padding:5px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -590,11 +625,11 @@ select.input{appearance:auto}
   <div class="login-card">
     <div class="lg-logo">
       <i class="brand-mark" style="width:92px;height:92px" aria-hidden="true"></i>
-      <b>RATTANA <span>Purchase Chat</span></b>
-      <em>แชท LINE จัดซื้อ · แดชบอร์ดการตอบแชท</em>
+      <b>RTN <span>Chat Hub</span></b>
+      <em>แชท LINE ทุกบัญชี · แดชบอร์ดการตอบแชท</em>
     </div>
     <h2>เข้าสู่ระบบ</h2>
-    <div class="lg-sub">สำหรับทีมจัดซื้อรัตนไพบูลย์เท่านั้น</div>
+    <div class="lg-sub">สำหรับทีมรัตนไพบูลย์ที่ได้รับสิทธิ์เท่านั้น</div>
     <button class="lg-btn" id="lgBtn" type="button" onclick="doLogin()">
       <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
         <path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.7-2 5-4.4 6.6v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.1z"/>
@@ -604,11 +639,23 @@ select.input{appearance:auto}
       </svg>
       <span>เข้าสู่ระบบด้วย Google</span>
     </button>
-    <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าจัดซื้อเพิ่มไว้ในทีม<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าจัดซื้อหรือผู้ดูแลระบบ</div>
+    <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana Purchase Chat v1.22 · 22/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.0 · 22/09/2569</div>
   </div>
 </div>
+
+<!-- เลือกบัญชี LINE (v2.0) — ล็อกอินครั้งเดียว แล้วเลือกว่าจะเข้าบัญชีไหน · คนที่เข้าได้บัญชีเดียวจะข้ามหน้านี้ไปเลย -->
+<div id="acctGate" class="hide">
+  <div class="acct-card">
+    <div class="acct-top"><i class="brand-mark" style="width:42px;height:42px" aria-hidden="true"></i>
+      <div><b>เลือกบัญชี LINE</b><span id="acctHello"></span></div>
+      <button class="hdr-btn" onclick="doLogout()" title="ออกจากระบบ"><span data-ic="logout"></span></button></div>
+    <div id="acctList"></div>
+    <label class="check on" style="margin-top:4px"><input type="checkbox" id="acctRemember" checked onchange="this.parentElement.classList.toggle('on',this.checked)"> จำบัญชีที่เลือก ครั้งหน้าเข้าบัญชีนั้นเลย</label>
+  </div>
+</div>
+<div class="acct-menu" id="acctMenu"></div>
 
 <div class="upd-bar" id="updBar"><span>มีเวอร์ชันใหม่ <b id="updVer"></b> พร้อมแล้ว</span><button onclick="applyUpdate()">อัปเดตเลย</button></div>
 <div class="demo-banner" id="demoBanner" hidden>โหมดตัวอย่าง — ข้อมูลสมมติ ไม่ได้เชื่อมต่อ LINE / ฐานข้อมูล</div>
@@ -616,9 +663,9 @@ select.input{appearance:auto}
 <!-- HEADER -->
 <header class="app-hdr">
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
-  <div style="min-width:0">
-    <div class="logo-text">RATTANA <span>Purchase Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE จัดซื้อ · v1.22</span>
+  <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
+    <div class="logo-text">RTN <span>Chat Hub</span></div>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.0</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -676,7 +723,7 @@ select.input{appearance:auto}
             <div class="chat-cname" id="chatName"></div>
             <div class="chat-csub" id="chatSub"></div>
           </div>
-          <button class="hdr-btn" style="color:var(--muted);border-color:var(--border)" onclick="openEditChat()" title="แก้ชื่อซัพพลายเออร์ / โน้ต"><span data-ic="pencil"></span></button>
+          <button class="hdr-btn" style="color:var(--muted);border-color:var(--border)" onclick="openEditChat()" title="แก้ชื่อที่ทีมตั้ง / โน้ต"><span data-ic="pencil"></span></button>
         </div>
         <div class="chat-tools" id="chatTools"></div>
         <div id="chatStrips"></div>
@@ -759,7 +806,7 @@ select.input{appearance:auto}
         <div class="card-head">
           <h3><span class="hb info" data-ic="calendar"></span>งานรอตอบรายวัน <span class="mini" id="dailyUnit"></span></h3>
           <div class="acts"><button class="toggle-btn" onclick="toggleTable('daily')">ตาราง</button></div>
-          <div class="hint">นับตามวันที่ซัพพลายเออร์ทักเข้ามา · <b>ทันเวลา</b> = ตอบภายใน SLA · <b>ช้า</b> = ตอบแต่เกิน SLA · <b>ยังไม่ตอบ</b> = ค้างอยู่ตอนนี้ · ข้อความรับทราบ (ขอบคุณ/สติกเกอร์) ไม่นับ</div>
+          <div class="hint">นับตามวันที่<span class="peer-word">ซัพพลายเออร์</span>ทักเข้ามา · <b>ทันเวลา</b> = ตอบภายใน SLA · <b>ช้า</b> = ตอบแต่เกิน SLA · <b>ยังไม่ตอบ</b> = ค้างอยู่ตอนนี้ · ข้อความรับทราบ (ขอบคุณ/สติกเกอร์) ไม่นับ</div>
         </div>
         <div class="legend"><span><i style="background:var(--st-good)"></i>✓ ทันเวลา</span><span><i style="background:var(--st-warn)"></i>⚠ ช้ากว่า SLA</span><span><i style="background:var(--st-crit)"></i>✗ ยังไม่ตอบ</span></div>
         <div class="card-body tight chart-wrap" id="dailyChart"></div>
@@ -778,7 +825,7 @@ select.input{appearance:auto}
         </div>
         <div class="card card-gold">
           <div class="card-head">
-            <h3><span class="hb warn" data-ic="flame"></span>ช่วงเวลาที่ซัพพลายเออร์ทักเข้ามา</h3>
+            <h3><span class="hb warn" data-ic="flame"></span>ช่วงเวลาที่<span class="peer-word">ซัพพลายเออร์</span>ทักเข้ามา</h3>
             <div class="acts"><button class="toggle-btn" onclick="toggleTable('heat')">ตาราง</button></div>
             <div class="hint">จำนวนงานรอตอบใหม่ แยกวันในสัปดาห์ × ชั่วโมง — ใช้วางแผนคนเฝ้าแชท</div>
           </div>
@@ -791,7 +838,7 @@ select.input{appearance:auto}
         <div class="card-head">
           <h3><span class="hb crit" data-ic="alert"></span>งานค้างตอนนี้ <span class="mini" id="backlogCount"></span></h3>
           <div class="acts" id="backlogSum"></div>
-          <div class="hint">ทุกแชทที่ซัพพลายเออร์ทักแล้วยังไม่มีใครตอบ (ไม่จำกัดช่วงเวลา) · คลิกเพื่อเปิดแชท</div>
+          <div class="hint">ทุกแชทที่<span class="peer-word">ซัพพลายเออร์</span>ทักแล้วยังไม่มีใครตอบ (ไม่จำกัดช่วงเวลา) · คลิกเพื่อเปิดแชท</div>
         </div>
         <div class="card-body" id="backlogTable"></div>
       </div>
@@ -815,7 +862,7 @@ select.input{appearance:auto}
 
       <div class="card card-gold">
         <div class="card-head">
-          <h3><span class="hb" data-ic="tag"></span>ซัพพลายเออร์ที่ทักบ่อยสุด</h3>
+          <h3><span class="hb" data-ic="tag"></span><span class="peer-word">ซัพพลายเออร์</span>ที่ทักบ่อยสุด</h3>
           <div class="hint">จำนวนงานรอตอบในช่วงที่เลือก · คลิกเพื่อเปิดแชท</div>
         </div>
         <div class="card-body" id="topChats"></div>
@@ -857,7 +904,8 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana Purchase Chat v1.22 — แชท LINE OA จัดซื้อ + แดชบอร์ดการตอบแชท
+//  RTN Chat Hub v2.0 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -867,7 +915,7 @@ select.input{appearance:auto}
 // เขียนเลขไว้ที่เดียวพอ แก้ที่ <title> แล้วทุกอย่างตามเอง
 // เดิมแยกเป็นตัวแปรต่างหาก พอขึ้นเวอร์ชันแล้วลืมแก้ ตัวเช็คเห็นเลขไม่ตรงกันตลอด
 // แถบ "มีเวอร์ชันใหม่" เลยเด้งซ้ำไม่จบต่อให้กดอัปเดตกี่รอบ
-const APP_VERSION   = (/Rattana Purchase Chat v([0-9.]+)/.exec(document.title) || [, '0'])[1];
+const APP_VERSION   = (/RTN Chat Hub v([0-9.]+)/.exec(document.title) || [, '0'])[1];
 
 // ── ไอคอนเส้นแทนอิโมจิ ──
 // วาดด้วย SVG ในตัว (ลายเส้นแบบ Lucide, MIT) ไม่โหลดอะไรจากข้างนอก สีตามตัวอักษรของที่ที่มันอยู่
@@ -900,6 +948,10 @@ const ICON_PATHS = {
   logout:    '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
   paperclip: '<path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',
   activity:  '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+  chevdown:  '<path d="m6 9 6 6 6-6"/>',
+  chevright: '<path d="m9 18 6-6-6-6"/>',
+  link:      '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  copy:      '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
 };
 const ic = (name, cls = '') => ICON_PATHS[name]
   ? `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" aria-hidden="true">${ICON_PATHS[name]}</svg>` : '';
@@ -910,7 +962,7 @@ function fillIcons(root = document){
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => fillIcons()); else fillIcons();
 const SUPABASE_URL  = 'https://tousunszpxvdotgunoae.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_-sRQEZz-2AhHqz-eCYsqZg_UbV2gD9p';   // publishable key — เผยได้ RLS เป็นคนคุมสิทธิ์
-const LINE_OA_ID = '@429hgoxl';   // ไอดี LINE OA จัดซื้อ (RTNPurchase) — ใช้ทำลิงก์เปิดแอพ LINE
+const LINE_OA_ID = '@429hgoxl';   // ไอดี LINE OA จัดซื้อ (RTNPurchase) — ค่าสำรอง · บัญชีที่เปิดอยู่ใช้ acct.oa_id
 const VAPID_PUBLIC = 'BLein9hi9x50rwGAK_dWnUcP69vIoKzTPx14DWzQSZ8Sg65QUcgGbwgIYPNgeZXWNYiWNtRFK05sV9EMIQnV8aw';        // กุญแจสาธารณะ Web Push — เติมด้วย node tools/make_vapid.mjs (เปิดเผยได้ตามสเปก)
 const FN_SEND = 'pur-send';       // Edge Function ส่งข้อความ / อ่านแล้ว / โควตา
 const BUCKET  = 'pur-media';      // bucket ส่วนตัว เก็บรูป-ไฟล์ (เปิดผ่านลิงก์ลงนามเท่านั้น)
@@ -919,7 +971,17 @@ const DEMO    = new URLSearchParams(location.search).get('demo') === '1';   // ?
 const sb      = DEMO ? null : supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 // ── STATE ──
-let me = null;                        // {email,nick,name,role}
+let me = null;                        // {email,nick,name,role} — role = บทบาทในบัญชีที่เปิดอยู่ ('admin' = ผู้ดูแลทั้งระบบ)
+// ── บัญชี LINE (v2.0) ──
+let meRow = null;                     // แถว pur_members ของฉัน (role 'admin' = ผู้ดูแลระบบ เห็นทุกบัญชี)
+let accounts = [];                    // บัญชีที่ฉันเข้าได้ (pur_my_accounts) พร้อมตัวเลขสำหรับหน้าเลือกบัญชี
+let acct = null;                      // บัญชีที่เปิดอยู่ — ทุกการโหลดข้อมูลกรองด้วย acct.id
+const acctName = () => acct?.name || 'LINE';
+const curOaId  = () => acct?.oa_id || LINE_OA_ID;
+const acctCls  = a => 'ac-' + (/^(teal|purple|coral|pink|blue|amber)$/.test(a?.color || '') ? a.color : 'teal');
+const acctIni  = a => { const w = String(a?.name || '?').trim().split(/\s+/); return (w.length > 1 ? w[0][0] + w[1][0] : w[0].slice(0, 2)).toUpperCase(); };
+// คำเรียกอีกฝั่งของแชท: จัดซื้อคุยกับซัพพลายเออร์ · แผนกอื่นคุยกับลูกค้า
+const peer = () => !acct || acct.id === 1 ? 'ซัพพลายเออร์' : 'ลูกค้า';
 let members = new Map();              // email → member
 let people  = new Map();              // line_user_id → person
 let chats = [], chatById = new Map(), msgCache = {};
@@ -942,13 +1004,18 @@ function defaultSettings(){
   return { work_days:[1,2,3,4,5,6], work_start:'08:00', work_end:'17:00', holidays:[], sla_minutes:60,
            ack_words:[], quick_replies:['สวัสดีค่ะ 🙏','รับทราบค่ะ ✓','ขอบคุณค่ะ 🙏'], auto_assign:false };
 }
+// ค่าตั้งของบัญชี → รูปแบบที่คำนวณเวลาทำการใช้ (ใช้กับบัญชีที่เปิดอยู่ และกับตัวเลขของบัญชีอื่นในหน้าเลือกบัญชี)
+function normSettings(s){
+  const st = { ...defaultSettings(), ...(s || {}) };
+  st.work_start = String(st.work_start).slice(0,5);
+  st.work_end   = String(st.work_end).slice(0,5);
+  st.holidays   = (st.holidays || []).map(x => String(x).slice(0,10));
+  st.holidaySet = new Set(st.holidays);
+  st.work_days  = (st.work_days || []).map(Number);
+  return st;
+}
 function applySettings(s){
-  settings = { ...defaultSettings(), ...(s || {}) };
-  settings.work_start = String(settings.work_start).slice(0,5);
-  settings.work_end   = String(settings.work_end).slice(0,5);
-  settings.holidays   = (settings.holidays || []).map(x => String(x).slice(0,10));
-  settings.holidaySet = new Set(settings.holidays);
-  settings.work_days  = (settings.work_days || []).map(Number);
+  settings = normSettings(s);
   renderQuick();
 }
 
@@ -989,22 +1056,22 @@ const avCol = s => { let h = 0; for(const c of String(s||'')) h = (h*31 + c.char
 const chatName   = c => c.supplier_name || c.title || (c.kind === 'user' ? 'ผู้ติดต่อ LINE' : 'กลุ่ม LINE');
 const memberName = e => { if(!e) return '—'; const m = members.get(e); return m ? (m.nick || m.name || e) : e.split('@')[0]; };
 // ลิงก์เปิดแอพ LINE ไปที่แชท 1:1 กับ OA พร้อมพิมพ์ข้อความรอไว้ให้ — ผู้ใช้แค่กดส่ง
-const oaChatUrl = text => `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OA_ID)}/?${encodeURIComponent(text)}`;
-const oaAddUrl  = () => `https://line.me/R/ti/p/${encodeURIComponent(LINE_OA_ID)}`;
+const oaChatUrl = text => `https://line.me/R/oaMessage/${encodeURIComponent(curOaId())}/?${encodeURIComponent(text)}`;
+const oaAddUrl  = () => `https://line.me/R/ti/p/${encodeURIComponent(curOaId())}`;
 const linkify = escaped => escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
 const slaSec = () => (settings?.sla_minutes || 60) * 60;
 
 // เวลาทำการ: นับเฉพาะช่วง work_start–work_end ของวันทำงานที่ไม่ใช่วันหยุด
 // ข้อความที่เข้ามาตอนกลางคืน/วันหยุด จึงเริ่มนับตอนเปิดงานวันถัดไป
-function bizSeconds(startMs, endMs){
+function bizSeconds(startMs, endMs, st = settings){
   if(!(endMs > startMs)) return 0;
-  const [sh, sm] = settings.work_start.split(':').map(Number);
-  const [eh, em] = settings.work_end.split(':').map(Number);
+  const [sh, sm] = st.work_start.split(':').map(Number);
+  const [eh, em] = st.work_end.split(':').map(Number);
   let total = 0, guard = 0;
   const day = new Date(startMs); day.setHours(0,0,0,0);
   while(day.getTime() < endMs && guard++ < 800){
     const dow = day.getDay() || 7;                       // 1=จันทร์ … 7=อาทิตย์
-    if(settings.work_days.includes(dow) && !settings.holidaySet.has(ymd(day))){
+    if(st.work_days.includes(dow) && !st.holidaySet.has(ymd(day))){
       const ws = new Date(day); ws.setHours(sh, sm, 0, 0);
       const we = new Date(day); we.setHours(eh, em, 0, 0);
       const a = Math.max(startMs, ws.getTime()), b = Math.min(endMs, we.getTime());
@@ -1014,10 +1081,10 @@ function bizSeconds(startMs, endMs){
   }
   return Math.round(total / 1000);
 }
-function elapsedSec(startISO, endISO){
+function elapsedSec(startISO, endISO, st = settings){
   const s = Date.parse(startISO), e = endISO ? Date.parse(endISO) : Date.now();
   if(!(e > s)) return 0;
-  return clockMode === 'biz' ? bizSeconds(s, e) : Math.round((e - s) / 1000);
+  return clockMode === 'biz' ? bizSeconds(s, e, st) : Math.round((e - s) / 1000);
 }
 
 // ── UI HELPERS ──
@@ -1065,14 +1132,19 @@ async function fetchAll(table, build){
   }
   return out;
 }
-async function loadMembers(){ const rows = await fetchAll('pur_members', q => q.order('nick', { nullsFirst:false })); members = new Map(rows.map(r => [r.email, r])); }
+// ทีมของบัญชีที่เปิดอยู่ (+ ผู้ดูแลระบบ) — บทบาท/รหัส PU/สถานะ เป็นของบัญชีนี้ (หัวหน้าบัญชีหนึ่งอาจเป็นพนักงานอีกบัญชี)
+async function loadMembers(){
+  const { data, error } = await sb.rpc('pur_account_team', { p_account:acct.id });
+  if(error) throw new Error(error.message);
+  members = new Map((data || []).map(r => [r.email, r]));
+}
 async function loadPeople(){ const rows = await fetchAll('pur_people', q => q.order('last_seen_at', { ascending:false })); people = new Map(rows.map(r => [r.line_user_id, r])); }
-async function loadSettings(){ const { data, error } = await sb.from('pur_settings').select('*').eq('id', 1).maybeSingle(); if(error) throw new Error(error.message); applySettings(data); }
+async function loadSettings(){ const { data, error } = await sb.from('pur_settings').select('*').eq('id', acct.id).maybeSingle(); if(error) throw new Error(error.message); applySettings(data); }
 async function loadChats(){
   // ถ้ามีเหตุการณ์ realtime ค้างรอวาดอยู่ (schedulePaint 250ms) ให้ใช้ภาพ "ก่อนเหตุการณ์" ของมัน
   // ไม่งั้นภาพที่ถ่ายตรงนี้มีข้อความใหม่อยู่แล้ว + บรรทัดล้าง paintSnap ข้างล่าง = การแจ้งเตือนของข้อความนั้นหาย
   const before = paintSnap || snapshot();
-  const rows = await fetchAll('pur_chats', q => q.order('last_message_at', { ascending:false, nullsFirst:false }));
+  const rows = await fetchAll('pur_chats', q => q.eq('account_id', acct.id).order('last_message_at', { ascending:false, nullsFirst:false }));
   chats = rows; chatById = new Map(rows.map(r => [r.id, r]));
   if(typeof paintSnap !== 'undefined') paintSnap = null;
   detectNew(before); renderList(); updateBadges();
@@ -1199,7 +1271,7 @@ function renderList(){
   const list = filteredChats(); const el = $('convList');
   const n = chipCounts();
   for(const k in n){ const e = $('cn-' + k); if(e) e.textContent = n[k] || ''; }
-  if(!list.length){ el.innerHTML = `<div class="conv-empty">${chats.length ? 'ไม่มีแชทในหมวดนี้' : 'ยังไม่มีแชทเข้ามา<br><span class="txt-sm">เชิญบัญชี LINE จัดซื้อเข้ากลุ่มซัพพลายเออร์ หรือรอให้ซัพพลายเออร์ทักเข้ามา</span>'}</div>`; return; }
+  if(!list.length){ el.innerHTML = `<div class="conv-empty">${chats.length ? 'ไม่มีแชทในหมวดนี้' : `ยังไม่มีแชทเข้ามา<br><span class="txt-sm">เชิญบัญชี LINE ${esc(acctName())} เข้ากลุ่ม${peer()} หรือรอให้${peer()}ทักเข้ามา</span>`}</div>`; return; }
   const sla = slaSec();
   if(listShown > LIST_STEP && listShown > list.length) listShown = Math.max(LIST_STEP, Math.ceil(list.length / LIST_STEP) * LIST_STEP);
   const shown = list.slice(0, listShown), rest = list.length - shown.length;
@@ -1235,7 +1307,7 @@ function filterConv(q){ searchQ = q; resetList(); renderList(); }
 function updateBadges(){
   const n = chats.filter(isWaiting).length;
   ['tb-chat', 'bn-chat'].forEach(id => { const e = $(id); if(e) e.textContent = n || ''; });
-  document.title = (n ? `(${n}) ` : '') + `Rattana Purchase Chat v${APP_VERSION}`;
+  document.title = (n ? `(${n}) ` : '') + `RTN Chat Hub v${APP_VERSION}`;
   setAppBadge(n);
 }
 // เลขบนไอคอนแอพที่หน้าจอโฮม (มือถือ/คอมที่ติดตั้งแอพไว้) = จำนวนงานที่รอตอบ
@@ -1284,7 +1356,7 @@ function renderChatHeader(c){
   $('chatSub').textContent = parts.join(' · ');
   $('chatAv').outerHTML = avatarHtml(c, 38).replace('class="av', 'id="chatAv" class="av');
   renderTools(c); renderStrips(c); applyReplyState(c);
-  $('sendBtn').title = c.kind !== 'user' && c.member_count > 1 ? `ส่ง 1 ข้อความเข้ากลุ่มนี้ใช้โควตา LINE ${c.member_count} ข้อความ (ตอบภายใน 1 นาทีหลังซัพพลายเออร์ทัก = ไม่ใช้โควตา)` : 'ส่ง';
+  $('sendBtn').title = c.kind !== 'user' && c.member_count > 1 ? `ส่ง 1 ข้อความเข้ากลุ่มนี้ใช้โควตา LINE ${c.member_count} ข้อความ (ตอบภายใน 1 นาทีหลัง${peer()}ทัก = ไม่ใช้โควตา)` : 'ส่ง';
 }
 function renderTools(c){
   const a = c.assignee_email; let h = '';
@@ -1299,9 +1371,9 @@ function renderStrips(c){
   let h = '';
   if(c.awaiting_since){
     const age = elapsedSec(c.awaiting_since, null), over = age > slaSec();
-    h += `<div class="strip ${over ? 'over' : 'wait'}">⏱ ซัพพลายเออร์รอคำตอบมา <b>${fmtDur(age)}</b>${clockMode === 'biz' ? ' (นับเวลาทำการ)' : ''} · SLA ${settings.sla_minutes} นาที${over ? ' — <b>เกินกำหนดแล้ว</b>' : ''}</div>`;
+    h += `<div class="strip ${over ? 'over' : 'wait'}">⏱ ${peer()}รอคำตอบมา <b>${fmtDur(age)}</b>${clockMode === 'biz' ? ' (นับเวลาทำการ)' : ''} · SLA ${settings.sla_minutes} นาที${over ? ' — <b>เกินกำหนดแล้ว</b>' : ''}</div>`;
   }
-  if(!c.is_active) h += `<div class="strip off">⚠️ ${c.kind === 'user' ? 'ผู้ติดต่อบล็อกบัญชี LINE จัดซื้อ — ส่งข้อความหาไม่ได้จนกว่าจะปลดบล็อก' : 'บัญชี LINE จัดซื้อไม่ได้อยู่ในกลุ่มนี้แล้ว — เชิญกลับเข้ากลุ่มก่อนจึงจะส่งได้'}</div>`;
+  if(!c.is_active) h += `<div class="strip off">⚠️ ${c.kind === 'user' ? `ผู้ติดต่อบล็อกบัญชี LINE ${esc(acctName())} — ส่งข้อความหาไม่ได้จนกว่าจะปลดบล็อก` : `บัญชี LINE ${esc(acctName())} ไม่ได้อยู่ในกลุ่มนี้แล้ว — เชิญกลับเข้ากลุ่มก่อนจึงจะส่งได้`}</div>`;
   if(c.exclude_kpi) h += `<div class="strip info">📵 แชทนี้ไม่นับในสถิติ</div>`;
   // ใครในทีมเคยตอบแชทนี้ (จาก trigger team_seen) — หัวหน้าคลิกชื่อเพื่อตั้งเป็นผู้รับผิดชอบได้
   const team = Object.entries(c.team_seen || {}).map(([k, v]) => ({ key:k, ...(v || {}) })).sort((a, b) => (b.count || 0) - (a.count || 0));
@@ -1735,7 +1807,7 @@ function openAssignee(){
   const c = chatById.get(activeId); if(!c) return;
   if(!isSup()){
     if(!c.assignee_email){ claimChat(); return; }
-    openModal('ผู้รับผิดชอบแชทนี้', `<p>ผู้รับผิดชอบ: <b>${esc(memberName(c.assignee_email))}</b></p><p class="txt-sm txt-muted mt-8">การเปลี่ยนผู้รับผิดชอบต้องให้หัวหน้าจัดซื้อทำ</p>`, `<button class="btn btn-outline" onclick="closeModal()">ปิด</button>`);
+    openModal('ผู้รับผิดชอบแชทนี้', `<p>ผู้รับผิดชอบ: <b>${esc(memberName(c.assignee_email))}</b></p><p class="txt-sm txt-muted mt-8">การเปลี่ยนผู้รับผิดชอบต้องให้หัวหน้าทำ</p>`, `<button class="btn btn-outline" onclick="closeModal()">ปิด</button>`);
     return;
   }
   const list = [...members.values()].filter(m => m.active).sort((a, b) => (a.nick || a.name || '').localeCompare(b.nick || b.name || '', 'th'));
@@ -1754,7 +1826,7 @@ async function claimChat(){
 }
 function dismissWait(){
   const c = chatById.get(activeId); if(!c || !c.awaiting_since) return;
-  openModal('ปิดงานรอตอบ — ไม่ต้องตอบ', `<p>ใช้เมื่อข้อความนี้ไม่ต้องการคำตอบจากจัดซื้อ เช่น ซัพพลายเออร์คุยกันเอง ส่งผิดกลุ่ม หรือแจ้งให้ทราบเฉยๆ</p><p class="txt-sm txt-muted mt-8">ระบบจะบันทึกว่า <b>${esc(me.nick || me.email)}</b> เป็นคนปิดงานนี้ (ไม่นับเป็นการตอบ และไม่นับเป็นงานค้าง)</p>`,
+  openModal('ปิดงานรอตอบ — ไม่ต้องตอบ', `<p>ใช้เมื่อข้อความนี้ไม่ต้องการคำตอบจากทีม เช่น ${peer()}คุยกันเอง ส่งผิดกลุ่ม หรือแจ้งให้ทราบเฉยๆ</p><p class="txt-sm txt-muted mt-8">ระบบจะบันทึกว่า <b>${esc(me.nick || me.email)}</b> เป็นคนปิดงานนี้ (ไม่นับเป็นการตอบ และไม่นับเป็นงานค้าง)</p>`,
     `<button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button><button class="btn btn-danger" onclick="doDismiss()">🚫 ยืนยัน ไม่ต้องตอบ</button>`);
 }
 async function doDismiss(){
@@ -1777,7 +1849,7 @@ function openEditChat(){
   const c = chatById.get(activeId); if(!c) return;
   openModal('ข้อมูลแชท', `
     <div class="field"><label>ชื่อจาก LINE</label><div class="txt-sm">${esc(c.title || '—')} <span class="txt-muted">· ${c.kind === 'user' ? 'แชท 1:1' : 'กลุ่ม'}</span></div></div>
-    <div class="field"><label>ชื่อซัพพลายเออร์ (ที่ทีมตั้งเอง)</label><input class="input" id="edSupplier" value="${esc(c.supplier_name || '')}" placeholder="เช่น บจก. วัสดุก่อสร้าง A"></div>
+    <div class="field"><label>ชื่อที่ทีมตั้ง (เช่น ชื่อ${peer()} + รหัส PU)</label><input class="input" id="edSupplier" value="${esc(c.supplier_name || '')}" placeholder="เช่น บจก. วัสดุก่อสร้าง A"></div>
     <div class="field"><label>โน้ต</label><textarea class="input" id="edNote" rows="3" placeholder="เช่น เซลส์ชื่อคุณเอ โทร 08x-xxx-xxxx · ส่งของทุกวันพุธ">${esc(c.note || '')}</textarea></div>
     <div class="txt-sm txt-muted">LINE ID: <code style="font-size:11px">${esc(c.line_id)}</code></div>`,
     `<button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button><button class="btn btn-gold" onclick="saveEditChat()">บันทึก</button>`);
@@ -1809,13 +1881,20 @@ function schedulePaint(){
     paintHeader = false;
   }, 250);
 }
+// realtime ฟังเฉพาะบัญชีที่เปิดอยู่ (filter account_id) — สลับบัญชีแล้วถอดช่องเดิมทิ้งก่อนต่อใหม่
+// DELETE ใส่ filter ไม่ได้ (Supabase ส่งมาแต่รหัสแถว) → ฟังแยก ไม่กรอง ตัวจัดการลบเฉพาะแชทที่มีในรายการอยู่แล้ว
+let rtChannels = [];
+function teardownRealtime(){ rtChannels.forEach(ch => { try{ sb.removeChannel(ch); }catch(_){ } }); rtChannels = []; }
 function setupRealtime(){
-  sb.channel('pur-chats').on('postgres_changes', { event:'*', schema:'public', table:'pur_chats' }, p => {
+  teardownRealtime();
+  const f = `account_id=eq.${acct.id}`;
+  const onChat = p => {
     if(p.eventType === 'DELETE'){ const id = p.old?.id; if(id){ chats = chats.filter(c => c.id !== id); chatById.delete(id);
       // บอกเหตุผลด้วย — ไม่งั้นบนจอกว้างผู้ใช้เห็นแค่แชทหายไปเฉยๆ (toast อยู่ที่นี่ ไม่ใช่ใน closeChat เพราะกดกลับปกติไม่ควรมี)
       if(activeId === id){ closeChat(); showToast('แชทนี้ถูกรวมกับแชทอื่นหรือถูกลบแล้ว — เลือกแชทจากรายการอีกครั้ง', 'info', 4500); }
       schedulePaint(); } return; }
     const r = p.new; if(!r?.id) return;
+    if(r.account_id != null && acct && r.account_id !== acct.id) return;
     if(!paintSnap) paintSnap = snapshot();   // เก็บภาพก่อนหน้าครั้งเดียวต่อรอบ ไม่ใช่ทุกเหตุการณ์
     const prevRead = chatById.get(r.id)?.peer_read_at;
     upsertChat(r);
@@ -1823,16 +1902,21 @@ function setupRealtime(){
     if(activeId === r.id && r.unread_count > 0 && viewingChat()){ r.unread_count = 0; chatById.get(r.id).unread_count = 0; }
     if(activeId === r.id) paintHeader = true;
     schedulePaint();
-  }).subscribe();
+  };
+  rtChannels.push(sb.channel('pur-chats-' + acct.id)
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'pur_chats', filter:f }, onChat)
+    .on('postgres_changes', { event:'UPDATE', schema:'public', table:'pur_chats', filter:f }, onChat)
+    .on('postgres_changes', { event:'DELETE', schema:'public', table:'pur_chats' }, onChat)
+    .subscribe());
 
-  sb.channel('pur-msgs')
-    .on('postgres_changes', { event:'INSERT', schema:'public', table:'pur_messages' }, p => onMsgInsert(p.new))
-    .on('postgres_changes', { event:'UPDATE', schema:'public', table:'pur_messages' }, p => onMsgUpdate(p.new))
-    .subscribe();
+  rtChannels.push(sb.channel('pur-msgs-' + acct.id)
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'pur_messages', filter:f }, p => onMsgInsert(p.new))
+    .on('postgres_changes', { event:'UPDATE', schema:'public', table:'pur_messages', filter:f }, p => onMsgUpdate(p.new))
+    .subscribe());
 
-  sb.channel('pur-people').on('postgres_changes', { event:'*', schema:'public', table:'pur_people' }, p => {
+  rtChannels.push(sb.channel('pur-people').on('postgres_changes', { event:'*', schema:'public', table:'pur_people' }, p => {
     if(p.new?.line_user_id){ people.set(p.new.line_user_id, p.new); refreshPeopleCards(); }
-  }).subscribe();
+  }).subscribe());
 }
 function onMsgInsert(m){
   if(!m || m.chat_id !== activeId) return;
@@ -2074,7 +2158,7 @@ function slaWatch(){
     if(!c.awaiting_since || c.status === 'resolved') return;
     const age = elapsedSec(c.awaiting_since, null);
     if(age >= sla)
-      pushNoti('sla', c, `ซัพพลายเออร์รอคำตอบมาแล้ว ${fmtDur(age)} (SLA ${settings.sla_minutes} นาที)`, `sla|${c.id}|${c.awaiting_since}`);
+      pushNoti('sla', c, `${peer()}รอคำตอบมาแล้ว ${fmtDur(age)} (SLA ${settings.sla_minutes} นาที)`, `sla|${c.id}|${c.awaiting_since}`);
     else if(age >= warnAt)
       pushNoti('warn', c, `รอมาแล้ว ${fmtDur(age)} · อีก ${fmtDur(sla - age)} จะเกิน SLA`, `warn|${c.id}|${c.awaiting_since}`);
   });
@@ -2096,7 +2180,7 @@ async function checkUpdate(){
                             { cache:'no-store', headers:{ Range:'bytes=0-1500' } });
     if(!res.ok && res.status !== 206) return;
     const head = await res.text();
-    const m = /Rattana Purchase Chat v([0-9.]+)/.exec(head);
+    const m = /RTN Chat Hub v([0-9.]+)/.exec(head);
     if(!m || m[1] === APP_VERSION || m[1] === updSeen) return;
     updSeen = m[1];
     $('updVer').textContent = 'v' + m[1];
@@ -2147,7 +2231,7 @@ async function initPush(){
     pushSub = await swReg.pushManager.getSubscription();
     // กดแจ้งเตือนจากนอกแอพ → service worker บอกให้เปิดแชทนั้น
     navigator.serviceWorker.addEventListener('message', e => {
-      if(e.data?.type === 'open-chat' && e.data.chat && chatById.get(e.data.chat)){ setView('chat'); openChat(e.data.chat); }
+      if(e.data?.type === 'open-chat' && e.data.chat) openChatAnyAccount(e.data.chat, e.data.account);
     });
     if(pushSub) syncPushPrefs();                       // ค่าตั้งอาจเปลี่ยนตอนแอพปิดอยู่
   }catch(e){ console.warn('service worker:', e.message); }
@@ -2156,7 +2240,18 @@ async function initPush(){
 // เปิดจากลิงก์ในแจ้งเตือน (กรณีแอพยังไม่ได้เปิดอยู่ — sw เปิดหน้าต่างใหม่พร้อม #chat=)
 function openChatFromHash(){
   const m = /[#&]chat=([0-9a-f-]{36})/i.exec(location.hash || '');
-  if(m && chatById.get(m[1])){ history.replaceState(null, '', location.pathname + location.search); setView('chat'); openChat(m[1]); }
+  const a = /[#&]a=(\d+)/.exec(location.hash || '');
+  if(!m) return;
+  history.replaceState(null, '', location.pathname + location.search);
+  openChatAnyAccount(m[1], a ? +a[1] : null);
+}
+// แชทของอีกบัญชี (เช่น กดแจ้งเตือนของแผนกอื่น) → สลับไปบัญชีนั้นก่อน แล้วค่อยเปิดแชท
+async function openChatAnyAccount(chatId, accountId){
+  if(chatById.get(chatId)){ setView('chat'); openChat(chatId); return; }
+  const a = accountId ? accounts.find(x => x.id === +accountId) : null;
+  if(!a || a.id === acct?.id) return;
+  await enterAccount(a.id);
+  if(chatById.get(chatId)){ setView('chat'); openChat(chatId); }
 }
 
 async function enablePush(){
@@ -2329,9 +2424,9 @@ async function loadDash(){
     if(DEMO){ dash.data = demoDash(); }
     else {
       const [w1, w2, rc] = await Promise.all([
-        fetchAll('pur_waits', q => q.gte('started_at', from.toISOString()).lt('started_at', to.toISOString()).order('started_at')),
-        fetchAll('pur_waits', q => q.is('closed_at', null).order('started_at')),
-        sb.rpc('pur_reply_counts', { p_from:from.toISOString(), p_to:to.toISOString() }),
+        fetchAll('pur_waits', q => q.eq('account_id', acct.id).gte('started_at', from.toISOString()).lt('started_at', to.toISOString()).order('started_at')),
+        fetchAll('pur_waits', q => q.eq('account_id', acct.id).is('closed_at', null).order('started_at')),
+        sb.rpc('pur_reply_counts', { p_from:from.toISOString(), p_to:to.toISOString(), p_account:acct.id }),
       ]);
       if(seq !== dash.seq) return;                          // มีคำขอใหม่กว่าแล้ว — ทิ้งผลชุดนี้
       if(rc.error) throw new Error(rc.error.message);
@@ -2350,10 +2445,12 @@ async function checkOaFresh(){
   const el = $('oaStale'); if(!el) return;
   if(DEMO) return;
   try{
-    const { data } = await sb.from('pur_messages').select('created_at')
+    const { data } = await sb.from('pur_messages').select('created_at').eq('account_id', acct.id)
       .eq('via', 'oa').order('created_at', { ascending:false }).limit(1).maybeSingle();
     const last = data?.created_at ? Date.parse(data.created_at) : 0;
     const mins = last ? Math.round((Date.now() - last) / 60000) : null;
+    // บัญชีที่ไม่เคยใช้ส่วนขยายเลย (ตอบจากแอพอย่างเดียว) ไม่ต้องเตือน — เตือนเฉพาะบัญชีที่เคยมีคำตอบจาก OA Manager แล้วเงียบไป
+    if(mins === null && acct.id !== 1){ el.innerHTML = ''; return; }
     if(mins !== null && mins < OA_STALE_MIN){ el.innerHTML = ''; return; }
     const ago = mins === null ? 'ยังไม่เคยมีข้อมูลเข้ามา'
               : mins >= 60 ? `${Math.floor(mins / 60)} ชม.${mins % 60 ? ' ' + (mins % 60) + ' น.' : ''}` : `${mins} นาที`;
@@ -2840,7 +2937,7 @@ function blastPreview(){
 
   openModal(`ตรวจก่อนส่ง — ${nf(rows.length)} แชท`,
     `<div class="warn-box">
-       <b>ส่งแล้วเรียกคืนไม่ได้</b> — ซัพพลายเออร์จะเห็นทันที กรุณาอ่านตัวอย่างข้างล่างให้ครบก่อนกดยืนยัน
+       <b>ส่งแล้วเรียกคืนไม่ได้</b> — ${peer()}จะเห็นทันที กรุณาอ่านตัวอย่างข้างล่างให้ครบก่อนกดยืนยัน
      </div>
      <div class="row mt-8" style="gap:14px">
        <div><div class="mini">จำนวนแชท</div><div class="txt-bold">${nf(rows.length)}</div></div>
@@ -2949,8 +3046,8 @@ function renderBlast(){
   const S = blast, sheetOn = BLAST_SHEET && S.mode === 'sheet';
   let step = 0; const no = () => ++step;               // เลขข้อรันเอง — ข้อที่ซ่อนอยู่ไม่กินเลข
   $('blastContent').innerHTML = `
-    <div class="card card-gold"><div class="card-head"><h3><span class="hb">${ic('send')}</span>ส่งข้อความหาซัพพลายเออร์หลายเจ้า</h3>
-      <div class="hint">ส่งผ่านบัญชี LINE จัดซื้อเหมือนพิมพ์ในแชทเอง · ข้อความจะไปอยู่ในแชทนั้นให้ทีมเห็นด้วย ·
+    <div class="card card-gold"><div class="card-head"><h3><span class="hb">${ic('send')}</span>ส่งข้อความหา${peer()}หลายเจ้า</h3>
+      <div class="hint">ส่งผ่านบัญชี LINE ${esc(acctName())} เหมือนพิมพ์ในแชทเอง · ข้อความจะไปอยู่ในแชทนั้นให้ทีมเห็นด้วย ·
         <b>ส่งแล้วเรียกคืนไม่ได้</b> ทุกครั้งจะมีหน้าตรวจก่อนส่งให้อ่านก่อนเสมอ</div></div>
       <div class="card-body">
         ${BLAST_SHEET ? `
@@ -3187,7 +3284,7 @@ let peopleQ = '';
 function renderSettings(){
   if(view !== 'set') return;
   const sup = isSup();
-  $('setContent').innerHTML = linkCardHtml() + notiCardHtml() + (sup ? teamCardHtml() + peopleCardHtml() + hoursCardHtml() : '') + quickCardHtml(sup) + (sup ? ackCardHtml() : '') + quotaCardHtml() + (isAdmin() ? adminCardHtml() : '') + aboutCardHtml();
+  $('setContent').innerHTML = linkCardHtml() + notiCardHtml() + (isAdmin() ? accountsCardHtml() + accessCardHtml() : '') + (sup ? teamCardHtml() + peopleCardHtml() + hoursCardHtml() : '') + quickCardHtml(sup) + (sup ? ackCardHtml() : '') + quotaCardHtml() + (isAdmin() ? adminCardHtml() : '') + aboutCardHtml();
   if(sup && peopleOpen) renderPeopleRows();
   if(sup && oaAdmins === null && !DEMO) loadOaAdmins();
 }
@@ -3206,13 +3303,103 @@ function refreshPeopleCards(){
 }
 function avatarSm(p){ return p.avatar_url ? `<img class="avs" src="${esc(p.avatar_url)}" alt="" loading="lazy">` : `<span class="avs" style="background:${avCol(p.display_name || p.line_user_id)}">${esc((p.display_name || '?').charAt(0))}</span>`; }
 
+// ── บัญชี LINE (ผู้ดูแลระบบ) — สถานะการเชื่อมต่อ + ลิงก์ webhook ของแต่ละบัญชี ──
+let acctStatus = null, accessMx = null;
+const WEBHOOK_BASE = `${SUPABASE_URL}/functions/v1/pur-webhook-line`;
+const webhookUrl = a => a.id === 1 ? WEBHOOK_BASE : `${WEBHOOK_BASE}?a=${encodeURIComponent(a.slug)}`;
+async function loadAcctStatus(){
+  acctStatus = [];
+  try{ const { data, error } = await sb.rpc('pur_account_status'); if(error) throw new Error(error.message); acctStatus = data || []; }
+  catch(e){ console.warn('account status:', e.message); }
+  const el = $('acctCard'); if(el) el.outerHTML = accountsCardHtml();
+}
+function accountsCardHtml(){
+  if(acctStatus === null && !DEMO) loadAcctStatus();
+  const st = new Map((acctStatus || []).map(x => [x.id, x]));
+  const row = a => {
+    const x = st.get(a.id) || {};
+    const hook = x.last_webhook_at ? `<span class="pill ok">webhook รับข้อความล่าสุด ${esc(timeAgo(x.last_webhook_at))}</span>` : '<span class="pill warn">ยังไม่มีข้อความเข้าทาง webhook</span>';
+    const ext = x.bot_locked ? `<span class="pill ok">ส่วนขยายต่อแล้ว${x.oa_last_ingest_at ? ' · ล่าสุด ' + esc(timeAgo(x.oa_last_ingest_at)) : ''}</span>` : '<span class="pill grey">ยังไม่ต่อส่วนขยาย</span>';
+    return `<div class="acct-row"><span class="acct-av ${acctCls(a)}">${esc(acctIni(a))}</span>
+      <div style="flex:1;min-width:0"><b>${esc(a.name)}</b> <span class="mini">${esc([a.dept, a.oa_id].filter(Boolean).join(' · '))}${a.active ? '' : ' · ปิดใช้งาน'}</span>
+        <div class="acct-pills">${hook}${ext}${x.chats != null ? `<span class="pill grey">${nf(x.chats)} แชท</span>` : ''}${x.forward ? '<span class="pill grey" title="ข้อความจาก LINE ถูกส่งต่อให้ระบบเดิมของบัญชีนี้ด้วย">ส่งต่อระบบเดิม</span>' : ''}</div>
+        <div class="acct-url"><code title="${esc(webhookUrl(a))}">${esc(webhookUrl(a))}</code>
+          <button class="btn btn-outline btn-sm" data-u="${esc(webhookUrl(a))}" onclick="copyText(this.dataset.u)" title="คัดลอก Webhook URL">${ic('copy')}</button>
+          <button class="btn btn-outline btn-sm" data-s="${esc(a.slug)}" onclick="checkAcctHealth(this.dataset.s)">ตรวจการตั้งค่า</button></div>
+        <div class="mini mt-8" id="health-${esc(a.slug)}"></div></div></div>`;
+  };
+  return `<div class="card card-gold" id="acctCard"><div class="card-head"><h3><span class="hb">${ic('link')}</span>บัญชี LINE <span class="mini">${nf(accounts.length)} บัญชี</span></h3>
+    <div class="hint"><b>webhook</b> = ข้อความที่อีกฝั่งส่งเข้ามา (ตั้ง Webhook URL ด้านล่างใน LINE OA Manager › ตั้งค่า › Messaging API) ·
+      <b>ส่วนขยาย</b> = คำตอบที่ทีมพิมพ์ใน LINE OA Manager (ติดตั้ง Bridge บนเครื่องที่เปิด OA Manager ของบัญชีนั้น)<br>
+      กด <b>ตรวจการตั้งค่า</b> <u>ก่อน</u>เปลี่ยน Webhook URL — ระบบจะจำ webhook เดิมของบัญชีนั้นไว้แล้วส่งข้อความต่อให้ระบบเดิมทำงานต่อได้</div></div>
+    <div class="card-body" style="padding-top:4px">${accounts.map(row).join('')}</div></div>`;
+}
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); showToast('คัดลอกแล้ว ✓', 'success'); }
+  catch(_){ showToast('คัดลอกไม่ได้ — เลือกข้อความแล้วคัดลอกเองได้', 'info'); }
+}
+// ถามสถานะจาก pur-webhook-line?health=1&a=<slug> — ตอบแค่ ใช่/ไม่ใช่ ไม่คืนค่าลับ
+// ครั้งแรกที่ตั้ง Channel ID/secret ครบ ฟังก์ชันจะจำ webhook เดิมของบัญชีนั้นไว้ส่งต่อ (forward = captured)
+async function checkAcctHealth(slug){
+  const el = $('health-' + slug); if(!el) return;
+  if(DEMO){ el.textContent = 'โหมดตัวอย่าง — ตรวจไม่ได้'; return; }
+  el.textContent = 'กำลังตรวจ…';
+  try{
+    const res = await fetch(`${WEBHOOK_BASE}?health=1&a=${encodeURIComponent(slug)}`, { cache:'no-store' });
+    const j = await res.json();
+    if(!j.ok){ el.innerHTML = `<span class="txt-danger">${esc(j.error || 'ตรวจไม่ได้')}</span>`; return; }
+    const yes = (ok, label) => `${ok ? '✓' : '✗'} ${label}`;
+    const fw = { captured:'จำ webhook เดิมไว้แล้ว — ข้อความจะถูกส่งต่อให้ระบบเดิมด้วย', ready:'มี webhook เดิมให้ส่งต่ออยู่แล้ว',
+                 self:'webhook ชี้มาที่แอพนี้แล้ว', none:'บัญชีนี้ไม่มี webhook เดิม', 'no-token':'ยังออก token ไม่ได้ (ตั้ง Channel ID / secret ก่อน)',
+                 env:'ตั้งปลายทางส่งต่อไว้ในค่าลับ', off:'ปิดการส่งต่อไว้', error:'บันทึก webhook เดิมไม่สำเร็จ' }[j.forward] || j.forward;
+    el.innerHTML = `${yes(j.channelId, 'Channel ID')} · ${yes(j.channelSecret, 'Channel secret')} · ${yes(j.lineToken, 'ออก token ได้')}<br>ส่งต่อ: ${esc(fw)}`;
+  }catch(e){ el.innerHTML = `<span class="txt-danger">ตรวจไม่ได้: ${esc(e.message)}</span>`; }
+}
+
+// ── สิทธิ์เข้าบัญชี (ผู้ดูแลระบบ) — ใครเข้าบัญชีไหน เป็นหัวหน้าหรือพนักงาน ──
+async function loadAccessMx(){
+  try{ const { data, error } = await sb.rpc('pur_access_matrix'); if(error) throw new Error(error.message); accessMx = data || []; }
+  catch(e){ console.warn('access matrix:', e.message); accessMx = []; }
+  const el = $('accessCard'); if(el) el.outerHTML = accessCardHtml();
+}
+function accessCardHtml(){
+  if(accessMx === null && DEMO) accessMx = demoAccessMx();
+  if(accessMx === null && !DEMO) loadAccessMx();
+  const byEmail = new Map();
+  (accessMx || []).forEach(r => {
+    const p = byEmail.get(r.email) || { email:r.email, nick:r.nick, name:r.name, admin:r.global_role === 'admin', active:r.active, acc:{} };
+    if(r.account_id) p.acc[r.account_id] = r.role;
+    byEmail.set(r.email, p);
+  });
+  const list = [...byEmail.values()].sort((a, b) => (b.admin - a.admin) || (b.active - a.active) || String(a.nick || a.name || a.email).localeCompare(String(b.nick || b.name || b.email), 'th'));
+  const cell = (p, a) => p.admin ? '<span class="pill bad" title="ผู้ดูแลระบบเข้าได้ทุกบัญชี">ทุกบัญชี</span>'
+    : `<select class="input input-sm" style="min-width:110px" data-e="${esc(p.email)}" data-a="${a.id}" onchange="setAccess(this)">${[['', '—'], ['staff', 'พนักงาน'], ['supervisor', 'หัวหน้า']]
+        .map(([v, l]) => `<option value="${v}" ${(p.acc[a.id] || '') === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+  return `<div class="card card-gold" id="accessCard"><div class="card-head"><h3><span class="hb">${ic('users')}</span>สิทธิ์เข้าบัญชี</h3>
+    <div class="hint">ใครเข้าบัญชีไหนได้ และเป็นหัวหน้าหรือพนักงานของบัญชีนั้น · ผู้ดูแลระบบเข้าได้ทุกบัญชีเสมอ · คนที่ได้บัญชีเดียวจะเข้าบัญชีนั้นเลยไม่ต้องผ่านหน้าเลือก ·
+      คนใหม่ให้เพิ่มที่การ์ด "ทีม" ของบัญชีนั้นก่อน (สลับบัญชีที่หัวแอพ) · ถอดสิทธิ์แล้วสถิติเดิมของคนนั้นยังอยู่</div></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th style="cursor:default">สมาชิก</th>${accounts.map(a => `<th style="cursor:default">${esc(a.name)}</th>`).join('')}</tr></thead><tbody>
+    ${list.length ? list.map(p => `<tr class="${p.active ? '' : 'dim'}"><td><b>${esc(p.nick || p.name || p.email)}</b><div class="mini">${esc(p.email)}</div></td>${accounts.map(a => `<td>${cell(p, a)}</td>`).join('')}</tr>`).join('')
+      : `<tr class="empty-row"><td colspan="${accounts.length + 1}">${accessMx === null ? 'กำลังโหลด…' : 'ยังไม่มีสมาชิก'}</td></tr>`}
+    </tbody></table></div></div>`;
+}
+async function setAccess(sel){
+  const acctId = +sel.dataset.a;
+  try{
+    await rpc('pur_set_access', { p_account:acctId, p_email:sel.dataset.e, p_role:sel.value || null });
+    showToast('บันทึกสิทธิ์แล้ว ✓', 'success');
+    if(acctId === acct.id){ await loadMembers(); const el = $('teamCard'); if(el) el.outerHTML = teamCardHtml(); }
+  }catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
+  accessMx = null; await loadAccessMx();
+}
+
 // ── ผูก LINE ของฉัน ──
 function linkCardHtml(){
   const mine = [...people.values()].filter(p => p.member_email === me.email);
   return `<div class="card card-gold" id="linkCard"><div class="card-head"><h3>🔗 ผูก LINE ของฉัน</h3>
-    <div class="hint">เพื่อให้ข้อความที่คุณตอบซัพพลายเออร์ <b>จาก LINE ส่วนตัวในกลุ่ม</b> ถูกนับเป็นผลงานของคุณ (ตอบจากแอพนี้นับอัตโนมัติอยู่แล้ว)</div></div>
+    <div class="hint">เพื่อให้ข้อความที่คุณตอบ${peer()} <b>จาก LINE ส่วนตัวในกลุ่มของบัญชี ${esc(acctName())}</b> ถูกนับเป็นผลงานของคุณ (ตอบจากแอพนี้นับอัตโนมัติอยู่แล้ว) · ถ้าใช้หลายบัญชี ผูกในแต่ละบัญชีที่คุณตอบในกลุ่ม</div></div>
     <div class="card-body">
-      ${mine.length ? `<div class="mb-12">${mine.map(p => `<div class="flex gap-8" style="align-items:center;margin-bottom:6px">${avatarSm(p)}<b>${esc(p.display_name || p.line_user_id)}</b><span class="pill ok">ผูกแล้ว ✓</span></div>`).join('')}</div>` : `<p class="txt-sm txt-muted mb-12">ยังไม่ได้ผูกบัญชี LINE — ถ้าคุณตอบซัพพลายเออร์ในกลุ่มจาก LINE ส่วนตัว ระบบจะยังไม่รู้ว่าเป็นคุณ</p>`}
+      ${mine.length ? `<div class="mb-12">${mine.map(p => `<div class="flex gap-8" style="align-items:center;margin-bottom:6px">${avatarSm(p)}<b>${esc(p.display_name || p.line_user_id)}</b><span class="pill ok">ผูกแล้ว ✓</span></div>`).join('')}</div>` : `<p class="txt-sm txt-muted mb-12">ยังไม่ได้ผูกบัญชี LINE — ถ้าคุณตอบ${peer()}ในกลุ่มจาก LINE ส่วนตัว ระบบจะยังไม่รู้ว่าเป็นคุณ</p>`}
       <div id="linkCodeBox"></div>
       <button class="btn btn-gold" onclick="newLinkCode()">${mine.length ? '🔗 ผูก LINE อีกบัญชี' : '🔗 ขอรหัสผูก LINE'}</button>
     </div></div>`;
@@ -3228,11 +3415,11 @@ async function newLinkCode(){
     $('linkCodeBox').innerHTML = `<div class="code-box">${esc(code)}</div>
       <div class="row mt-12">
         <a class="btn btn-gold" href="${oaChatUrl(code)}" target="_blank" rel="noopener">📱 เปิด LINE แล้วส่งรหัสนี้</a>
-        <a class="btn btn-outline" href="${oaAddUrl()}" target="_blank" rel="noopener">＋ เพิ่มเพื่อน LINE จัดซื้อ</a>
+        <a class="btn btn-outline" href="${oaAddUrl()}" target="_blank" rel="noopener">＋ เพิ่มเพื่อน ${esc(acctName())}</a>
         <button class="btn btn-outline" data-v="${esc(code)}" onclick="copyLinkCode(this.dataset.v)">📋 คัดลอกรหัส</button>
       </div>
-      <div class="txt-sm txt-muted mt-8">กดปุ่มแรก — LINE จะเปิดแชทกับ <b>LINE จัดซื้อ</b> พร้อมรหัสในช่องพิมพ์ให้แล้ว แค่กดส่ง
-        <br>ยังไม่ได้เพิ่มเพื่อน? กดปุ่มกลางก่อน · ปุ่มไม่ทำงาน ส่งรหัส <b>${esc(code)}</b> ในแชท 1:1 กับ <b>${esc(LINE_OA_ID)}</b> เองก็ได้
+      <div class="txt-sm txt-muted mt-8">กดปุ่มแรก — LINE จะเปิดแชทกับ <b>${esc(acctName())}</b> พร้อมรหัสในช่องพิมพ์ให้แล้ว แค่กดส่ง
+        <br>ยังไม่ได้เพิ่มเพื่อน? กดปุ่มกลางก่อน · ปุ่มไม่ทำงาน ส่งรหัส <b>${esc(code)}</b> ในแชท 1:1 กับ <b>${esc(curOaId())}</b> เองก็ได้
         <br>ระบบจะตอบยืนยัน แล้วหน้านี้จะขึ้น "ผูกแล้ว" เอง</div>
       <div class="txt-sm txt-muted mt-8" id="linkCountdown"></div>`;
     const tick = () => { const el = $('linkCountdown'); if(!el) return; const left = exp - Date.now(); if(left <= 0){ el.textContent = 'รหัสหมดอายุแล้ว — ขอรหัสใหม่ได้เลย'; return; } el.textContent = `รหัสใช้ได้อีก ${Math.floor(left/60000)}:${pad(Math.floor(left % 60000 / 1000))} นาที · ใช้ได้ครั้งเดียว`; linkTimer = setTimeout(tick, 1000); };
@@ -3256,11 +3443,11 @@ function notiCardHtml(){
         <select class="input" id="ntScope" onchange="saveNotiPrefs()">
           <option value="mine" ${P.scope === 'mine' ? 'selected' : ''}>เฉพาะแชทที่ฉันรับผิดชอบ</option>
           <option value="mine_none" ${P.scope === 'mine_none' ? 'selected' : ''}>แชทของฉัน + แชทที่ยังไม่มีผู้รับผิดชอบ</option>
-          <option value="all" ${P.scope === 'all' ? 'selected' : ''}>ทุกแชทของจัดซื้อ</option>
+          <option value="all" ${P.scope === 'all' ? 'selected' : ''}>ทุกแชท (ทุกบัญชีที่ฉันเข้าได้)</option>
         </select>
         <span class="mini">ผู้รับผิดชอบมาจากรหัส PU ในชื่อแชท · แชทที่ตั้ง "ไม่นับสถิติ" ไว้จะไม่เตือน</span></div>
       <div class="field"><label>เตือนเรื่องอะไรบ้าง</label>
-        ${chk('ntMsg', P.msg, '💬 ข้อความใหม่จากซัพพลายเออร์')}
+        ${chk('ntMsg', P.msg, '💬 ข้อความใหม่จาก' + peer())}
         ${chk('ntWarn', P.warn, '🟠 ใกล้ครบ SLA', `เตือนเมื่อรอมาแล้ว 80% ของ SLA (ตอนนี้ราว ${Math.round(sla * .8)} นาที)`)}
         ${chk('ntSla', P.sla, '🔴 เกิน SLA แล้ว', `รอเกิน ${sla} นาทีแล้วยังไม่มีใครตอบ — เตือนเองแม้ซัพไม่ได้ทักมาใหม่`)}
         ${chk('ntAssign', P.assign, '👤 มีคนตั้งให้ฉันเป็นผู้รับผิดชอบแชท')}
@@ -3296,13 +3483,13 @@ async function testNoti(){
   showToast('ส่งเสียงและ popup ทดสอบแล้ว ✓', 'success');
 }
 
-// ── ทีมจัดซื้อ ──
+// ── ทีมของบัญชีที่เปิดอยู่ ──
 function teamCardHtml(){
   const list = [...members.values()].sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1) || (a.nick || a.name || '').localeCompare(b.nick || b.name || '', 'th'));
   const linked = e => [...people.values()].filter(p => p.member_email === e).map(p => p.display_name || p.line_user_id);
-  return `<div class="card card-gold" id="teamCard"><div class="card-head"><h3>👥 ทีมจัดซื้อ <span class="mini">${list.filter(m => m.active).length} คน</span></h3>
+  return `<div class="card card-gold" id="teamCard"><div class="card-head"><h3><span class="hb">${ic('users')}</span>ทีม ${esc(acctName())} <span class="mini">${list.filter(m => m.active).length} คน</span></h3>
     <div class="acts"><button class="btn btn-outline btn-sm" onclick="applyPu()" title="ไล่ดูชื่อแชททุกแชท แล้วตั้งผู้รับผิดชอบตามรหัส PU">🔁 ใช้รหัส PU กับทุกแชท</button><button class="btn btn-gold btn-sm" onclick="openMemberModal()">＋ เพิ่มสมาชิก</button></div>
-    <div class="hint">คนในรายชื่อนี้เท่านั้นที่เข้าแอพได้ · <b>หัวหน้า</b>เห็นแดชบอร์ดทุกคนและตั้งค่าระบบได้ · <b>พนักงาน</b>เห็นสถิติของตัวเอง · <b>ผู้ดูแลระบบ</b>ตั้งหัวหน้าได้<br>
+    <div class="hint">คนในรายชื่อนี้เข้าบัญชี <b>${esc(acctName())}</b> ได้ · <b>หัวหน้า</b>เห็นแดชบอร์ดทุกคนและตั้งค่าบัญชีนี้ได้ · <b>พนักงาน</b>เห็นสถิติของตัวเอง · <b>ผู้ดูแลระบบ</b>เข้าได้ทุกบัญชีและตั้งหัวหน้าได้ · สิทธิ์และรหัส PU แยกกันแต่ละบัญชี<br>
       <b>รหัส PU</b> = รหัสแบ่งงานที่ทีมใส่ไว้ในชื่อแชท (เช่น <b>PU1#คาราบาว</b>) — แชทไหนมีรหัส ระบบยกให้เจ้าของรหัสอัตโนมัติ และเปลี่ยนตามทันทีเมื่อทีมแก้ชื่อแชทใน OA Manager · แชทที่ยังไม่มีรหัสจะไม่ถูกแตะ</div></div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr>${['ชื่อเล่น', 'ชื่อ-สกุล', 'อีเมล', 'ชื่อใน OA', 'รหัส PU', 'สิทธิ์', 'LINE ที่ผูก', 'สถานะ', ''].map(h => `<th style="cursor:default">${h}</th>`).join('')}</tr></thead><tbody>
     ${list.map(m => `<tr class="${m.active ? '' : 'dim'}"><td><b>${esc(m.nick || '—')}</b></td><td>${esc(m.name || '—')}</td><td class="mini">${esc(m.email)}</td><td class="mini">${esc(m.oa_name || '—')}${m.oa_biz_id ? ' <span class="pill ok" title="ผูกกับแอดมินใน LINE OA Manager แล้ว — คำตอบใน OA นับเป็นผลงานคนนี้">ผูกแล้ว</span>' : ''}</td>
@@ -3322,7 +3509,7 @@ function oaAdminsHtml(){
 }
 function openMemberModal(email){
   const m = email ? members.get(email) : null; const canRole = isAdmin();
-  openModal(m ? 'แก้ไขสมาชิก' : 'เพิ่มสมาชิกทีมจัดซื้อ', `
+  openModal(m ? `แก้ไขสมาชิก · ${acctName()}` : `เพิ่มสมาชิกทีม ${acctName()}`, `
     ${m ? '' : `<div class="field"><label>เลือกจากทะเบียนพนักงาน</label>
       <div class="dd-wrap" id="ddStaff"><button class="dd-trigger" type="button" onclick="toggleDD('ddStaff');loadStaffDir()"><span id="ddStaffLabel">— ค้นหาชื่อพนักงาน —</span> ▾</button>
       <div class="dd-panel"><input class="dd-search" placeholder="🔍 พิมพ์ชื่อ / อีเมล…" oninput="filterDD(this,'ddStaffList')" autocomplete="off"><ul class="dd-list" id="ddStaffList"><li class="no-result">กำลังโหลด…</li></ul></div></div>
@@ -3342,7 +3529,7 @@ function openMemberModal(email){
 // ไล่ตั้งผู้รับผิดชอบตามรหัส PU ในชื่อแชททั้งหมด (ปกติระบบทำให้เองตอนชื่อแชทเปลี่ยน)
 async function applyPu(){
   try{
-    const n = await rpc('pur_apply_pu');
+    const n = await rpc('pur_apply_pu', { p_account:acct.id });
     await loadChats(); renderSettings();
     showToast(n ? `ยกแชทตามรหัส PU แล้ว ${nf(n)} แชท ✓` : 'ทุกแชทตรงกับรหัส PU อยู่แล้ว ✓', 'success');
   }catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
@@ -3363,8 +3550,8 @@ async function saveMember(){
   const email = $('mmEmail').value.trim().toLowerCase();
   if(!email){ showToast('กรอกอีเมล', 'warning'); return; }
   try{
-    await rpc('pur_upsert_member', { p_email:email, p_nick:$('mmNick').value.trim(), p_name:$('mmName').value.trim(), p_role:$('mmRole').value, p_active:$('mmActive').checked, p_oa_name:$('mmOa').value.trim(), p_pu_code:$('mmPu').value.trim() });
-    closeModal(); await loadMembers(); await loadChats(); renderSettings(); fillPersonDD(); showToast('บันทึกสมาชิกแล้ว ✓', 'success');
+    await rpc('pur_upsert_member', { p_email:email, p_nick:$('mmNick').value.trim(), p_name:$('mmName').value.trim(), p_role:$('mmRole').value, p_active:$('mmActive').checked, p_oa_name:$('mmOa').value.trim(), p_pu_code:$('mmPu').value.trim(), p_account:acct.id });
+    closeModal(); accessMx = null; await loadMembers(); await loadChats(); renderSettings(); fillPersonDD(); showToast('บันทึกสมาชิกแล้ว ✓', 'success');
   }catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
 
@@ -3375,7 +3562,7 @@ function peopleCardHtml(){
   const inCo = [...people.values()].filter(p => p.side === 'company').length;
   return `<div class="card card-gold" id="peopleCard"><div class="card-head"><h3>🪪 บัญชี LINE ที่พบในแชท <span class="mini">${nf(people.size)} บัญชี · คนในบริษัท ${nf(inCo)}</span></h3>
     <div class="acts"><button class="btn btn-outline btn-sm" onclick="togglePeople()">${peopleOpen ? '▲ ซ่อนรายชื่อ' : '▼ แสดงรายชื่อ'}</button></div>
-    <div class="hint">ระบบต้องรู้ว่าบัญชี LINE ไหนเป็น <b>คนในบริษัท</b> เพื่อไม่นับข้อความของพนักงานเป็นคำถามของซัพพลายเออร์ และให้เครดิตการตอบถูกคน · เปลี่ยนแล้วระบบคำนวณสถิติย้อนหลังของคนนั้นใหม่ทันที · พนักงานผูกเองได้ที่ "ผูก LINE ของฉัน"</div></div>
+    <div class="hint">ระบบต้องรู้ว่าบัญชี LINE ไหนเป็น <b>คนในบริษัท</b> เพื่อไม่นับข้อความของพนักงานเป็นคำถามของ${peer()} และให้เครดิตการตอบถูกคน · เปลี่ยนแล้วระบบคำนวณสถิติย้อนหลังของคนนั้นใหม่ทันที · พนักงานผูกเองได้ที่ "ผูก LINE ของฉัน"</div></div>
     ${peopleOpen ? `<div class="card-body" style="padding-bottom:8px"><input class="input input-sm" placeholder="🔍 ค้นหาชื่อ LINE / อีเมลพนักงาน…" value="${esc(peopleQ)}" oninput="peopleQ=this.value;renderPeopleRows()"></div>
     <div class="tbl-wrap" id="peopleRows" style="max-height:min(60vh,460px);overflow:auto"></div>` : ''}</div>`;
 }
@@ -3386,7 +3573,7 @@ function renderPeopleRows(){
   const opts = sel => `<option value="">— ไม่ระบุ —</option>` + [...members.values()].filter(m => m.active || m.email === sel).map(m => `<option value="${esc(m.email)}" ${m.email === sel ? 'selected' : ''}>${esc(m.nick || m.name || m.email)}</option>`).join('');
   el.innerHTML = `<table class="tbl"><thead><tr>${['บัญชี LINE', 'ฝั่ง', 'คือพนักงาน', 'เห็นล่าสุด'].map(h => `<th style="cursor:default">${h}</th>`).join('')}</tr></thead><tbody>${
     list.length ? list.map(p => `<tr><td style="white-space:nowrap">${avatarSm(p)}${esc(p.display_name || p.line_user_id)}</td>
-      <td><select class="input input-sm" style="width:auto;min-width:140px" data-id="${esc(p.line_user_id)}" onchange="changePersonSide(this)"><option value="supplier" ${p.side === 'supplier' ? 'selected' : ''}>ซัพพลายเออร์</option><option value="company" ${p.side === 'company' ? 'selected' : ''}>คนในบริษัท</option></select></td>
+      <td><select class="input input-sm" style="width:auto;min-width:140px" data-id="${esc(p.line_user_id)}" onchange="changePersonSide(this)"><option value="supplier" ${p.side === 'supplier' ? 'selected' : ''}>${peer()}</option><option value="company" ${p.side === 'company' ? 'selected' : ''}>คนในบริษัท</option></select></td>
       <td>${p.side === 'company' ? `<select class="input input-sm" style="width:auto;min-width:150px" data-id="${esc(p.line_user_id)}" onchange="changePersonMember(this)">${opts(p.member_email)}</select>` : '<span class="txt-muted mini">—</span>'}</td>
       <td class="mini">${p.last_seen_at ? thDateTime(p.last_seen_at) : '—'}</td></tr>`).join('')
     : '<tr class="empty-row"><td colspan="4">ยังไม่พบบัญชี LINE</td></tr>'}</tbody></table>`;
@@ -3406,7 +3593,7 @@ function changePersonMember(sel){ setPersonRpc(sel.dataset.id, 'company', sel.va
 // ── เวลาทำการ & SLA ──
 function hoursCardHtml(){
   const S = settings, days = ['', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์'];
-  return `<div class="card card-gold" id="hoursCard"><div class="card-head"><h3>🕗 เวลาทำการ & SLA</h3>
+  return `<div class="card card-gold" id="hoursCard"><div class="card-head"><h3>🕗 เวลาทำการ & SLA · ${esc(acctName())}</h3>
     <div class="hint">ใช้คำนวณเวลาตอบแบบ "เวลาทำการ" (ข้อความนอกเวลางานเริ่มนับเมื่อเปิดงาน) และตัดสินว่างานไหนตอบทัน/ช้ากว่า SLA · แก้แล้วมีผลกับสถิติย้อนหลังทันที</div></div>
     <div class="card-body">
       <div class="field"><label>วันทำงาน</label><div class="row" id="wdRow">${[1,2,3,4,5,6,7].map(d => `<label class="check ${S.work_days.includes(d) ? 'on' : ''}"><input type="checkbox" value="${d}" ${S.work_days.includes(d) ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on',this.checked)"> ${days[d]}</label>`).join('')}</div></div>
@@ -3429,7 +3616,7 @@ async function saveHours(){
               sla_minutes:+$('hsSla').value || 60, holidays:[...document.querySelectorAll('#holiList [data-d]')].map(e => e.dataset.d), auto_assign:$('hsAuto').checked };
   if(!p.work_days.length){ showToast('เลือกวันทำงานอย่างน้อย 1 วัน', 'warning'); return; }
   if(!p.work_start || !p.work_end || p.work_end <= p.work_start){ showToast('เวลาเลิกงานต้องหลังเวลาเริ่มงาน', 'warning'); return; }
-  try{ await rpc('pur_save_settings', { p }); await loadSettings(); renderSettings(); renderList(); if(dashLoadedOnce) renderDash(); showToast('บันทึกแล้ว ✓', 'success'); }
+  try{ await rpc('pur_save_settings', { p, p_account:acct.id }); await loadSettings(); renderSettings(); renderList(); if(dashLoadedOnce) renderDash(); showToast('บันทึกแล้ว ✓', 'success'); }
   catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
 
@@ -3442,55 +3629,56 @@ function quickCardHtml(sup){
 }
 async function saveQuick(){
   const arr = $('qrText').value.split('\n').map(s => s.trim()).filter(Boolean);
-  try{ await rpc('pur_save_settings', { p:{ quick_replies:arr } }); await loadSettings(); showToast('บันทึกแล้ว ✓', 'success'); }
+  try{ await rpc('pur_save_settings', { p:{ quick_replies:arr }, p_account:acct.id }); await loadSettings(); showToast('บันทึกแล้ว ✓', 'success'); }
   catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
 function ackCardHtml(){
   return `<div class="card card-gold"><div class="card-head"><h3>🙏 คำรับทราบ (ไม่นับเป็นงานรอตอบ)</h3>
-    <div class="hint">ข้อความจากซัพพลายเออร์ที่ประกอบด้วยคำเหล่านี้ล้วนๆ (เช่น "ขอบคุณครับ", "รับทราบค่ะ 🙏", "ok") และสติกเกอร์ จะ<b>ไม่</b>เปิดงานรอตอบใหม่ · หนึ่งบรรทัดต่อคำ · มีผลกับข้อความใหม่ (ของเก่าให้ผู้ดูแลกด "คำนวณสถิติใหม่")</div></div>
+    <div class="hint">ข้อความจาก${peer()}ที่ประกอบด้วยคำเหล่านี้ล้วนๆ (เช่น "ขอบคุณครับ", "รับทราบค่ะ 🙏", "ok") และสติกเกอร์ จะ<b>ไม่</b>เปิดงานรอตอบใหม่ · หนึ่งบรรทัดต่อคำ · มีผลกับข้อความใหม่ (ของเก่าให้ผู้ดูแลกด "คำนวณสถิติใหม่")</div></div>
     <div class="card-body"><textarea class="input" id="ackText" rows="8">${esc((settings.ack_words || []).join('\n'))}</textarea><div class="mt-8"><button class="btn btn-gold" onclick="saveAck()">💾 บันทึก</button></div></div></div>`;
 }
 async function saveAck(){
   const arr = $('ackText').value.split('\n').map(s => s.trim()).filter(Boolean);
-  try{ await rpc('pur_save_settings', { p:{ ack_words:arr } }); await loadSettings(); showToast('บันทึกแล้ว ✓', 'success'); }
+  try{ await rpc('pur_save_settings', { p:{ ack_words:arr }, p_account:acct.id }); await loadSettings(); showToast('บันทึกแล้ว ✓', 'success'); }
   catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
 
 // ── โควตา LINE / ผู้ดูแล / วิธีนับ ──
 function quotaCardHtml(){
-  return `<div class="card card-gold"><div class="card-head"><h3>📨 โควตาข้อความ LINE เดือนนี้</h3>
-    <div class="hint">ส่งจากแอพหลังซัพพลายเออร์ทักเกิน 1 นาที = <b>push</b> (กินโควตา · ในกลุ่มนับตามจำนวนสมาชิก) · ตอบภายใน 1 นาที = <b>reply</b> (ฟรี) · ตอบจาก LINE ส่วนตัวในกลุ่ม = ฟรี</div></div>
+  return `<div class="card card-gold"><div class="card-head"><h3>📨 โควตาข้อความ LINE เดือนนี้ · ${esc(acctName())}</h3>
+    <div class="hint">ส่งจากแอพหลัง${peer()}ทักเกิน 1 นาที = <b>push</b> (กินโควตา · ในกลุ่มนับตามจำนวนสมาชิก) · ตอบภายใน 1 นาที = <b>reply</b> (ฟรี) · ตอบจาก LINE ส่วนตัวในกลุ่ม = ฟรี</div></div>
     <div class="card-body"><div id="quotaBox" class="txt-sm txt-muted">กดปุ่มเพื่อดูโควตาปัจจุบัน</div><div class="mt-8"><button class="btn btn-outline" onclick="loadQuota()">ดูโควตา</button></div></div></div>`;
 }
 async function loadQuota(){
   const box = $('quotaBox'); box.textContent = 'กำลังตรวจสอบ…';
-  const r = await callFn({ action:'quota' });
+  const r = await callFn({ action:'quota', accountId:acct.id });
   if(!r.ok){ box.innerHTML = `<span class="txt-danger">${esc(r.error || 'ดูไม่ได้')}</span>`; return; }
   const limit = r.type === 'limited' ? r.limit : null;
   box.innerHTML = `ใช้ไปแล้ว <b style="font-size:20px">${nf(r.used || 0)}</b> ${limit ? `จาก ${nf(limit)} ข้อความ (${pct(r.used || 0, limit)})` : 'ข้อความ · แพ็กเกจไม่จำกัด'}`;
 }
 function adminCardHtml(){
   return `<div class="card" style="border-top:3px solid var(--st-crit)"><div class="card-head"><h3>🛠 ผู้ดูแลระบบ</h3>
-    <div class="hint">คำนวณงานรอตอบของทุกแชทใหม่จากประวัติข้อความ — ใช้หลังแก้คำรับทราบ หรือเมื่อสงสัยว่าสถิติเพี้ยน (ข้อความไม่หาย)</div></div>
-    <div class="card-body"><button class="btn btn-danger" onclick="rebuildAll()">♻️ คำนวณสถิติใหม่ทั้งหมด</button></div></div>`;
+    <div class="hint">คำนวณงานรอตอบของทุกแชทในบัญชี <b>${esc(acctName())}</b> ใหม่จากประวัติข้อความ — ใช้หลังแก้คำรับทราบ หรือเมื่อสงสัยว่าสถิติเพี้ยน (ข้อความไม่หาย)</div></div>
+    <div class="card-body"><button class="btn btn-danger" onclick="rebuildAll()">♻️ คำนวณสถิติใหม่ทั้งบัญชีนี้</button></div></div>`;
 }
 async function rebuildAll(){
-  if(!confirm('คำนวณสถิติงานรอตอบใหม่ทั้งหมด?\n\nข้อความไม่หาย แต่ตัวเลขแดชบอร์ดอาจเปลี่ยนตามกติกาปัจจุบัน')) return;
+  if(!confirm(`คำนวณสถิติงานรอตอบของบัญชี ${acctName()} ใหม่ทั้งหมด?\n\nข้อความไม่หาย แต่ตัวเลขแดชบอร์ดอาจเปลี่ยนตามกติกาปัจจุบัน`)) return;
   showSpinner('กำลังคำนวณสถิติใหม่…');
-  try{ const n = await rpc('pur_rebuild_all'); showToast(`คำนวณใหม่แล้ว ${nf(n)} แชท ✓`, 'success'); await loadChats(); if(dashLoadedOnce) loadDash(); }
+  try{ const n = await rpc('pur_rebuild_all', { p_account:acct.id }); showToast(`คำนวณใหม่แล้ว ${nf(n)} แชท ✓`, 'success'); await loadChats(); if(dashLoadedOnce) loadDash(); }
   catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
   finally{ hideSpinner(); }
 }
 function aboutCardHtml(){
   return `<div class="card"><div class="card-head"><h3>ℹ️ วิธีนับสถิติ</h3></div><div class="card-body txt-sm" style="line-height:1.85">
-    <b>งานรอตอบ</b> = ซัพพลายเออร์ส่งข้อความเข้ามา (นับจากข้อความแรกหลังทีมตอบครั้งล่าสุด) จนถึงข้อความแรกที่ทีมจัดซื้อตอบ → 1 งาน · ข้อความหลายข้อความติดกันก่อนได้คำตอบ = งานเดียว<br>
+    <b>งานรอตอบ</b> = ${peer()}ส่งข้อความเข้ามา (นับจากข้อความแรกหลังทีมตอบครั้งล่าสุด) จนถึงข้อความแรกที่ทีมตอบ → 1 งาน · ข้อความหลายข้อความติดกันก่อนได้คำตอบ = งานเดียว<br>
     <b>ตอบแล้ว</b> = ทีมตอบจากแอพนี้ (LINE รับสำเร็จ) · พนักงานที่ผูก LINE ตอบในกลุ่มจาก LINE ส่วนตัว · หรือตอบใน <b>LINE OA Manager</b> โดยมีส่วนขยาย Bridge อ่านมา (LINE ไม่ส่งข้อความฝั่งแอดมินออกมาเอง — ต้องติดตั้งส่วนขยาย)<br>
     <b>ทีมที่เคยตอบแชทนี้</b> = รายชื่อเหนือแชท นับจากข้อความจริง · ถ้าตั้งผู้รับผิดชอบไว้ใน OA Manager และแอพยังไม่มี ระบบจะใช้คนนั้นให้อัตโนมัติ<br>
     <b>ไม่ต้องตอบ</b> = กดปิดงานเอง (ไม่นับเป็นตอบ ไม่นับเป็นค้าง มีบันทึกว่าใครกด) · <b>คำรับทราบ</b>/สติกเกอร์ ไม่เปิดงานใหม่<br>
-    <b>เวลาตอบ</b> = จากข้อความแรกของซัพพลายเออร์ถึงคำตอบแรกของทีม · ใช้<b>มัธยฐาน</b>แทนค่าเฉลี่ย เพื่อไม่ให้งานค้างข้ามคืนไม่กี่งานลากตัวเลขทั้งทีม · <b>P90</b> = 90% ของงานตอบเร็วกว่านี้<br>
+    <b>เวลาตอบ</b> = จากข้อความแรกของ${peer()}ถึงคำตอบแรกของทีม · ใช้<b>มัธยฐาน</b>แทนค่าเฉลี่ย เพื่อไม่ให้งานค้างข้ามคืนไม่กี่งานลากตัวเลขทั้งทีม · <b>P90</b> = 90% ของงานตอบเร็วกว่านี้<br>
     <b>เวลาทำการ</b> = นับเฉพาะช่วงเวลางานของวันทำงาน ไม่นับวันหยุด · <b>24 ชม.</b> = เวลาจริง<br>
     <b>ผู้รับผิดชอบ</b>ของงาน = ผู้รับผิดชอบแชท ณ ตอนที่งานเข้า (ถ้ายังไม่มี = คนที่ตอบ) · เปลี่ยนผู้รับผิดชอบแชทจะย้ายเฉพาะงานที่ยังค้าง<br>
-    <span class="txt-muted">Rattana Purchase Chat v${APP_VERSION} · ${DEMO ? 'โหมดตัวอย่าง' : 'Supabase ' + SUPABASE_URL.replace('https://', '').split('.')[0]}</span></div></div>`;
+    <b>หลายบัญชี</b> = แต่ละบัญชี LINE มีทีม ผู้รับผิดชอบ รหัส PU เวลาทำการ SLA และคำรับทราบของตัวเอง · ตัวเลขทุกหน้าเป็นของบัญชีที่เปิดอยู่ · สลับบัญชีได้ที่ชื่อบัญชีบนหัวแอพ<br>
+    <span class="txt-muted">RTN Chat Hub v${APP_VERSION} · บัญชี ${esc(acctName())} · ${DEMO ? 'โหมดตัวอย่าง' : 'Supabase ' + SUPABASE_URL.replace('https://', '').split('.')[0]}</span></div></div>`;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -3529,27 +3717,151 @@ function showLogin(){ const btn = $('lgBtn'); btn.disabled = false; btn.querySel
 // ด่านจริงคือ RLS ในฐานข้อมูล — ตรงนี้แค่บอกผู้ใช้ให้รู้เรื่องว่าทำไมเข้าไม่ได้
 async function gateSession(session){
   const email = (session.user.email || '').toLowerCase();
+  const deny = async () => {
+    await sb.auth.signOut(); showLogin();
+    $('lgErr').innerHTML = `อีเมล <b>${esc(email)}</b> ยังไม่ได้รับสิทธิ์เข้าบัญชี LINE ไหน<br>ให้หัวหน้าแผนกหรือผู้ดูแลระบบเพิ่มอีเมลนี้ที่ ตั้งค่า › ทีม`;
+  };
   try{
     const { data, error } = await sb.from('pur_members').select('email,nick,name,role,active').eq('email', email).maybeSingle();
     if(error) throw new Error(error.message);
-    if(!data || !data.active){
-      await sb.auth.signOut(); showLogin();
-      $('lgErr').innerHTML = `อีเมล <b>${esc(email)}</b> ยังไม่อยู่ในทีมจัดซื้อ<br>ให้หัวหน้าจัดซื้อเพิ่มอีเมลนี้ที่ ตั้งค่า › ทีมจัดซื้อ`;
-      return;
-    }
-    me = data; await showApp();
+    if(!data || !data.active){ await deny(); return; }
+    meRow = data;
+    const { data:acc, error:accErr } = await sb.rpc('pur_my_accounts');
+    if(accErr) throw new Error(accErr.message);
+    accounts = (acc || []).filter(a => a.active || meRow.role === 'admin');
+    if(!accounts.length){ await deny(); return; }
+    // เปิดจากลิงก์แจ้งเตือนของบัญชีไหน → เข้าบัญชีนั้นเลย · ไม่งั้นบัญชีที่จำไว้ · ไม่มี → หน้าเลือกบัญชี
+    const fromHash = +((/[#&]a=(\d+)/.exec(location.hash || '') || [])[1] || 0);
+    const last = +(LS.get('pur.acct') || 0), remember = LS.get('pur.acctRemember') !== '0';
+    const pick = accounts.length === 1 ? accounts[0]
+               : accounts.find(a => a.id === fromHash) || (remember ? accounts.find(a => a.id === last && a.active) : null);
+    if(pick) await enterAccount(pick.id); else showAcctGate();
   }catch(e){ await sb.auth.signOut(); showLogin(); $('lgErr').textContent = e.message + ' — กรุณาลองใหม่'; }
 }
+
+// ── เลือก / สลับบัญชี ──
+// "เกิน SLA" ของบัญชีหนึ่ง คิดด้วยเวลาทำการ + SLA ของบัญชีนั้นเอง (ตั้งค่าแยกต่อบัญชี)
+function acctLate(a){
+  const st = normSettings(a.settings), sla = (st.sla_minutes || 60) * 60;
+  return (a.waits || []).filter(ts => elapsedSec(ts, null, st) > sla).length;
+}
+function acctItemHtml(a, big){
+  const late = acctLate(a), last = +(LS.get('pur.acct') || 0) === a.id;
+  const pills = [
+    a.awaiting ? `<span class="pill warn">รอตอบ ${nf(a.awaiting)}</span>` : '<span class="pill ok">ไม่มีงานค้าง</span>',
+    late ? `<span class="pill bad">เกิน SLA ${nf(late)}</span>` : '',
+    a.unread ? `<span class="pill grey">ยังไม่อ่าน ${nf(a.unread)}</span>` : '',
+    a.active ? '' : '<span class="pill grey">ปิดใช้งาน</span>',
+  ].join('');
+  return `<button class="${big ? 'acct-item' : ''}" data-id="${a.id}" onclick="enterAccount(+this.dataset.id)">
+    <span class="acct-av ${acctCls(a)}">${esc(acctIni(a))}</span>
+    <span class="acct-meta"><b>${esc(a.name)}${big && last ? ' <span class="pill grey" style="font-size:10px;vertical-align:1px">ใช้ล่าสุด</span>' : ''}</b>
+      <small>${esc([a.dept, a.oa_id, roleLabel(a.role)].filter(Boolean).join(' · '))}</small>
+      <span class="acct-pills">${pills}</span></span>
+    ${big ? `<span class="acct-chev">${ic('chevright')}</span>` : (acct?.id === a.id ? `<span class="acct-chev">${ic('check')}</span>` : '')}</button>`;
+}
+function showAcctGate(){
+  closeAcctMenu();
+  $('loginGate').classList.add('hide');
+  const name = meRow?.nick || meRow?.name || meRow?.email || '';
+  $('acctHello').textContent = `สวัสดี ${name} · เข้าได้ ${nf(accounts.length)} บัญชี`;
+  const rm = $('acctRemember'); rm.checked = LS.get('pur.acctRemember') !== '0'; rm.parentElement.classList.toggle('on', rm.checked);
+  $('acctList').innerHTML = accounts.map(a => acctItemHtml(a, true)).join('');
+  $('acctGate').classList.remove('hide');
+  // ตัวเลขในหน้านี้อาจเก่า (เปิดค้างไว้นาน) → ดึงใหม่แล้ววาดซ้ำ
+  if(started) refreshAccounts().then(() => { if(!$('acctGate').classList.contains('hide')) $('acctList').innerHTML = accounts.map(a => acctItemHtml(a, true)).join(''); });
+}
+async function refreshAccounts(){
+  if(DEMO){ accounts = demoAccounts(); return; }
+  try{
+    const { data, error } = await sb.rpc('pur_my_accounts');
+    if(error || !data) return;
+    accounts = data.filter(a => a.active || meRow?.role === 'admin');
+    const cur = acct && accounts.find(a => a.id === acct.id);
+    if(cur) acct = { ...acct, ...cur };
+  }catch(_){ /* ออฟไลน์ ใช้ตัวเลขเดิม */ }
+}
+function renderAcctHeader(){
+  const multi = accounts.length > 1;
+  // ลูกศรต่อท้ายชื่อบัญชีเลย (ไม่ใช่ท้ายบรรทัด) — จอแคบบรรทัดนี้ถูกตัดด้วย … แล้วลูกศรจะหาย · แผนกดูได้ในเมนู
+  $('hdrGreet').innerHTML = acct
+    ? `${esc(acct.name)}${multi ? ic('chevdown') : ''} · ${esc(roleLabel(me.role))}`
+    : `แชท LINE · v${esc(APP_VERSION)}`;
+  $('hdrAcct').classList.toggle('hdr-acct', multi);
+  $('hdrAcct').title = multi ? 'สลับบัญชี LINE' : '';
+}
+function toggleAcctMenu(ev){
+  if(accounts.length < 2) return;
+  ev?.stopPropagation();
+  const m = $('acctMenu');
+  if(m.classList.contains('open')){ closeAcctMenu(); return; }
+  const place = () => {
+    const r = $('hdrAcct').getBoundingClientRect();
+    m.style.top = Math.round(r.bottom + 6) + 'px';
+    m.style.left = Math.round(Math.max(10, Math.min(r.left, window.innerWidth - m.offsetWidth - 10))) + 'px';
+  };
+  const draw = () => { m.innerHTML = accounts.map(a => acctItemHtml(a, false)).join('')
+    + `<div class="am-foot"><button onclick="showAcctGate()">${ic('chat')} หน้าเลือกบัญชี</button></div>`; };
+  draw(); m.classList.add('open'); place();
+  refreshAccounts().then(() => { if(m.classList.contains('open')){ draw(); place(); } });
+}
+function closeAcctMenu(){ $('acctMenu')?.classList.remove('open'); }
+document.addEventListener('click', e => { if(!e.target.closest('#acctMenu') && !e.target.closest('#hdrAcct')) closeAcctMenu(); });
+
+// ล้างข้อมูลของบัญชีเดิมทั้งหมดก่อนโหลดบัญชีใหม่ — ห้ามมีแชท/ตัวเลข/รายชื่อของอีกบัญชีค้างบนจอ
+function resetAccountState(){
+  if(activeId) closeChat();
+  // ภาพ "ก่อนเหตุการณ์" ที่ realtime ของบัญชีเดิมเก็บค้างไว้ ต้องทิ้ง — ไม่งั้น loadChats เทียบกับแชทของบัญชีเดิม
+  // แล้วนึกว่าแชททุกห้องของบัญชีใหม่ "เพิ่งเข้ามา" → แจ้งเตือนรัวทั้งบัญชี
+  paintSnap = null;
+  chats = []; chatById = new Map(); msgCache = {};
+  for(const k in msgMeta) delete msgMeta[k];
+  members = new Map();
+  dash.data = { waits:[], replies:[] }; dash.person = 'all'; dashLoadedOnce = false;
+  blast.picked = new Set(); blast.pu = 'all'; blast.q = ''; blast.result = null; blast.match = new Map(); blast.unmatched = [];
+  oaAdmins = null; staffDir = null; acctStatus = null; accessMx = null;
+  searchQ = ''; const si = document.querySelector('.search-inp'); if(si) si.value = '';
+  renderList(); updateBadges();
+}
+async function enterAccount(id){
+  const a = accounts.find(x => x.id === id); if(!a) return;
+  if(!$('acctGate').classList.contains('hide')) LS.set('pur.acctRemember', $('acctRemember').checked ? '1' : '0');
+  closeAcctMenu();
+  $('acctGate').classList.add('hide');
+  if(acct?.id === a.id && started) return;                 // บัญชีเดิม — แค่ปิดเมนู/หน้าเลือก
+  const switching = !!acct;
+  acct = a; LS.set('pur.acct', String(a.id));
+  me = { ...(meRow || {}), role:a.role };
+  if(DEMO){ demoEnter(); renderAcctHeader(); if(started) setView(view); else await showApp(); return; }
+  if(!started){ await showApp(); return; }
+  if(switching) resetAccountState();
+  showSpinner(`กำลังเปิดบัญชี ${a.name}…`);
+  try{
+    await Promise.all([loadMembers(), loadPeople(), loadSettings()]);
+    await loadChats();
+    setupRealtime();
+  }catch(e){ showToast('โหลดข้อมูลไม่สำเร็จ: ' + e.message, 'error', 6000); }
+  finally{ hideSpinner(); }
+  renderAcctHeader(); applyPeerWords(); fillPersonDD();
+  setView(view);
+  showToast(`เปิดบัญชี ${a.name} แล้ว`, 'info', 1800);
+}
+// ป้ายคงที่ในหน้าแดชบอร์ด/ค้นหาที่เรียกอีกฝั่งของแชท — จัดซื้อ = ซัพพลายเออร์ · แผนกอื่น = ลูกค้า
+function applyPeerWords(){
+  document.querySelectorAll('.peer-word').forEach(el => { el.textContent = peer(); });
+  const si = document.querySelector('.search-inp'); if(si) si.placeholder = `ค้นหา${peer()} / กลุ่ม / ข้อความ`;
+}
+
 async function showApp(){
   $('loginGate').classList.add('hide');
   if(started) return; started = true;
   showSpinner('กำลังโหลดข้อมูล…');
   try{
-    if(DEMO) demoInit();
+    if(DEMO){ /* demoBoot + demoEnter โหลดข้อมูลของบัญชีที่เลือกไว้แล้ว */ }
     else { await Promise.all([loadMembers(), loadPeople(), loadSettings()]); await loadChats(); setupRealtime(); startAutoRefresh(); }
   }catch(e){ console.error('load failed:', e); showToast('โหลดข้อมูลไม่สำเร็จ: ' + e.message, 'error', 6000); }
   finally{ hideSpinner(); }
-  $('hdrGreet').textContent = `สวัสดี ${me.nick || me.name || me.email} 👋 · ${roleLabel(me.role)}`;
+  renderAcctHeader(); applyPeerWords();
   notiLoad(); startSlaWatch(); askNotifyPermission(); initPush(); openChatFromHash();
   setTimeout(checkUpdate, 5000); setInterval(checkUpdate, 30 * 60 * 1000);
   document.addEventListener('visibilitychange', () => { if(!document.hidden) checkUpdate(); });   // แจ้งเตือน: โหลดค่าตั้ง (scope ขึ้นกับสิทธิ์) แล้วเริ่มเฝ้า SLA
@@ -3649,13 +3961,93 @@ function demoInit(){
   chats.forEach(c => { msgCache[c.id] = demoMsgs(c, rnd); });
   renderList(); updateBadges();
 }
+// ── หลายบัญชีในโหมดตัวอย่าง: จัดซื้อ = ชุดเดิมของ demoInit · อีก 2 บัญชีสร้างชุดเล็กๆ (คุยกับลูกค้า) ──
+let demoAll = null;
+const DEMO_ACCTS = [
+  { id:1, slug:'purchase', name:'RTNPurchase', dept:'จัดซื้อ', oa_id:'@429hgoxl', color:'teal', sort:1 },
+  { id:2, slug:'rpbsale', name:'Rattana Official', dept:'แผนกแอดมิน', oa_id:'@rpbsale', color:'purple', sort:2 },
+  { id:3, slug:'rattanamart', name:'Rattana Mart', dept:'แผนกแอดมินรัตนมาร์ท', oa_id:'@rattanamart', color:'coral', sort:3 },
+];
+function demoBoot(){
+  demoInit();                                                  // บัญชีจัดซื้อ → ตัวแปรหลัก แล้วเก็บเข้า demoAll[1]
+  chats.forEach(c => { c.account_id = 1; }); demoWaits.forEach(w => { w.account_id = 1; });
+  demoAll = { 1:{ members, chats, waits:demoWaits, settings:{ ...settings, holidaySet:undefined } } };
+  demoAll[2] = demoAccount(2, 2570, [['ann@demo', 'แอน', 'แอนนา แอดมินขาย', 'supervisor'], ['mek@demo', 'เมฆ', 'เมฆา แอดมินขาย', 'staff']],
+    [['user', 'คุณมาลี (ลูกค้าส่ง)', null], ['group', 'ตัวแทนจำหน่าย ภาคกลาง', 6], ['user', 'ร้านป้าแดง', null], ['group', 'ลูกค้าโครงการ The Hub', 4], ['user', 'คุณวิทย์ สั่งประจำ', null]],
+    ['สินค้าตัวนี้มีสต็อกไหมคะ', 'ขอใบเสนอราคา 20 ลังครับ', 'ส่งของวันไหนคะ', 'ขอใบกำกับภาษีด้วยค่ะ', 'โปรเดือนนี้มีอะไรบ้างครับ']);
+  demoAll[3] = demoAccount(3, 2571, [['ploy@demo', 'พลอย', 'พลอยใส แอดมินมาร์ท', 'supervisor'], ['tan@demo', 'แทน', 'แทนไท แอดมินมาร์ท', 'staff']],
+    [['user', 'ลูกค้าหน้าร้าน สาขาบางแค', null], ['user', 'คุณนิด สมาชิกมาร์ท', null], ['group', 'กลุ่มสมาชิก Rattana Mart', 12], ['user', 'คุณเอก สั่งออนไลน์', null]],
+    ['เปิดกี่โมงคะ', 'สั่งของส่งบ้านได้ไหมครับ', 'แต้มสมาชิกใช้ยังไงคะ', 'ของที่สั่งถึงไหนแล้วครับ']);
+  members = demoAll[1].members;
+  meRow = { email:'admin@demo', nick:'แอดมิน', name:'ผู้ดูแลระบบ', role:'admin', active:true };
+  accounts = demoAccounts();
+  const last = +(LS.get('pur.acct') || 0), remember = LS.get('pur.acctRemember') !== '0';
+  const pick = remember ? accounts.find(a => a.id === last) : null;
+  if(pick) enterAccount(pick.id); else showAcctGate();
+}
+function demoAccount(id, seed, team, list, asks){
+  const rnd = seeded(seed), now = Date.now(), pre = 'a' + id + 'c';
+  const mem = new Map([...team, ['admin@demo', 'แอดมิน', 'ผู้ดูแลระบบ', 'admin']].map(([e, n, f, r]) => [e, { email:e, nick:n, name:f, role:r, active:true, in_account:r !== 'admin' }]));
+  const staff = team.map(t => t[0]), waits = [], cs = [];
+  list.forEach((x, i) => {
+    const c = { id:pre + (i + 1), account_id:id, kind:x[0], line_id:'L' + pre + (i + 1), title:x[1], supplier_name:x[0] === 'group' ? x[1] : null, member_count:x[2], assignee_email:staff[i % staff.length],
+                status:'open', exclude_kpi:false, is_active:true, unread_count:0, last_message:'', last_message_at:null, last_inbound_at:null,
+                awaiting_since:null, open_wait_id:null, note:null, avatar_url:null };
+    for(let d = 20; d >= 0; d--){
+      const day = startOfDay(addDays(now, -d)); if(day.getDay() === 0 || rnd() < .45) continue;
+      const st = new Date(day); st.setHours(9 + Math.floor(rnd() * 8), Math.floor(rnd() * 60), 0, 0);
+      if(st.getTime() > now - 120000) continue;
+      const open = d === 0 && rnd() < .5, sec = 120 + Math.floor(rnd() * (rnd() < .2 ? 9000 : 2400));
+      const closed = open ? null : new Date(st.getTime() + sec * 1000);
+      const w = { id:'w' + pre + waits.length, account_id:id, chat_id:c.id, chat_kind:c.kind, started_at:st.toISOString(), in_count:1, owner_email:c.assignee_email,
+                  closed_at:closed ? closed.toISOString() : null, closed_reason:closed ? 'answered' : null, closed_by:closed ? c.assignee_email : null,
+                  answer_via:closed ? 'app' : null, response_sec:closed ? sec : null };
+      waits.push(w);
+      c.last_inbound_at = st.toISOString(); c.last_message_at = (closed || st).toISOString();
+      c.last_message = closed ? 'ได้ค่ะ เดี๋ยวจัดการให้นะคะ' : asks[Math.floor(rnd() * asks.length)];
+      if(open){ c.awaiting_since = st.toISOString(); c.open_wait_id = w.id; c.unread_count = 1; } else { c.awaiting_since = null; c.open_wait_id = null; }
+    }
+    cs.push(c);
+  });
+  const keep = members; members = mem;                        // demoMsgs ใช้ชื่อทีมของบัญชีนั้น
+  cs.forEach(c => { msgCache[c.id] = demoMsgs(c, rnd); });
+  members = keep;
+  const st = { ...defaultSettings(), sla_minutes:id === 3 ? 30 : 60, work_end:id === 3 ? '20:00' : '17:00', ack_words:['ครับ', 'ค่ะ', 'ขอบคุณ', 'รับทราบ', 'ok', '🙏'],
+               quick_replies:['สวัสดีค่ะ 🙏', 'รับทราบค่ะ ✓', 'ขอเช็คข้อมูลสักครู่นะคะ', 'ขอบคุณค่ะ 🙏'], holidays:[] };
+  return { members:mem, chats:cs, waits, settings:st };
+}
+function demoAccounts(){
+  return DEMO_ACCTS.map(a => {
+    const d = demoAll[a.id], open = d.chats.filter(c => c.awaiting_since && c.status !== 'resolved' && !c.exclude_kpi);
+    return { ...a, active:true, role:'admin', awaiting:open.length, unread:d.chats.reduce((n, c) => n + (c.unread_count || 0), 0),
+             waits:open.map(c => c.awaiting_since).sort(), settings:d.settings };
+  });
+}
+function demoAccessMx(){
+  const rows = [];
+  for(const a of DEMO_ACCTS) for(const m of demoAll[a.id].members.values()){
+    if(m.role === 'admin') continue;
+    rows.push({ email:m.email, nick:m.nick, name:m.name, global_role:'staff', active:true, account_id:a.id, role:m.role, pu_code:m.pu_code || null });
+  }
+  rows.push({ email:'admin@demo', nick:'แอดมิน', name:'ผู้ดูแลระบบ', global_role:'admin', active:true, account_id:null, role:null, pu_code:null });
+  return rows;
+}
+function demoEnter(){
+  const d = demoAll[acct.id];
+  members = d.members; chats = d.chats; chatById = new Map(chats.map(c => [c.id, c])); demoWaits = d.waits;
+  applySettings(d.settings);
+  if(activeId && !chatById.get(activeId)) closeChat();
+  dash.data = { waits:[], replies:[] }; dashLoadedOnce = false; dash.person = 'all';
+  blast.picked = new Set(); blast.result = null; blast.q = ''; blast.pu = 'all';
+  renderList(); updateBadges(); applyPeerWords(); if(typeof fillPersonDD === 'function') fillPersonDD();
+}
 function demoMsgs(c, rnd){
   const grp = c.kind !== 'user'; const sales = grp ? (c.id === 'c1' ? 'เซลส์ปูน TPI (คุณเอ)' : 'เซลส์ ' + c.supplier_name) : c.title;
   const staff = c.assignee_email || 'bee@demo'; const base = Date.parse(c.last_message_at || Date.now()) - 3 * 3600000;
   const mk = (i, o) => ({ id:c.id + '-m' + i, chat_id:c.id, status:'sent', unsent:false, is_ack:false, quote_token:null, line_msg_id:c.id + '-l' + i, quoted_line_msg_id:null, ...o });
   const t = i => new Date(base + i * 9 * 60000).toISOString();
   const list = [
-    mk(1, { via:'line', direction:'in', sender_type:'supplier', sender_name:sales, msg_type:'text', content:'สวัสดีครับ ' + (grp ? 'ทีมจัดซื้อ' : ''), sent_at:t(0), is_ack:false, quote_token:'q1' }),
+    mk(1, { via:'line', direction:'in', sender_type:'supplier', sender_name:sales, msg_type:'text', content:'สวัสดีครับ ' + (grp ? (c.account_id > 1 ? 'ทีมแอดมิน' : 'ทีมจัดซื้อ') : ''), sent_at:t(0), is_ack:false, quote_token:'q1' }),
     mk(2, { via:'line', direction:'in', sender_type:'supplier', sender_name:sales, msg_type:'text', content:'ขอราคาสินค้าล็อตใหม่ครับ ราคาปรับขึ้น 3% ตั้งแต่เดือนหน้า แนบใบเสนอราคาให้ครับ', sent_at:t(1), quote_token:'q2' }),
     mk(3, { via:'line', direction:'in', sender_type:'supplier', sender_name:sales, msg_type:'file', content:'demo/quote.pdf', file_name:'ใบเสนอราคา-ก.ย.69.pdf', sent_at:t(1.2) }),
     mk(4, { via:'app', direction:'out', sender_type:'staff', staff_email:staff, sender_name:memberName(staff), msg_type:'text', content:'รับทราบครับ ขอเช็คกับหัวหน้าก่อนนะครับ เดี๋ยวแจ้งกลับ', sent_at:t(2), quoted_line_msg_id:c.id + '-l2' }),
@@ -3692,7 +4084,7 @@ function demoDash(){
     if(a.scrollTop < 120 && Date.now() - openedAt > 800) loadOlder();
     if(a.scrollHeight - a.scrollTop - a.clientHeight < 160) $('newPill').classList.remove('show');
   }, { passive:true });
-  if(DEMO){ $('demoBanner').hidden = false; showApp(); return; }
+  if(DEMO){ $('demoBanner').hidden = false; demoBoot(); return; }
   if(/YOUR-PROJECT|YOUR_PUBLISHABLE/.test(SUPABASE_URL + SUPABASE_ANON)){ showLogin(); document.getElementById('lgErr').textContent = 'แอพยังไม่ได้เชื่อมกับ Supabase — ผู้ดูแลระบบต้องใส่ Project URL และ Publishable key ก่อน'; return; }
   sb.auth.onAuthStateChange((_e, s) => route(s));
   sb.auth.getSession().then(({ data }) => route(data.session));
