@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="RTN Chat Hub">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.01">
-<title>RTN Chat Hub v2.01</title>
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.02">
+<title>RTN Chat Hub v2.02</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -641,7 +641,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.01 · 22/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.02 · 23/09/2569</div>
   </div>
 </div>
 
@@ -665,7 +665,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
     <div class="logo-text">RTN <span>Chat Hub</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.01</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.02</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -699,8 +699,8 @@ select.input{appearance:auto}
       <div class="chips" id="listChips">
         <button class="chip active" data-f="all" onclick="setListFilter('all')">ทั้งหมด <span class="n" id="cn-all"></span></button>
         <button class="chip warn" data-f="awaiting" onclick="setListFilter('awaiting')"><span data-ic="clock"></span>รอตอบ <span class="n" id="cn-awaiting"></span></button>
-        <button class="chip" data-f="mine" onclick="setListFilter('mine')">ของฉัน <span class="n" id="cn-mine"></span></button>
-        <button class="chip" data-f="unassigned" onclick="setListFilter('unassigned')">ไม่มีผู้รับผิดชอบ <span class="n" id="cn-unassigned"></span></button>
+        <button class="chip" data-f="mine" data-owner-only onclick="setListFilter('mine')">ของฉัน <span class="n" id="cn-mine"></span></button>
+        <button class="chip" data-f="unassigned" data-owner-only onclick="setListFilter('unassigned')">ไม่มีผู้รับผิดชอบ <span class="n" id="cn-unassigned"></span></button>
         <button class="chip" data-f="group" onclick="setListFilter('group')">กลุ่ม <span class="n" id="cn-group"></span></button>
         <button class="chip" data-f="user" onclick="setListFilter('user')">1:1 <span class="n" id="cn-user"></span></button>
         <button class="chip" data-f="resolved" onclick="setListFilter('resolved')"><span data-ic="check"></span>เสร็จแล้ว <span class="n" id="cn-resolved"></span></button>
@@ -793,7 +793,7 @@ select.input{appearance:auto}
         <div class="card-head">
           <h3><span class="hb" data-ic="users"></span>ผลงานรายคน</h3>
           <div class="acts"><button class="toggle-btn" data-alt="การ์ด" onclick="toggleTable('person')">ตาราง</button></div>
-          <div class="hint">นับตาม<b>ผู้รับผิดชอบ</b>ของงาน (ผู้รับผิดชอบแชทตอนที่งานเข้า หรือคนที่ตอบถ้ายังไม่มีผู้รับผิดชอบ) ·
+          <div class="hint"><span id="personHint">นับตาม<b>ผู้รับผิดชอบ</b>ของงาน (ผู้รับผิดชอบแชทตอนที่งานเข้า หรือคนที่ตอบถ้ายังไม่มีผู้รับผิดชอบ)</span> ·
             เรียงจาก<b>คนที่น่ากังวลที่สุดลงมา</b> — ดูงานที่ค้างและเลย SLA แล้วก่อน แล้วค่อยดูงานค้างทั้งหมด ตามด้วยจำนวนครั้งที่ตอบช้า ·
             <b>คลิกการ์ดเพื่อกางข้อมูลของคนนั้น</b> (กราฟและรายการทั้งหน้าจะเปลี่ยนตามด้วย) · ในตารางคลิกหัวคอลัมน์เพื่อเรียง</div>
         </div>
@@ -851,7 +851,7 @@ select.input{appearance:auto}
         <div class="card-body" id="lateTable"></div>
       </div>
 
-      <div class="card card-gold">
+      <div class="card card-gold" data-owner-only>
         <div class="card-head">
           <h3><span class="hb warn" data-ic="userx"></span>แชทที่ยังไม่มีผู้รับผิดชอบ <span class="mini" id="noOwnerCount"></span></h3>
           <div class="acts" id="noOwnerSum"></div>
@@ -904,9 +904,10 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  RTN Chat Hub v2.01 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  RTN Chat Hub v2.02 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
+//  v2.02: บัญชีเลือกได้ว่า "แบ่งงานรายแชท" หรือไม่ (pur_settings.use_assignee) — ปิดแล้วซ่อนผู้รับผิดชอบ/รหัส PU ทั้งแอพ
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -1006,7 +1007,7 @@ const viaLabel  = v => v === 'app' ? 'แอป' : v === 'oa' ? 'OA Manager' : '
 
 function defaultSettings(){
   return { work_days:[1,2,3,4,5,6], work_start:'08:00', work_end:'17:00', holidays:[], sla_minutes:60,
-           ack_words:[], quick_replies:['สวัสดีค่ะ 🙏','รับทราบค่ะ ✓','ขอบคุณค่ะ 🙏'], auto_assign:false };
+           ack_words:[], quick_replies:['สวัสดีค่ะ 🙏','รับทราบค่ะ ✓','ขอบคุณค่ะ 🙏'], auto_assign:false, use_assignee:true };
 }
 // ค่าตั้งของบัญชี → รูปแบบที่คำนวณเวลาทำการใช้ (ใช้กับบัญชีที่เปิดอยู่ และกับตัวเลขของบัญชีอื่นในหน้าเลือกบัญชี)
 function normSettings(s){
@@ -1021,7 +1022,11 @@ function normSettings(s){
 function applySettings(s){
   settings = normSettings(s);
   renderQuick();
+  applyOwnerMode();
 }
+// บัญชีที่ "ไม่แบ่งงานรายแชท" (เช่น Rattana Mart — แอดมินหลายคนใครว่างก็ตอบ) → ซ่อนเรื่องผู้รับผิดชอบ/รหัส PU ทั้งหมด
+// สถิติยังตรง: งานที่ไม่มีผู้รับผิดชอบ ฐานข้อมูลให้เครดิต "คนที่ตอบ" อยู่แล้ว
+const useOwner = () => settings?.use_assignee !== false;
 
 // ── HELPERS ──
 const $   = id => document.getElementById(id);
@@ -1294,7 +1299,8 @@ function renderList(){
     const cls = ['conv-item', c.unread_count > 0 ? 'unread' : '', c.awaiting_since ? 'awaiting' : '', over ? 'over' : '', activeId === c.id ? 'selected' : '', c.status === 'resolved' ? 'resolved' : ''].join(' ');
     const tags = [];
     tags.push(`<span class="tag">${c.kind === 'user' ? '1:1' : `👥 กลุ่ม${c.member_count ? ' · ' + c.member_count : ''}`}</span>`);
-    tags.push(c.assignee_email ? `<span class="tag assg">👤 ${esc(memberName(c.assignee_email))}</span>` : `<span class="tag none">ไม่มีผู้รับผิดชอบ</span>`);
+    if(useOwner() || c.assignee_email)
+      tags.push(c.assignee_email ? `<span class="tag assg">👤 ${esc(memberName(c.assignee_email))}</span>` : `<span class="tag none">ไม่มีผู้รับผิดชอบ</span>`);
     if(age != null) tags.push(`<span class="tag wait ${over ? 'over' : ''}">⏱ รอ ${fmtDur(age)}${over ? ' · เกิน SLA' : ''}</span>`);
     if(!c.is_active) tags.push(`<span class="tag off">${c.kind === 'user' ? 'ถูกบล็อก' : 'ไม่อยู่ในกลุ่ม'}</span>`);
     if(c.status === 'resolved') tags.push(`<span class="tag done">✓ เสร็จแล้ว</span>`);
@@ -1374,7 +1380,8 @@ function renderChatHeader(c){
 }
 function renderTools(c){
   const a = c.assignee_email; let h = '';
-  h += `<button class="tool-btn ${a ? 'gold' : ''}" onclick="openAssignee()">👤 ${a ? esc(memberName(a)) : 'ยังไม่มีผู้รับผิดชอบ'} ▾</button>`;
+  if(useOwner() || a)   // บัญชีที่ไม่แบ่งงานรายแชท: ไม่มีปุ่มผู้รับผิดชอบ (ใครว่างก็ตอบ)
+    h += `<button class="tool-btn ${a ? 'gold' : ''}" onclick="openAssignee()">👤 ${a ? esc(memberName(a)) : 'ยังไม่มีผู้รับผิดชอบ'} ▾</button>`;
   if(!a) h += `<button class="tool-btn" onclick="claimChat()">✋ รับเรื่องเอง</button>`;
   h += `<button class="tool-btn ${c.status === 'resolved' ? 'done' : ''}" onclick="toggleResolve()">${c.status === 'resolved' ? '✓ เสร็จแล้ว · เปิดใหม่' : '✓ ทำเครื่องหมายเสร็จ'}</button>`;
   if(c.awaiting_since) h += `<button class="tool-btn danger" onclick="dismissWait()" title="ปิดงานรอตอบโดยไม่ตอบ เช่น ข้อความไม่เกี่ยวกับเรา">🚫 ไม่ต้องตอบ</button>`;
@@ -1392,7 +1399,7 @@ function renderStrips(c){
   // ใครในทีมเคยตอบแชทนี้ (จาก trigger team_seen) — หัวหน้าคลิกชื่อเพื่อตั้งเป็นผู้รับผิดชอบได้
   const team = Object.entries(c.team_seen || {}).map(([k, v]) => ({ key:k, ...(v || {}) })).sort((a, b) => (b.count || 0) - (a.count || 0));
   if(team.length || c.oa_assignee){
-    const chips = team.map(t => { const lbl = t.email ? memberName(t.email) : (t.name || 'แอดมิน OA'); const click = t.email && isSup() && t.email !== c.assignee_email;
+    const chips = team.map(t => { const lbl = t.email ? memberName(t.email) : (t.name || 'แอดมิน OA'); const click = useOwner() && t.email && isSup() && t.email !== c.assignee_email;
       return `<button class="tag ${t.email ? 'assg' : ''}" style="cursor:${click ? 'pointer' : 'default'}" ${click ? `data-e="${esc(t.email)}" onclick="setAssignee(this.dataset.e)" title="ตั้ง ${esc(lbl)} เป็นผู้รับผิดชอบ"` : ''}>${esc(lbl)} ${nf(t.count || 0)}${t.via === 'oa' ? ' · OA' : t.via === 'line' ? ' · LINE' : ''}</button>`; }).join(' ');
     h += `<div class="strip info">👥 ทีมที่เคยตอบแชทนี้: ${chips || '—'}${c.oa_assignee ? ` &nbsp;·&nbsp; ผู้รับผิดชอบใน OA Manager: <b>${esc(c.oa_assignee)}</b>` : ''}</div>`;
   }
@@ -2417,7 +2424,7 @@ function fillPersonDD(){
   $('personWrap').style.display = '';
   const list = [...members.values()].filter(m => m.role !== 'admin').sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1) || (a.nick || a.name || '').localeCompare(b.nick || b.name || '', 'th'));
   const sel = $('dashPerson'), cur = dash.person || 'all';
-  sel.innerHTML = `<option value="all">ทุกคน</option><option value="none">ไม่มีผู้รับผิดชอบ</option>` +
+  sel.innerHTML = `<option value="all">ทุกคน</option><option value="none">${useOwner() ? 'ไม่มีผู้รับผิดชอบ' : 'ยังไม่มีคนตอบ'}</option>` +
     list.map(m => `<option value="${esc(m.email)}">${esc(m.nick || m.name || m.email)}${m.active ? '' : ' (พ้นสภาพ)'}</option>`).join('');
   sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'all';
 }
@@ -2654,7 +2661,7 @@ function sortRows(rows, key, dir){
 }
 function renderPersons(inR, open, reps){
   const rows = new Map();
-  const get = k => { if(!rows.has(k)) rows.set(k, { email:k, name:k ? memberName(k) : 'ไม่มีผู้รับผิดชอบ', total:0, answered:0, ok:0, late:0, openR:0, dis:0, byOther:0, openNow:0, openLate:0, durs:[], repApp:0, repLine:0, repOa:0 }); return rows.get(k); };
+  const get = k => { if(!rows.has(k)) rows.set(k, { email:k, name:k ? memberName(k) : (useOwner() ? 'ไม่มีผู้รับผิดชอบ' : 'ยังไม่มีคนตอบ'), total:0, answered:0, ok:0, late:0, openR:0, dis:0, byOther:0, openNow:0, openLate:0, durs:[], repApp:0, repLine:0, repOa:0 }); return rows.get(k); };
   inR.forEach(w => { const r = get(w.owner_email || ''); r.total++; if(w._answered){ r.answered++; if(w._ok) r.ok++; else r.late++; r.durs.push(w._dur); if(w.closed_by && w.closed_by !== w.owner_email) r.byOther++; } else if(w._dismissed) r.dis++; else r.openR++; });
   const slaNow = slaSec();
   open.forEach(w => { const r = get(w.owner_email || ''); r.openNow++; if(w._age > slaNow) r.openLate++; });
@@ -2663,7 +2670,7 @@ function renderPersons(inR, open, reps){
   const list = [...rows.values()].map(r => { r.durs.sort((a, b) => a - b); r.med = quantile(r.durs, .5); r.p90 = quantile(r.durs, .9); r.slaPct = r.answered ? r.ok / r.answered : null; r.reps = r.repApp + r.repLine + r.repOa; return r; });
   // ผู้ดูแลระบบไม่ได้ตอบแชทซัพ — ไม่ขึ้นในผลงานรายคน (ทั้งการ์ดและตาราง)
   for(let i = list.length - 1; i >= 0; i--) if(list[i].email && members.get(list[i].email)?.role === 'admin') list.splice(i, 1);
-  const cols = [['name', 'ผู้รับผิดชอบ', 'str'], ['total', 'งานรอตอบ', 'num'], ['answered', 'ตอบแล้ว', 'num'], ['openR', 'ยังไม่ตอบ', 'num'], ['dis', 'ไม่ต้องตอบ', 'num'], ['openNow', 'ค้างตอนนี้', 'num'], ['slaPct', 'ทัน SLA', 'num'], ['late', 'ช้ากว่า SLA', 'num'], ['med', 'มัธยฐาน', 'num'], ['p90', 'P90', 'num'], ['byOther', 'คนอื่นช่วยตอบ', 'num'], ['reps', 'ข้อความส่ง', 'num']];
+  const cols = [['name', useOwner() ? 'ผู้รับผิดชอบ' : 'คนที่ตอบ', 'str'], ['total', 'งานรอตอบ', 'num'], ['answered', 'ตอบแล้ว', 'num'], ['openR', 'ยังไม่ตอบ', 'num'], ['dis', 'ไม่ต้องตอบ', 'num'], ['openNow', 'ค้างตอนนี้', 'num'], ['slaPct', 'ทัน SLA', 'num'], ['late', 'ช้ากว่า SLA', 'num'], ['med', 'มัธยฐาน', 'num'], ['p90', 'P90', 'num'], ['byOther', 'คนอื่นช่วยตอบ', 'num'], ['reps', 'ข้อความส่ง', 'num']];
   const sorted = sortRows(list, personSort.key, personSort.dir);
   const T = list.reduce((t, r) => { t.total += r.total; t.answered += r.answered; t.openR += r.openR; t.dis += r.dis; t.openNow += r.openNow; t.ok += r.ok; t.late += r.late; t.byOther += r.byOther; t.reps += r.reps; return t; }, { total:0, answered:0, openR:0, dis:0, openNow:0, ok:0, late:0, byOther:0, reps:0 });
   const allDurs = inR.filter(w => w._answered).map(w => w._dur).sort((a, b) => a - b);
@@ -2769,7 +2776,7 @@ function pcardHtml({ c, tone, onclick, main, sub, meta, msg, foot }){
 }
 const ownerPill = e => e
   ? `<span class="pill grey">👤 ${esc(memberName(e))}</span>`
-  : `<span class="pill bad">ไม่มีผู้รับผิดชอบ</span>`;
+  : useOwner() ? `<span class="pill bad">ไม่มีผู้รับผิดชอบ</span>` : '';
 
 // ── 🚨 งานค้างตอนนี้ ──
 let backlogFilter = 'all';
@@ -3028,6 +3035,7 @@ function puFilterChips(){
     .sort((a, b) => a.pu_code.localeCompare(b.pu_code, undefined, { numeric:true }));
   // ค่าที่มาจากข้อมูล (อีเมล/รหัส PU/หัวคอลัมน์) ห้ามฝังใน onclick="f('…')" — มี ' หรือ " แล้วปุ่มพัง/รันโค้ดได้ → ใช้ data-* + esc
   const chip = (v, label) => `<button class="chip ${blast.pu === v ? 'active' : ''}" data-v="${esc(v)}" onclick="setBlastPu(this.dataset.v)">${label}</button>`;
+  if(!useOwner()) return '';   // บัญชีที่ไม่แบ่งงานรายแชท — ไม่มีอะไรให้กรองตามผู้รับผิดชอบ
   return chip('all', 'ทุกแชท') + chip('mine', 'ของฉัน')
        + list.map(m => chip(m.pu_code.toUpperCase(), `${esc(m.pu_code)} · ${esc(m.nick || m.name || m.email)}`)).join('')
        + chip('none', 'ไม่มีผู้รับผิดชอบ');
@@ -3040,7 +3048,7 @@ function renderBlastList(){
       <input type="checkbox" ${on ? 'checked' : ''} onchange="blastToggle('${c.id}')">
       <span class="bl-nm">${esc(chatName(c))}</span>
       <span class="tag">${c.kind === 'user' ? '1:1' : `${ic('users')} ${c.member_count || 1}`}</span>
-      ${c.assignee_email ? `<span class="tag assg">${esc(memberName(c.assignee_email))}</span>` : '<span class="tag none">ไม่มีผู้รับผิดชอบ</span>'}
+      ${c.assignee_email ? `<span class="tag assg">${esc(memberName(c.assignee_email))}</span>` : useOwner() ? '<span class="tag none">ไม่มีผู้รับผิดชอบ</span>' : ''}
       ${row ? `<span class="tag" title="${esc(Object.entries(row).slice(0, 6).map(([k, v]) => k + ': ' + v).join(' · '))}">📄 มีข้อมูลในชีท</span>` : ''}
     </label>`;
   }).join('') : `<div class="conv-empty">${blast.mode === 'sheet' ? 'ยังไม่มีแชทที่จับคู่กับชีทได้' : 'ไม่พบแชทตามตัวกรอง'}</div>`;
@@ -3114,7 +3122,7 @@ function renderBlast(){
     <div class="card card-gold"><div class="card-head"><h3><span class="hb">${ic('users')}</span>ผู้รับ <span class="mini" id="blPickInfo"></span></h3>
       <div class="acts"><button class="btn btn-outline btn-sm" onclick="blastPickAll(true)">เลือกทั้งหมดที่แสดง</button>
         <button class="btn btn-outline btn-sm" onclick="blastPickAll(false)">ล้างที่แสดง</button></div>
-      <div class="hint">กรองตามรหัส PU เพื่อส่งเฉพาะเจ้าที่คนนั้นดูแล${sheetOn ? ' · โหมดชีทจะแสดงเฉพาะแชทที่จับคู่กับชีทได้' : ''}</div></div>
+      <div class="hint">${useOwner() ? 'กรองตามรหัส PU เพื่อส่งเฉพาะเจ้าที่คนนั้นดูแล' : 'เลือกแชทที่จะส่งจากรายการด้านล่าง'}${sheetOn ? ' · โหมดชีทจะแสดงเฉพาะแชทที่จับคู่กับชีทได้' : ''}</div></div>
       <div class="chips" style="padding:8px 12px">${puFilterChips()}</div>
       <div class="card-body" style="padding-top:0">
         <input class="input" placeholder="ค้นหาชื่อ…" oninput="blastSearch(this.value)" value="${esc(S.q)}">
@@ -3459,13 +3467,15 @@ function notiCardHtml(){
           <option value="mine_none" ${P.scope === 'mine_none' ? 'selected' : ''}>แชทของฉัน + แชทที่ยังไม่มีผู้รับผิดชอบ</option>
           <option value="all" ${P.scope === 'all' ? 'selected' : ''}>ทุกแชท (ทุกบัญชีที่ฉันเข้าได้)</option>
         </select>
-        <span class="mini">ผู้รับผิดชอบมาจากรหัส PU ในชื่อแชท · แชทที่ตั้ง "ไม่นับสถิติ" ไว้จะไม่เตือน</span></div>
+        <span class="mini">${useOwner()
+          ? 'ผู้รับผิดชอบมาจากรหัส PU ในชื่อแชท'
+          : `บัญชี ${esc(acctName())} ไม่มีผู้รับผิดชอบรายแชท — ต้องเลือก "ทุกแชท" หรือ "ของฉัน + ที่ยังไม่มีผู้รับผิดชอบ" ถึงจะได้แจ้งเตือนของบัญชีนี้`} · แชทที่ตั้ง "ไม่นับสถิติ" ไว้จะไม่เตือน</span></div>
       <div class="field"><label>เตือนเรื่องอะไรบ้าง</label>
         ${chk('ntMsg', P.msg, '💬 ข้อความใหม่จาก' + peer())}
         ${chk('ntWarn', P.warn, '🟠 ใกล้ครบ SLA', `เตือนเมื่อรอมาแล้ว 80% ของ SLA (ตอนนี้ราว ${Math.round(sla * .8)} นาที)`)}
         ${chk('ntSla', P.sla, '🔴 เกิน SLA แล้ว', `รอเกิน ${sla} นาทีแล้วยังไม่มีใครตอบ — เตือนเองแม้ซัพไม่ได้ทักมาใหม่`)}
-        ${chk('ntAssign', P.assign, '👤 มีคนตั้งให้ฉันเป็นผู้รับผิดชอบแชท')}
-        ${chk('ntOrphan', P.orphan, '❓ แชทใหม่ที่ยังไม่มีผู้รับผิดชอบ', 'เหมาะกับหัวหน้า — ถ้าเปิดไว้ตอนกำลังนำเข้าประวัติจะเตือนเยอะ')}
+        ${useOwner() ? chk('ntAssign', P.assign, '👤 มีคนตั้งให้ฉันเป็นผู้รับผิดชอบแชท') : ''}
+        ${chk('ntOrphan', P.orphan, useOwner() ? '❓ แชทใหม่ที่ยังไม่มีผู้รับผิดชอบ' : '❓ แชทใหม่เข้ามา', 'เหมาะกับหัวหน้า — ถ้าเปิดไว้ตอนกำลังนำเข้าประวัติจะเตือนเยอะ')}
       </div>
       <div class="field"><label>ช่องทาง</label>
         ${chk('ntSound', P.sound, '🔊 เสียงเตือน', 'เกิน SLA จะดัง 3 จังหวะให้สังเกตง่ายกว่าข้อความปกติ')}
@@ -3484,6 +3494,7 @@ function notiPermLabel(){
 }
 function saveNotiPrefs(){
   const g = (id, k) => { const e = $(id); if(e) notiPrefs[k] = e.type === 'checkbox' ? e.checked : e.value; };
+  // ntAssign ไม่มีในบัญชีที่ไม่แบ่งงานรายแชท — g() ข้ามช่องที่ไม่มีให้แล้ว ค่าเดิมของบัญชีอื่นจึงไม่ถูกล้าง
   g('ntScope', 'scope'); g('ntMsg', 'msg'); g('ntWarn', 'warn'); g('ntSla', 'sla'); g('ntAssign', 'assign'); g('ntOrphan', 'orphan');
   g('ntSound', 'sound'); g('ntPopup', 'popup'); g('ntWork', 'workOnly');
   notiSave(); renderBell(); syncPushPrefs();
@@ -3502,12 +3513,14 @@ function teamCardHtml(){
   const list = [...members.values()].sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1) || (a.nick || a.name || '').localeCompare(b.nick || b.name || '', 'th'));
   const linked = e => [...people.values()].filter(p => p.member_email === e).map(p => p.display_name || p.line_user_id);
   return `<div class="card card-gold" id="teamCard"><div class="card-head"><h3><span class="hb">${ic('users')}</span>ทีม ${esc(acctName())} <span class="mini">${list.filter(m => m.active).length} คน</span></h3>
-    <div class="acts"><button class="btn btn-outline btn-sm" onclick="applyPu()" title="ไล่ดูชื่อแชททุกแชท แล้วตั้งผู้รับผิดชอบตามรหัส PU">🔁 ใช้รหัส PU กับทุกแชท</button><button class="btn btn-gold btn-sm" onclick="openMemberModal()">＋ เพิ่มสมาชิก</button></div>
-    <div class="hint">คนในรายชื่อนี้เข้าบัญชี <b>${esc(acctName())}</b> ได้ · <b>หัวหน้า</b>เห็นแดชบอร์ดทุกคนและตั้งค่าบัญชีนี้ได้ · <b>พนักงาน</b>เห็นสถิติของตัวเอง · <b>ผู้ดูแลระบบ</b>เข้าได้ทุกบัญชีและตั้งหัวหน้าได้ · สิทธิ์และรหัส PU แยกกันแต่ละบัญชี<br>
-      <b>รหัส PU</b> = รหัสแบ่งงานที่ทีมใส่ไว้ในชื่อแชท (เช่น <b>PU1#คาราบาว</b>) — แชทไหนมีรหัส ระบบยกให้เจ้าของรหัสอัตโนมัติ และเปลี่ยนตามทันทีเมื่อทีมแก้ชื่อแชทใน OA Manager · แชทที่ยังไม่มีรหัสจะไม่ถูกแตะ</div></div>
-    <div class="tbl-wrap"><table class="tbl"><thead><tr>${['ชื่อเล่น', 'ชื่อ-สกุล', 'อีเมล', 'ชื่อใน OA', 'รหัส PU', 'สิทธิ์', 'LINE ที่ผูก', 'สถานะ', ''].map(h => `<th style="cursor:default">${h}</th>`).join('')}</tr></thead><tbody>
+    <div class="acts">${useOwner() ? `<button class="btn btn-outline btn-sm" onclick="applyPu()" title="ไล่ดูชื่อแชททุกแชท แล้วตั้งผู้รับผิดชอบตามรหัส PU">🔁 ใช้รหัส PU กับทุกแชท</button>` : ''}<button class="btn btn-gold btn-sm" onclick="openMemberModal()">＋ เพิ่มสมาชิก</button></div>
+    <div class="hint">คนในรายชื่อนี้เข้าบัญชี <b>${esc(acctName())}</b> ได้ · <b>หัวหน้า</b>เห็นแดชบอร์ดทุกคนและตั้งค่าบัญชีนี้ได้ · <b>พนักงาน</b>เห็นสถิติของตัวเอง · <b>ผู้ดูแลระบบ</b>เข้าได้ทุกบัญชีและตั้งหัวหน้าได้ · สิทธิ์แยกกันแต่ละบัญชี<br>
+      ${useOwner()
+        ? '<b>รหัส PU</b> = รหัสแบ่งงานที่ทีมใส่ไว้ในชื่อแชท (เช่น <b>PU1#คาราบาว</b>) — แชทไหนมีรหัส ระบบยกให้เจ้าของรหัสอัตโนมัติ และเปลี่ยนตามทันทีเมื่อทีมแก้ชื่อแชทใน OA Manager · แชทที่ยังไม่มีรหัสจะไม่ถูกแตะ'
+        : 'บัญชีนี้ตั้งไว้แบบ <b>ไม่แบ่งงานรายแชท</b> — ใครว่างก็ตอบได้ทุกแชท ผลงานนับให้คนที่ตอบ (เปลี่ยนได้ที่การ์ดเวลาทำการ &amp; SLA)'}</div></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr>${['ชื่อเล่น', 'ชื่อ-สกุล', 'อีเมล', 'ชื่อใน OA', ...(useOwner() ? ['รหัส PU'] : []), 'สิทธิ์', 'LINE ที่ผูก', 'สถานะ', ''].map(h => `<th style="cursor:default">${h}</th>`).join('')}</tr></thead><tbody>
     ${list.map(m => `<tr class="${m.active ? '' : 'dim'}"><td><b>${esc(m.nick || '—')}</b></td><td>${esc(m.name || '—')}</td><td class="mini">${esc(m.email)}</td><td class="mini">${esc(m.oa_name || '—')}${m.oa_biz_id ? ' <span class="pill ok" title="ผูกกับแอดมินใน LINE OA Manager แล้ว — คำตอบใน OA นับเป็นผลงานคนนี้">ผูกแล้ว</span>' : ''}</td>
-      <td class="mini">${m.pu_code ? `<b>${esc(m.pu_code)}</b>` : '—'}</td>
+      ${useOwner() ? `<td class="mini">${m.pu_code ? `<b>${esc(m.pu_code)}</b>` : '—'}</td>` : ''}
       <td><span class="pill ${m.role === 'admin' ? 'bad' : m.role === 'supervisor' ? 'gold' : 'grey'}">${roleLabel(m.role)}</span></td>
       <td class="mini">${linked(m.email).map(esc).join(', ') || '<span class="txt-muted">—</span>'}</td>
       <td>${m.active ? '<span class="pill ok">ใช้งาน</span>' : '<span class="pill grey">ปิด</span>'}</td>
@@ -3531,7 +3544,7 @@ function openMemberModal(email){
     <div class="row"><div class="field"><label>ชื่อเล่น</label><input class="input" id="mmNick" value="${esc(m?.nick || '')}" placeholder="เช่น นก"></div><div class="field"><label>ชื่อ-สกุล</label><input class="input" id="mmName" value="${esc(m?.name || '')}"></div></div>
     <div class="field mt-12"><label>อีเมล Google ที่ใช้ล็อกอิน</label><input class="input" id="mmEmail" type="email" value="${esc(m?.email || '')}" ${m ? 'readonly style="opacity:.7"' : ''} placeholder="name@rattanaphaiboon.com"></div>
     <div class="field"><label>ชื่อที่แสดงใน LINE OA Manager</label><input class="input" id="mmOa" list="oaAdminList" value="${esc(m?.oa_name || '')}" placeholder="เลือกหรือพิมพ์ชื่อแอดมินตามที่ OA Manager แสดง"><datalist id="oaAdminList">${(oaAdmins || []).filter(a => a.name && (!a.member_email || a.member_email === m?.email)).map(a => `<option value="${esc(a.name)}"></option>`).join('')}</datalist><div class="help">${m?.oa_biz_id ? '✓ ผูกกับแอดมินใน OA แล้ว · ' : ''}ใช้จับคู่คำตอบที่พิมพ์ใน OA Manager (ผ่านส่วนขยาย) ให้เป็นผลงานของคนนี้ รวมคำตอบย้อนหลัง — ถ้าเว้นว่างจะเทียบกับชื่อเล่น/ชื่อจริง</div></div>
-    <div class="field"><label>รหัส PU (รหัสแบ่งงานในชื่อแชท)</label><input class="input" id="mmPu" value="${esc(m?.pu_code || '')}" placeholder="เช่น PU1 · เว้นว่างได้ถ้าไม่ได้แบ่งงานด้วยรหัส"><div class="help">แชทที่มีรหัสนี้ในชื่อ (เช่น "PU1#คาราบาว") จะถูกยกให้คนนี้อัตโนมัติ และเปลี่ยนตามเมื่อทีมแก้ชื่อแชท · 1 รหัสต่อ 1 คน</div></div>
+    ${useOwner() ? `<div class="field"><label>รหัส PU (รหัสแบ่งงานในชื่อแชท)</label><input class="input" id="mmPu" value="${esc(m?.pu_code || '')}" placeholder="เช่น PU1 · เว้นว่างได้ถ้าไม่ได้แบ่งงานด้วยรหัส"><div class="help">แชทที่มีรหัสนี้ในชื่อ (เช่น "PU1#คาราบาว") จะถูกยกให้คนนี้อัตโนมัติ และเปลี่ยนตามเมื่อทีมแก้ชื่อแชท · 1 รหัสต่อ 1 คน</div></div>` : ''}
     <div class="field"><label>สิทธิ์</label><select class="input" id="mmRole" ${canRole ? '' : 'disabled'}>
       <option value="staff" ${(m?.role || 'staff') === 'staff' ? 'selected' : ''}>พนักงาน — เห็นสถิติตัวเอง</option>
       <option value="supervisor" ${m?.role === 'supervisor' ? 'selected' : ''}>หัวหน้า — เห็นทุกคน ตั้งค่าได้</option>
@@ -3564,7 +3577,7 @@ async function saveMember(){
   const email = $('mmEmail').value.trim().toLowerCase();
   if(!email){ showToast('กรอกอีเมล', 'warning'); return; }
   try{
-    await rpc('pur_upsert_member', { p_email:email, p_nick:$('mmNick').value.trim(), p_name:$('mmName').value.trim(), p_role:$('mmRole').value, p_active:$('mmActive').checked, p_oa_name:$('mmOa').value.trim(), p_pu_code:$('mmPu').value.trim(), p_account:acct.id });
+    await rpc('pur_upsert_member', { p_email:email, p_nick:$('mmNick').value.trim(), p_name:$('mmName').value.trim(), p_role:$('mmRole').value, p_active:$('mmActive').checked, p_oa_name:$('mmOa').value.trim(), p_pu_code:$('mmPu') ? $('mmPu').value.trim() : '', p_account:acct.id });
     closeModal(); accessMx = null; await loadMembers(); await loadChats(); renderSettings(); fillPersonDD(); showToast('บันทึกสมาชิกแล้ว ✓', 'success');
   }catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
@@ -3614,7 +3627,10 @@ function hoursCardHtml(){
       <div class="row"><div class="field"><label>เริ่มงาน</label><input class="input" type="time" id="hsStart" value="${esc(S.work_start)}"></div><div class="field"><label>เลิกงาน</label><input class="input" type="time" id="hsEnd" value="${esc(S.work_end)}"></div><div class="field"><label>SLA ตอบภายใน (นาที)</label><input class="input" type="number" min="1" max="1440" id="hsSla" value="${S.sla_minutes}"></div></div>
       <div class="field mt-12"><label>วันหยุด</label><div class="holi" id="holiList">${S.holidays.map(h => `<span class="tag" data-d="${h}">${thDate(h)} <button type="button" onclick="this.parentElement.remove()" title="ลบ">×</button></span>`).join('') || '<span class="mini txt-muted">ยังไม่มีวันหยุด</span>'}</div>
         <div class="row mt-8"><input class="input input-sm" type="date" id="holiNew" style="max-width:180px"><button class="btn btn-outline btn-sm" onclick="addHoliday()">＋ เพิ่มวันหยุด</button></div></div>
-      <label class="check ${S.auto_assign ? 'on' : ''}"><input type="checkbox" id="hsAuto" ${S.auto_assign ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on',this.checked)"> แชทที่ยังไม่มีผู้รับผิดชอบ → คนแรกที่ตอบได้เป็นผู้รับผิดชอบอัตโนมัติ</label>
+      <label class="check ${S.use_assignee !== false ? 'on' : ''}"><input type="checkbox" id="hsOwner" ${S.use_assignee !== false ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on',this.checked);$('autoAssignRow').hidden=!this.checked">
+        แบ่งงานรายแชท — มี<b>ผู้รับผิดชอบ</b>และรหัส PU (ปิด = แอดมินใครว่างก็ตอบ ผลงานนับให้คนที่ตอบ เหมาะกับทีมแอดมินหลายคน)</label>
+      <div id="autoAssignRow" ${S.use_assignee !== false ? '' : 'hidden'}>
+        <label class="check ${S.auto_assign ? 'on' : ''}"><input type="checkbox" id="hsAuto" ${S.auto_assign ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on',this.checked)"> แชทที่ยังไม่มีผู้รับผิดชอบ → คนแรกที่ตอบได้เป็นผู้รับผิดชอบอัตโนมัติ</label></div>
       <div class="mt-12"><button class="btn btn-gold" onclick="saveHours()">💾 บันทึกเวลาทำการ & SLA</button></div>
     </div></div>`;
 }
@@ -3627,7 +3643,8 @@ function addHoliday(){
 }
 async function saveHours(){
   const p = { work_days:[...document.querySelectorAll('#wdRow input:checked')].map(i => +i.value), work_start:$('hsStart').value, work_end:$('hsEnd').value,
-              sla_minutes:+$('hsSla').value || 60, holidays:[...document.querySelectorAll('#holiList [data-d]')].map(e => e.dataset.d), auto_assign:$('hsAuto').checked };
+              sla_minutes:+$('hsSla').value || 60, holidays:[...document.querySelectorAll('#holiList [data-d]')].map(e => e.dataset.d),
+              use_assignee:$('hsOwner').checked, auto_assign:$('hsOwner').checked && $('hsAuto').checked };
   if(!p.work_days.length){ showToast('เลือกวันทำงานอย่างน้อย 1 วัน', 'warning'); return; }
   if(!p.work_start || !p.work_end || p.work_end <= p.work_start){ showToast('เวลาเลิกงานต้องหลังเวลาเริ่มงาน', 'warning'); return; }
   try{ await rpc('pur_save_settings', { p, p_account:acct.id }); await loadSettings(); renderSettings(); renderList(); if(dashLoadedOnce) renderDash(); showToast('บันทึกแล้ว ✓', 'success'); }
@@ -3865,6 +3882,18 @@ function applyPeerWords(){
   document.querySelectorAll('.peer-word').forEach(el => { el.textContent = peer(); });
   const si = document.querySelector('.search-inp'); if(si) si.placeholder = `ค้นหา${peer()} / กลุ่ม / ข้อความ`;
 }
+// ซ่อน/แสดงส่วนที่พูดถึงผู้รับผิดชอบตามโหมดของบัญชี (ส่วนที่วาดด้วย JS ตรวจ useOwner() เองในที่ของมัน)
+function applyOwnerMode(){
+  const on = useOwner();
+  document.querySelectorAll('[data-owner-only]').forEach(el => { el.hidden = !on; });
+  NOTI_KINDS.orphan.label = on ? 'แชทใหม่ ยังไม่มีผู้รับผิดชอบ' : 'แชทใหม่เข้ามา';
+  const hint = $('personHint');
+  if(hint) hint.innerHTML = on
+    ? 'นับตาม<b>ผู้รับผิดชอบ</b>ของงาน (ผู้รับผิดชอบแชทตอนที่งานเข้า หรือคนที่ตอบถ้ายังไม่มีผู้รับผิดชอบ)'
+    : 'นับตาม<b>คนที่ตอบ</b>งานนั้น (บัญชีนี้ไม่มีเจ้าของแชท ใครตอบได้เครดิตคนนั้น)';
+  // อยู่ในตัวกรองที่เพิ่งถูกซ่อน → กลับไปดู "ทั้งหมด" ไม่งั้นรายการว่างโดยไม่มีปุ่มให้กดกลับ
+  if(!on && (listFilter === 'mine' || listFilter === 'unassigned')) setListFilter('all');
+}
 
 async function showApp(){
   $('loginGate').classList.add('hide');
@@ -4004,7 +4033,9 @@ function demoAccount(id, seed, team, list, asks){
   const mem = new Map([...team, ['admin@demo', 'แอดมิน', 'ผู้ดูแลระบบ', 'admin']].map(([e, n, f, r]) => [e, { email:e, nick:n, name:f, role:r, active:true, in_account:r !== 'admin' }]));
   const staff = team.map(t => t[0]), waits = [], cs = [];
   list.forEach((x, i) => {
-    const c = { id:pre + (i + 1), account_id:id, kind:x[0], line_id:'L' + pre + (i + 1), title:x[1], supplier_name:x[0] === 'group' ? x[1] : null, member_count:x[2], assignee_email:staff[i % staff.length],
+    // บัญชีมาร์ท (ตัวอย่าง) = ไม่แบ่งงานรายแชท → ไม่มีผู้รับผิดชอบ แต่ยังรู้ว่าใครเป็นคนตอบ
+    const replier = staff[i % staff.length];
+    const c = { id:pre + (i + 1), account_id:id, kind:x[0], line_id:'L' + pre + (i + 1), title:x[1], supplier_name:x[0] === 'group' ? x[1] : null, member_count:x[2], assignee_email:id === 3 ? null : replier,
                 status:'open', exclude_kpi:false, is_active:true, unread_count:0, last_message:'', last_message_at:null, last_inbound_at:null,
                 awaiting_since:null, open_wait_id:null, note:null, avatar_url:null };
     for(let d = 20; d >= 0; d--){
@@ -4013,8 +4044,8 @@ function demoAccount(id, seed, team, list, asks){
       if(st.getTime() > now - 120000) continue;
       const open = d === 0 && rnd() < .5, sec = 120 + Math.floor(rnd() * (rnd() < .2 ? 9000 : 2400));
       const closed = open ? null : new Date(st.getTime() + sec * 1000);
-      const w = { id:'w' + pre + waits.length, account_id:id, chat_id:c.id, chat_kind:c.kind, started_at:st.toISOString(), in_count:1, owner_email:c.assignee_email,
-                  closed_at:closed ? closed.toISOString() : null, closed_reason:closed ? 'answered' : null, closed_by:closed ? c.assignee_email : null,
+      const w = { id:'w' + pre + waits.length, account_id:id, chat_id:c.id, chat_kind:c.kind, started_at:st.toISOString(), in_count:1, owner_email:replier,
+                  closed_at:closed ? closed.toISOString() : null, closed_reason:closed ? 'answered' : null, closed_by:closed ? replier : null,
                   answer_via:closed ? 'app' : null, response_sec:closed ? sec : null };
       waits.push(w);
       c.last_inbound_at = st.toISOString(); c.last_message_at = (closed || st).toISOString();
@@ -4026,7 +4057,7 @@ function demoAccount(id, seed, team, list, asks){
   const keep = members; members = mem;                        // demoMsgs ใช้ชื่อทีมของบัญชีนั้น
   cs.forEach(c => { msgCache[c.id] = demoMsgs(c, rnd); });
   members = keep;
-  const st = { ...defaultSettings(), sla_minutes:id === 3 ? 30 : 60, work_end:id === 3 ? '20:00' : '17:00', ack_words:['ครับ', 'ค่ะ', 'ขอบคุณ', 'รับทราบ', 'ok', '🙏'],
+  const st = { ...defaultSettings(), use_assignee:id !== 3, sla_minutes:id === 3 ? 30 : 60, work_end:id === 3 ? '20:00' : '17:00', ack_words:['ครับ', 'ค่ะ', 'ขอบคุณ', 'รับทราบ', 'ok', '🙏'],
                quick_replies:['สวัสดีค่ะ 🙏', 'รับทราบค่ะ ✓', 'ขอเช็คข้อมูลสักครู่นะคะ', 'ขอบคุณค่ะ 🙏'], holidays:[] };
   return { members:mem, chats:cs, waits, settings:st };
 }
