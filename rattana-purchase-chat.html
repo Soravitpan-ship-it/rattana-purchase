@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="RTN Chat Hub">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.02">
-<title>RTN Chat Hub v2.02</title>
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.03">
+<title>RTN Chat Hub v2.03</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -641,7 +641,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.02 · 23/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.03 · 24/09/2569</div>
   </div>
 </div>
 
@@ -665,7 +665,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
     <div class="logo-text">RTN <span>Chat Hub</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.02</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.03</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -904,10 +904,11 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  RTN Chat Hub v2.02 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  RTN Chat Hub v2.03 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
 //  v2.02: บัญชีเลือกได้ว่า "แบ่งงานรายแชท" หรือไม่ (pur_settings.use_assignee) — ปิดแล้วซ่อนผู้รับผิดชอบ/รหัส PU ทั้งแอพ
+//  v2.03: แชทเก่าที่ยังไม่มีรหัส LINE — ข้อความเตือนใช้คำของบัญชีนั้น (ลูกค้า/ซัพ) ไม่พูดถึงใบสั่งสินค้านอกบัญชีจัดซื้อ
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -1413,7 +1414,9 @@ function applyReplyState(c){
   const oaOnly = isOaOnly(c);
   const blocked = oaOnly || (!c.is_active && !forceReply.has(c.id));
   const note = $('replyNote');
-  note.innerHTML = oaOnly ? `<span>⚠️ ${OA_ONLY_MSG} <span class="txt-muted">(ระบบจะได้รหัสเองเมื่อซัพทักเข้ามาหรือมีการส่งใบสั่งสินค้า)</span></span>`
+  // แชทเก่าที่ดึงจาก OA Manager — LINE ให้รหัสลูกค้าเฉพาะตอนเขาทักเข้ามาทาง webhook (บัญชีแบบนี้ขอรายชื่อผู้ติดตามไม่ได้)
+  // ใบสั่งสินค้า (การ์ด) มีเฉพาะบัญชีจัดซื้อ
+  note.innerHTML = oaOnly ? `<span>⚠️ ${OA_ONLY_MSG} <span class="txt-muted">(ระบบจะได้รหัสเองเมื่อ${peer()}ทักเข้ามา${acct?.id === 1 ? 'หรือมีการส่งใบสั่งสินค้า' : ' แล้วตอบจากแอพได้ทันที'})</span></span>`
     : blocked ? `⚠️ ส่งจากหน้านี้ไม่ได้ในตอนนี้ <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="forceReply.add(activeId);applyReplyState(chatById.get(activeId))">ลองส่งดูอยู่ดี</button>` : '';
   note.classList.toggle('show', blocked);
   $('replyInp').disabled = blocked; $('sendBtn').disabled = blocked; $('attachBtn').disabled = blocked;
