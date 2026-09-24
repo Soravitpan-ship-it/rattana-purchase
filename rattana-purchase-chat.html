@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="RTN Chat Hub">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.03">
-<title>RTN Chat Hub v2.03</title>
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.04">
+<title>RTN Chat Hub v2.04</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -641,7 +641,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.03 · 24/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.04 · 24/09/2569</div>
   </div>
 </div>
 
@@ -665,7 +665,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
     <div class="logo-text">RTN <span>Chat Hub</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.03</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.04</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -904,11 +904,12 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  RTN Chat Hub v2.03 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  RTN Chat Hub v2.04 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
 //  v2.02: บัญชีเลือกได้ว่า "แบ่งงานรายแชท" หรือไม่ (pur_settings.use_assignee) — ปิดแล้วซ่อนผู้รับผิดชอบ/รหัส PU ทั้งแอพ
 //  v2.03: แชทเก่าที่ยังไม่มีรหัส LINE — ข้อความเตือนใช้คำของบัญชีนั้น (ลูกค้า/ซัพ) ไม่พูดถึงใบสั่งสินค้านอกบัญชีจัดซื้อ
+//  v2.04: ประหยัดโควตา Supabase แพ็กเกจฟรี — รอบอัตโนมัติขอเฉพาะแชทที่เปลี่ยน (pur_chats.updated_at) · ข้อความ/แดชบอร์ดโหลดเมื่อจำเป็น · ลิงก์รูปอายุ 1 วันจำในเครื่อง
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -1000,6 +1001,15 @@ let listSort  = LS.get('pur.sort') === 'wait' ? 'wait' : 'recent';   // recent =
 const msgMeta = {};                   // chatId → {hasMore, loading} โหลดข้อความทีละหน้า
 let openedAt  = 0;                    // เวลาเปิดแชทล่าสุด (กันโหลดหน้าเก่าเองตอนเพิ่งเปิด)
 const signedCache = new Map();        // storage path → {url, exp}
+// ลิงก์รูปอายุ 1 วัน และจำไว้ในเครื่อง (v2.04) — เปิดแชทเดิม/รีเฟรชหน้า ได้ลิงก์เดิม เบราว์เซอร์ใช้รูปจากแคช ไม่ดาวน์โหลดซ้ำ
+// (เดิมลิงก์ 1 ชม. อยู่แค่ในหน่วยความจำ รีเฟรชทีไรลิงก์ใหม่ = โหลดทุกรูปใหม่หมด กินแบนด์วิดท์ของแพ็กเกจฟรี)
+const SIGN_TTL_S = 24 * 3600, SIGN_KEY = 'pur.signed', SIGN_MAX = 1000;
+try{ const o = JSON.parse(LS.get(SIGN_KEY) || '{}'), now = Date.now();
+     for(const [p, v] of Object.entries(o)) if(Array.isArray(v) && v[1] > now) signedCache.set(p, { url:v[0], exp:v[1] }); }catch(_){}
+function saveSigned(){
+  const now = Date.now(), keep = [...signedCache].filter(([, v]) => v.exp > now).slice(-SIGN_MAX);
+  LS.set(SIGN_KEY, JSON.stringify(Object.fromEntries(keep.map(([p, v]) => [p, [v.url, v.exp]]))));
+}
 const forceReply  = new Set();        // แชทที่ผู้ใช้กด "ลองส่งดูอยู่ดี"
 const isSup   = () => !!me && (me.role === 'supervisor' || me.role === 'admin');
 const isAdmin = () => !!me && me.role === 'admin';
@@ -1156,6 +1166,7 @@ async function loadChats(){
   const before = paintSnap || snapshot();
   const rows = await fetchAll('pur_chats', q => q.eq('account_id', acct.id).order('last_message_at', { ascending:false, nullsFirst:false }));
   chats = rows; chatById = new Map(rows.map(r => [r.id, r]));
+  chatSync = maxUpdated(rows); lastFullChats = Date.now();
   if(typeof paintSnap !== 'undefined') paintSnap = null;
   detectNew(before); renderList(); updateBadges();
   if(activeId && chatById.get(activeId)) renderChatHeader(chatById.get(activeId));
@@ -1166,6 +1177,41 @@ async function loadChats(){
     const { data, error } = await sb.from('pur_chats').select('id').eq('id', id).maybeSingle();
     if(!error && !data && activeId === id){ closeChat(); showToast('แชทนี้ถูกรวมกับแชทอื่นหรือถูกลบแล้ว — เลือกแชทจากรายการอีกครั้ง', 'info', 4500); }
   }
+}
+// ── โหลดแชทแบบประหยัดแบนด์วิดท์ (v2.04) ──
+// เดิมรอบอัตโนมัติโหลดแชททั้งบัญชีใหม่ทุก 45 วิ (~0.5 MB/ครั้ง/เครื่อง) — Supabase แพ็กเกจฟรีให้แบนด์วิดท์ 5 GB/เดือน
+// ตอนนี้ขอเฉพาะแถวที่ updated_at ใหม่กว่าครั้งก่อน (ปกติ 0–5 แถว) · realtime ส่งการเปลี่ยนแปลงมาให้อยู่แล้ว รอบนี้เป็นแค่ตัวกันพลาด
+// ถอยเวลากลับ 1 นาทีเผื่อแถวที่ commit ช้ากว่าเวลาที่ประทับ (ได้ซ้ำไม่เสียหาย แทนที่ตาม id) · โหลดเต็มทุก 10 นาที (เผื่อแชทถูกลบ/รวม)
+let chatSync = null, lastFullChats = 0;
+const FULL_CHATS_MS = 10 * 60 * 1000, SYNC_OVERLAP_MS = 60 * 1000;
+const tsOf = v => { const t = Date.parse(v || ''); return isNaN(t) ? 0 : t; };
+const maxUpdated = rows => rows.reduce((m, r) => tsOf(r.updated_at) > tsOf(m) ? r.updated_at : m, null);
+// คืน Set ของแชทที่เปลี่ยน · null = เพิ่งโหลดเต็ม (ถือว่าอาจเปลี่ยนทุกแชท)
+async function syncChats(){
+  if(!chatSync || Date.now() - lastFullChats > FULL_CHATS_MS){ await loadChats(); return null; }
+  const acctId = acct.id, since = new Date(tsOf(chatSync) - SYNC_OVERLAP_MS).toISOString();
+  const { data, error } = await sb.from('pur_chats').select('*').eq('account_id', acctId).gt('updated_at', since);
+  if(error) throw new Error(error.message);
+  if(acct?.id !== acctId) return new Set();                      // สลับบัญชีระหว่างรอ → ทิ้งผลของบัญชีเก่า
+  const rows = data || [], m = maxUpdated(rows);
+  if(tsOf(m) > tsOf(chatSync)) chatSync = m;
+  // realtime อาจอัปเดตแถวไปก่อนแล้ว (รูปแบบเวลาอาจต่างกัน → เทียบเป็นมิลลิวินาที)
+  const changed = rows.filter(r => { const o = chatById.get(r.id); return !o || tsOf(o.updated_at) !== tsOf(r.updated_at); });
+  if(!changed.length) return new Set();
+  const before = paintSnap || snapshot();
+  for(const r of changed){ const i = chats.findIndex(c => c.id === r.id); if(i >= 0) chats[i] = r; else chats.push(r); chatById.set(r.id, r); }
+  chats.sort((a, b) => tsOf(b.last_message_at) - tsOf(a.last_message_at));   // ลำดับเดียวกับ loadChats (ล่าสุดก่อน ไม่มีเวลาไว้ท้าย)
+  if(typeof paintSnap !== 'undefined') paintSnap = null;
+  detectNew(before); renderList(); updateBadges();
+  if(activeId && chatById.get(activeId)) renderChatHeader(chatById.get(activeId));
+  return new Set(changed.map(r => r.id));
+}
+// แชทที่เปิดอยู่มีข้อความใหม่กว่าที่โหลดไว้ไหม (ไม่มี = ไม่ต้องโหลดข้อความ 120 อันซ้ำ)
+function activeMissingMsgs(){
+  const c = chatById.get(activeId), list = msgCache[activeId] || [];
+  if(!c || !c.last_message_at) return false;
+  const newest = list.reduce((mx, x) => Math.max(mx, tsOf(x.sent_at), tsOf(x.created_at)), 0);
+  return tsOf(c.last_message_at) > newest + 1000;
 }
 // ข้อความโหลดทีละหน้าแบบ LINE: เปิดแชทเห็นข้อความล่าสุดด้านล่าง เลื่อนขึ้นบนสุดเพื่อโหลดข้อความเก่ากว่า
 const MSG_PAGE = 120;
@@ -1193,8 +1239,10 @@ async function loadMsgs(chatId){
 }
 // โหลดข้อความของแชทที่เปิดอยู่ใหม่ — จำ id ไว้ก่อน await แล้วเช็คซ้ำหลัง await
 // (ระหว่างรอ ผู้ใช้อาจเปิดแชทอื่นไปแล้ว → ห้ามวาดข้อความของแชทเก่าลงใต้หัวแชทใหม่)
+let lastMsgRefresh = 0;
 async function refreshActiveMsgs(){
   const id = activeId; if(!id) return;
+  lastMsgRefresh = Date.now();
   const msgs = await loadMsgs(id);
   if(activeId === id) renderMsgs(msgs);
 }
@@ -1737,9 +1785,11 @@ async function resolveMedia(area){
   const els = [...area.querySelectorAll('[data-path]')]; if(!els.length || DEMO) return;
   const need = [...new Set(els.map(e => e.dataset.path))].filter(p => { const c = signedCache.get(p); return !(c && c.exp > Date.now()); });
   if(need.length){
-    const { data, error } = await sb.storage.from(BUCKET).createSignedUrls(need, 3600);
+    const { data, error } = await sb.storage.from(BUCKET).createSignedUrls(need, SIGN_TTL_S);
     if(error){ console.warn('signed urls:', error.message); return; }
-    (data || []).forEach(r => { if(r.signedUrl) signedCache.set(r.path, { url:r.signedUrl, exp:Date.now() + 50*60*1000 }); });
+    // ใช้ต่อจนเหลืออายุ 1 ชม. (เผื่อเปิดดูนานๆ แล้วลิงก์หมดกลางทาง)
+    (data || []).forEach(r => { if(r.signedUrl) signedCache.set(r.path, { url:r.signedUrl, exp:Date.now() + (SIGN_TTL_S - 3600) * 1000 }); });
+    saveSigned();
   }
   els.forEach(e => { const c = signedCache.get(e.dataset.path); if(!c) return; if(e.tagName === 'A') e.dataset.url = c.url; else e.src = c.url; });
 }
@@ -2437,7 +2487,9 @@ function renderRangeLabel(){
   const [from, to] = currentRange();
   $('dashRangeLabel').textContent = `ช่วง ${thDate(from)} – ${thDate(addDays(to, -1))} · นับตาม${clockMode === 'biz' ? 'เวลาทำการ' : 'เวลาจริง 24 ชม.'} · SLA ${settings?.sla_minutes ?? '–'} นาที`;
 }
+let dashLoadedAt = 0;
 async function loadDash(){
+  dashLoadedAt = Date.now();
   // เลขลำดับคำขอ — เดิมทิ้งคำขอที่ซ้อนกันทั้งก้อน แต่ปุ่มช่วงเวลา/dash.preset เปลี่ยนไปแล้ว → ข้อมูลช่วงเก่าถูกวาดบนแกนช่วงใหม่
   // ตอนนี้คำขอใหม่วิ่งได้เลย ส่วนผล (และ error) ของคำขอเก่าที่กลับมาทีหลังถูกทิ้ง
   const seq = dash.seq = (dash.seq || 0) + 1;
@@ -3927,7 +3979,15 @@ function startAutoRefresh(){
   if(refreshTimer) return;
   const tick = async () => {
     if(document.hidden || refreshing || DEMO) return; refreshing = true;
-    try{ await loadChats(); await refreshActiveMsgs(); if(view === 'dash') await loadDash(); }   // refreshActiveMsgs เช็ค activeId ซ้ำหลัง await — ไม่วาดข้อความแชทเก่าทับแชทที่เพิ่งเปิด
+    // v2.04 ประหยัดแบนด์วิดท์: ขอเฉพาะแชทที่เปลี่ยน · ข้อความของแชทที่เปิดอยู่โหลดใหม่เฉพาะเมื่อมีข้อความใหม่ที่ยังไม่มี (หรือทุก 5 นาที)
+    // แดชบอร์ดโหลดใหม่เมื่อมีแชทเปลี่ยนและห่างจากครั้งก่อน ≥2 นาที (หรือทุก 10 นาที) — realtime ส่งของใหม่มาให้อยู่แล้ว
+    try{
+      const changed = await syncChats(), now = Date.now();
+      if(activeId && (changed === null || (changed.has(activeId) && activeMissingMsgs()) || now - lastMsgRefresh > 5 * 60 * 1000))
+        await refreshActiveMsgs();   // เช็ค activeId ซ้ำหลัง await — ไม่วาดข้อความแชทเก่าทับแชทที่เพิ่งเปิด
+      if(view === 'dash' && ((changed === null || changed.size) && now - dashLoadedAt > 2 * 60 * 1000 || now - dashLoadedAt > 10 * 60 * 1000))
+        await loadDash();
+    }
     catch(e){ console.warn('auto refresh:', e.message); } finally{ refreshing = false; }
   };
   refreshTimer = setInterval(tick, REFRESH_MS);
