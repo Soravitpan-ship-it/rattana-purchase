@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="RTN Chat Hub">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.04">
-<title>RTN Chat Hub v2.04</title>
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.05">
+<title>RTN Chat Hub v2.05</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -641,7 +641,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.04 · 24/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.05 · 25/09/2569</div>
   </div>
 </div>
 
@@ -665,7 +665,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
     <div class="logo-text">RTN <span>Chat Hub</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.04</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.05</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -904,12 +904,13 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  RTN Chat Hub v2.04 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  RTN Chat Hub v2.05 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
 //  v2.02: บัญชีเลือกได้ว่า "แบ่งงานรายแชท" หรือไม่ (pur_settings.use_assignee) — ปิดแล้วซ่อนผู้รับผิดชอบ/รหัส PU ทั้งแอพ
 //  v2.03: แชทเก่าที่ยังไม่มีรหัส LINE — ข้อความเตือนใช้คำของบัญชีนั้น (ลูกค้า/ซัพ) ไม่พูดถึงใบสั่งสินค้านอกบัญชีจัดซื้อ
 //  v2.04: ประหยัดโควตา Supabase แพ็กเกจฟรี — รอบอัตโนมัติขอเฉพาะแชทที่เปลี่ยน (pur_chats.updated_at) · ข้อความ/แดชบอร์ดโหลดเมื่อจำเป็น · ลิงก์รูปอายุ 1 วันจำในเครื่อง
+//  v2.05: ตัววาดการ์ด Flex ตีความแบบ LINE — flex 0 = กว้างตามเนื้อหา · ค่าปริยายในกล่องแนวนอน = 1 · ข้อความไม่ wrap = บรรทัดเดียว · aspectRatio ของรูป
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -1542,6 +1543,14 @@ function fxOffset(n){
   if(e) out.push(`right:${e}`);
   return out;
 }
+// flex แบบ LINE (v2.05): ในกล่องแนวนอน ค่าปริยาย = 1 (แบ่งพื้นที่ที่เหลือตามสัดส่วน) · แนวตั้ง = ไม่ยืด
+// flex 0 = "กว้างตามเนื้อหา ไม่ยืดไม่หด" — เดิมแปลงเป็น CSS flex:0 (= 0 1 0%) กล่องเลยถูกบีบเหลือศูนย์
+// ป้าย "เลขที่ออเดอร์" ของการ์ด Rattana Official จึงตัดคำทีละตัวอักษรเป็นแนวตั้ง และช่องรูปสินค้า (width 48px) กว้าง 0 จนรูปหาย
+function fxFlex(n, horiz){
+  const fl = fxNum(n.flex), v = fl !== null ? fl : (horiz ? 1 : null);
+  if(v === null) return [];
+  return v === 0 ? ['flex:0 0 auto', 'max-width:100%'] : [`flex:${v} 1 0%`, 'min-width:0'];
+}
 // margin ของ LINE คิดจาก "ด้านต้น" ของกล่องแม่ — แนวตั้งคือด้านบน แนวนอนคือด้านซ้าย
 const fxMargin = (n, horiz) => {
   const m = fxLen(n.margin, FX_GAP);
@@ -1557,10 +1566,11 @@ function fxText(n, horiz){
   if(n.align === 'center' || n.align === 'end') st.push(`text-align:${n.align === 'end' ? 'right' : 'center'}`);
   if(n.gravity === 'center' || n.gravity === 'bottom') st.push(`align-self:${n.gravity === 'bottom' ? 'flex-end' : 'center'}`);
   const ls = fxLen(n.lineSpacing);     if(ls) st.push(`line-height:calc(1em + ${ls})`);
-  const fl = fxNum(n.flex);            if(fl !== null) st.push(`flex:${fl}`);
+  st.push(...fxFlex(n, horiz));
   if(n.decoration === 'line-through') st.push('text-decoration:line-through');
   else if(n.decoration === 'underline') st.push('text-decoration:underline');
-  if(n.wrap === false) st.push('white-space:nowrap;overflow:hidden;text-overflow:ellipsis');
+  // LINE: ข้อความที่ไม่ได้ตั้ง wrap:true อยู่บรรทัดเดียว ยาวเกินตัดด้วย … (เดิมปล่อยตัดบรรทัด การ์ดเลยสูงเกินและจัดแถวเพี้ยน)
+  if(n.wrap !== true) st.push('white-space:nowrap;overflow:hidden;text-overflow:ellipsis');
   else if(fxNum(n.maxLines)) st.push(`display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:${fxNum(n.maxLines)};overflow:hidden`);
   st.push(...fxMargin(n, horiz), ...fxOffset(n));
   // span ซ้อนในข้อความ (LINE ใช้ทำตัวหนา/สีในบรรทัดเดียว)
@@ -1598,8 +1608,9 @@ function fxBox(n, depth, horiz, blockCls, defPad){
   const ps = fxLen(n.paddingStart, FX_GAP)  || pa || dp;
   if(pt || pe || pb || ps) st.push(`padding:${pt || 0} ${pe || 0} ${pb || 0} ${ps || 0}`);
 
-  const fl = fxNum(n.flex);                 if(fl !== null) st.push(`flex:${fl}`);
-  const w = fxLen(n.width);                 if(w) st.push(`width:${w};flex-shrink:0`);
+  // กำหนดกว้างเอง = กว้างเท่านั้น ไม่ยืดไม่หด (LINE ไม่เอา flex มาคิดเมื่อมี width) · ไม่มี = flex แบบ LINE
+  const w = fxLen(n.width);
+  if(w) st.push(`width:${w}`, 'flex:0 0 auto'); else st.push(...fxFlex(n, horiz));
   const h = fxLen(n.height);                if(h) st.push(`height:${h}`);
   const mw = fxLen(n.maxWidth);             if(mw) st.push(`max-width:${mw}`);
   st.push(...fxMargin(n, horiz), ...fxOffset(n));
@@ -1635,11 +1646,16 @@ function fxNode(n, depth = 0, horiz = false){
       const u = fxUrl(n.url); if(!u) return '';
       const st = [...fxMargin(n, horiz)];
       const w = n.size === 'full' ? '100%' : fxLen(n.size, FX_IMG); if(w) st.push(`width:${w}`);
-      if(n.aspectMode === 'cover') st.push('object-fit:cover');
+      if(horiz) st.push(...fxFlex(n, horiz));
+      // สัดส่วนรูปแบบ LINE ("1:1", "20:13") — ไม่ใส่ รูปสินค้าจะสูงไม่เท่ากันตามไฟล์ต้นฉบับ
+      const ar = /^(\d{1,4}(?:\.\d+)?):(\d{1,4}(?:\.\d+)?)$/.exec(String(n.aspectRatio || ''));
+      if(ar) st.push(`aspect-ratio:${ar[1]}/${ar[2]};height:auto`);
+      st.push(`object-fit:${n.aspectMode === 'cover' ? 'cover' : 'contain'}`);
       if(n.align === 'center') st.push('margin-left:auto;margin-right:auto');
       else if(n.align === 'end') st.push('margin-left:auto');
       const act = fxUrl(n.action?.uri);
-      const img = `<img class="fx-img" style="${st.join(';')}" src="${esc(u)}" alt="" loading="lazy">`;
+      // no-referrer: รูปจาก Google Drive/Googleusercontent บางลิงก์ไม่ยอมให้เว็บอื่นดึงเมื่อเห็นที่มา
+      const img = `<img class="fx-img" style="${st.join(';')}" src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer">`;
       return act ? `<a href="${esc(act)}" target="_blank" rel="noopener">${img}</a>` : img;
     }
     case 'button': {
