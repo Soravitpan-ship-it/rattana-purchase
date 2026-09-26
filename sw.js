@@ -1,4 +1,4 @@
-/* RTN Chat Hub — Service Worker v2 (หลายบัญชี: กดแจ้งเตือนแล้วเปิดแชทในบัญชีของมัน)
+/* Rattana One Chat (เดิม RTN Chat Hub) — Service Worker v3 (หลายบัญชี: กดแจ้งเตือนแล้วเปิดแชทในบัญชีของมัน)
    หน้าที่เดียว: รับ Web Push แล้วเด้งแจ้งเตือนของเครื่อง แม้ปิดแอพอยู่
    ไม่ cache ไฟล์แอพ (แอพเป็นไฟล์เดียว อัปเดตบ่อย — cache แล้วจะได้ของเก่า) */
 
@@ -6,15 +6,17 @@ self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 
 const ICON = 'icon-192.png';
+// ไอคอนของแจ้งเตือน = รูปประจำบัญชีที่แชทนั้นอยู่ (badge ยังเป็นไอคอนแอพ — Android ใช้ทำสัญลักษณ์ขาวดำบนแถบสถานะ)
+const ACCT_ICON = { 1:'acct-purchase.png', 2:'acct-rpbsale.jpg', 3:'acct-rattanamart.jpg' };
 
 self.addEventListener('push', event => {
   let d = {};
   try { d = event.data ? event.data.json() : {}; } catch (_) { d = { body: event.data && event.data.text() }; }
 
-  const title = d.title || 'RTN Chat Hub';
+  const title = d.title || 'Rattana One Chat';
   const opts = {
     body: d.body || '',
-    icon: ICON,
+    icon: ACCT_ICON[d.account] || ICON,
     badge: ICON,
     // เรื่องเดียวกันเด้งทับอันเดิม ไม่ท่วมจอ · renotify ให้สั่นซ้ำเมื่อมีอันใหม่จริง
     tag: d.tag || 'pur',

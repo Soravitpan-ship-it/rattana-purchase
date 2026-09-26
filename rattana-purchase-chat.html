@@ -6,11 +6,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="RTN Chat Hub">
+<meta name="apple-mobile-web-app-title" content="Rattana One Chat">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.07">
-<title>RTN Chat Hub v2.07</title>
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.08">
+<!-- แอพรุ่น v2.0–v2.07 หาเลขเวอร์ชันด้วยชื่อ "RTN Chat Hub vX" — คงไว้ให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบอัปเดต -->
+<meta name="x-app-legacy2" content="RTN Chat Hub v2.08">
+<title>Rattana One Chat v2.08</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -711,6 +713,11 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 }
 @media (prefers-reduced-motion:no-preference){ .ov-track .p{transition:left .3s} }
 .acct-av{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:700;font-size:14px;flex-shrink:0}
+.acct-av.has-img{background:#fff;overflow:hidden;box-shadow:0 0 0 1px var(--border)}
+.acct-av.has-img img{width:100%;height:100%;object-fit:cover;display:block}
+.acct-av.ov-av{width:38px;height:38px;border-radius:10px}
+.ov-at h3 .ov-dot{width:9px;height:9px;vertical-align:1px;margin-right:2px}
+.hdr-av{width:14px;height:14px;border-radius:4px;object-fit:cover;vertical-align:-2px;margin-right:5px;background:#fff}
 .acct-meta{flex:1;min-width:0;display:block}
 .acct-meta b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .acct-meta small{display:block;font-size:11.5px;color:var(--muted)}
@@ -742,7 +749,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
   <div class="login-card">
     <div class="lg-logo">
       <i class="brand-mark" style="width:92px;height:92px" aria-hidden="true"></i>
-      <b>RTN <span>Chat Hub</span></b>
+      <b>Rattana <span>One Chat</span></b>
       <em>แชท LINE ทุกบัญชี · แดชบอร์ดการตอบแชท</em>
     </div>
     <h2>เข้าสู่ระบบ</h2>
@@ -758,7 +765,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.07 · 26/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana One Chat v2.08 · 26/09/2569</div>
   </div>
 </div>
 
@@ -781,7 +788,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 <div id="ovGate" class="hide" role="dialog" aria-label="ภาพรวมทุกบัญชี">
   <div class="ov-bar">
     <button class="ov-back" onclick="closeOverview()" title="กลับ" aria-label="กลับ"><span data-ic="chevright" style="display:inline-flex;transform:rotate(180deg)"></span></button>
-    <div class="ov-ttl"><h1>RTN Chat Hub · <span>ภาพรวมทุกบัญชี</span></h1><div class="sub" id="ovSub"></div></div>
+    <div class="ov-ttl"><h1>Rattana One Chat · <span>ภาพรวมทุกบัญชี</span></h1><div class="sub" id="ovSub"></div></div>
     <div class="ov-seg" id="ovSeg" role="group" aria-label="ช่วงเวลา"><button data-p="this" class="on" onclick="setOvPeriod('this')">สัปดาห์นี้</button><button data-p="last" onclick="setOvPeriod('last')">สัปดาห์ที่แล้ว</button></div>
     <button class="ov-ref" onclick="loadOverview()" title="โหลดตัวเลขใหม่" aria-label="โหลดตัวเลขใหม่"><span data-ic="refresh"></span></button>
   </div>
@@ -806,8 +813,8 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 <header class="app-hdr">
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
-    <div class="logo-text">RTN <span>Chat Hub</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.07</span>
+    <div class="logo-text">Rattana <span>One Chat</span></div>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.08</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -1046,7 +1053,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  RTN Chat Hub v2.07 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  Rattana One Chat v2.08 (เดิม RTN Chat Hub) — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
 //  v2.02: บัญชีเลือกได้ว่า "แบ่งงานรายแชท" หรือไม่ (pur_settings.use_assignee) — ปิดแล้วซ่อนผู้รับผิดชอบ/รหัส PU ทั้งแอพ
@@ -1055,6 +1062,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 //  v2.05: ตัววาดการ์ด Flex ตีความแบบ LINE — flex 0 = กว้างตามเนื้อหา · ค่าปริยายในกล่องแนวนอน = 1 · ข้อความไม่ wrap = บรรทัดเดียว · aspectRatio ของรูป
 //  v2.06: การ์ดจากระบบอัตโนมัติที่ยังไม่ได้ส่งเนื้อการ์ดเข้าแอพ (OA Manager ให้มาแค่ altText) ขึ้นเป็นป้าย "การ์ดจากระบบ…" แทน "แอดมิน OA"
 //  v2.07: หน้า "ภาพรวมทุกบัญชี" (ผู้ดูแลระบบ/หัวหน้า) — รวมทุกบัญชีในหน้าเดียว เทียบสัปดาห์นี้กับสัปดาห์ก่อน · ใครตอบช้าสุด · ใครตอบผ่านช่องทางไหน
+//  v2.08: เปลี่ยนชื่อเป็น Rattana One Chat + โลโก้ใหม่ · รูปประจำบัญชี (ACCT_LOGO) ในหน้าเลือกบัญชี เมนู หัวแอพ ตั้งค่า ภาพรวม และแจ้งเตือน
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -1064,7 +1072,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 // เขียนเลขไว้ที่เดียวพอ แก้ที่ <title> แล้วทุกอย่างตามเอง
 // เดิมแยกเป็นตัวแปรต่างหาก พอขึ้นเวอร์ชันแล้วลืมแก้ ตัวเช็คเห็นเลขไม่ตรงกันตลอด
 // แถบ "มีเวอร์ชันใหม่" เลยเด้งซ้ำไม่จบต่อให้กดอัปเดตกี่รอบ
-const APP_VERSION   = (/RTN Chat Hub v([0-9.]+)/.exec(document.title) || [, '0'])[1];
+const APP_VERSION   = (/(?:Rattana One Chat|RTN Chat Hub) v([0-9.]+)/.exec(document.title) || [, '0'])[1];
 
 // ── ไอคอนเส้นแทนอิโมจิ ──
 // วาดด้วย SVG ในตัว (ลายเส้นแบบ Lucide, MIT) ไม่โหลดอะไรจากข้างนอก สีตามตัวอักษรของที่ที่มันอยู่
@@ -1118,7 +1126,7 @@ const FN_SEND = 'pur-send';       // Edge Function ส่งข้อควา�
 // แล้วทุกคำสั่งในฟังก์ชันต้องวิ่งข้ามไปโตเกียวแล้วกลับ ~10 รอบ ส่งหนึ่งข้อความช้าไปเกือบวินาที)
 const FN_REGION = 'ap-northeast-1';
 const BUCKET  = 'pur-media';      // bucket ส่วนตัว เก็บรูป-ไฟล์ (เปิดผ่านลิงก์ลงนามเท่านั้น)
-const MARK    = 'data:image/png;base64,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';
+const MARK    = 'data:image/png;base64,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';
 const DEMO    = new URLSearchParams(location.search).get('demo') === '1';   // ?demo=1 = ข้อมูลสมมติ ไม่ต่อเน็ต
 const sb      = DEMO ? null : supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
@@ -1131,6 +1139,11 @@ let acct = null;                      // บัญชีที่เปิดอ
 const acctName = () => acct?.name || 'LINE';
 const curOaId  = () => acct?.oa_id || LINE_OA_ID;
 const acctCls  = a => 'ac-' + (/^(teal|purple|coral|pink|blue|amber)$/.test(a?.color || '') ? a.color : 'teal');
+// รูปประจำบัญชี (ไฟล์อยู่ข้างแอพใน site/) — บัญชีที่ไม่มีรูปใช้อักษรย่อ + สีเดิม
+const ACCT_LOGO = { purchase:'acct-purchase.png', rpbsale:'acct-rpbsale.jpg', rattanamart:'acct-rattanamart.jpg' };
+const acctAv = (a, cls = '') => ACCT_LOGO[a?.slug]
+  ? `<span class="acct-av has-img ${cls}"><img src="${ACCT_LOGO[a.slug]}" alt="" loading="lazy"></span>`
+  : `<span class="acct-av ${acctCls(a)} ${cls}">${esc(acctIni(a))}</span>`;
 const acctIni  = a => { const w = String(a?.name || '?').trim().split(/\s+/); return (w.length > 1 ? w[0][0] + w[1][0] : w[0].slice(0, 2)).toUpperCase(); };
 // คำเรียกอีกฝั่งของแชท: จัดซื้อคุยกับซัพพลายเออร์ · แผนกอื่นคุยกับลูกค้า
 const peer = () => !acct || acct.id === 1 ? 'ซัพพลายเออร์' : 'ลูกค้า';
@@ -1521,7 +1534,7 @@ function filterConv(q){ searchQ = q; resetList(); renderList(); }
 function updateBadges(){
   const n = chats.filter(isWaiting).length;
   ['tb-chat', 'bn-chat'].forEach(id => { const e = $(id); if(e) e.textContent = n || ''; });
-  document.title = (n ? `(${n}) ` : '') + `RTN Chat Hub v${APP_VERSION}`;
+  document.title = (n ? `(${n}) ` : '') + `Rattana One Chat v${APP_VERSION}`;
   setAppBadge(n);
 }
 // เลขบนไอคอนแอพที่หน้าจอโฮม (มือถือ/คอมที่ติดตั้งแอพไว้) = จำนวนงานที่รอตอบ
@@ -2430,7 +2443,7 @@ async function checkUpdate(){
                             { cache:'no-store', headers:{ Range:'bytes=0-1500' } });
     if(!res.ok && res.status !== 206) return;
     const head = await res.text();
-    const m = /RTN Chat Hub v([0-9.]+)/.exec(head);
+    const m = /(?:Rattana One Chat|RTN Chat Hub) v([0-9.]+)/.exec(head);
     if(!m || m[1] === APP_VERSION || m[1] === updSeen) return;
     updSeen = m[1];
     $('updVer').textContent = 'v' + m[1];
@@ -3521,7 +3534,7 @@ function exportDashExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(buckets.map(b => ({ 'วันที่':b.full, 'ทันเวลา':b.ok, 'ช้ากว่า SLA':b.late, 'ยังไม่ตอบ':b.open, 'ไม่ต้องตอบ':b.dis, 'รวม':b.ok + b.late + b.open + b.dis }))), 'รายวัน');
   const meta = [{ 'รายการ':'ช่วงเวลา', 'ค่า':`${thDate(from)} – ${thDate(addDays(to, -1))}` }, { 'รายการ':'นาฬิกา', 'ค่า':clockMode === 'biz' ? `เวลาทำการ ${settings.work_start}–${settings.work_end}` : '24 ชม.' }, { 'รายการ':'SLA (นาที)', 'ค่า':sla / 60 }, { 'รายการ':'ส่งออกเมื่อ', 'ค่า':thDateTime(new Date()) }, { 'รายการ':'โดย', 'ค่า':me?.email || '' }];
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(meta), 'เงื่อนไข');
-  XLSX.writeFile(wb, `Rattana Purchase Chat - รายงานการตอบแชท ${thDate(from).replace(/\//g, '')}-${thDate(addDays(to, -1)).replace(/\//g, '')}.xlsx`);
+  XLSX.writeFile(wb, `Rattana One Chat - รายงานการตอบแชท ${thDate(from).replace(/\//g, '')}-${thDate(addDays(to, -1)).replace(/\//g, '')}.xlsx`);
 }
 let resizeT = null;
 window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if(view === 'dash' && dashLoadedOnce) renderDash(); }, 200); });
@@ -3573,7 +3586,7 @@ function accountsCardHtml(){
     const x = st.get(a.id) || {};
     const hook = x.last_webhook_at ? `<span class="pill ok">webhook รับข้อความล่าสุด ${esc(timeAgo(x.last_webhook_at))}</span>` : '<span class="pill warn">ยังไม่มีข้อความเข้าทาง webhook</span>';
     const ext = x.bot_locked ? `<span class="pill ok">ส่วนขยายต่อแล้ว${x.oa_last_ingest_at ? ' · ล่าสุด ' + esc(timeAgo(x.oa_last_ingest_at)) : ''}</span>` : '<span class="pill grey">ยังไม่ต่อส่วนขยาย</span>';
-    return `<div class="acct-row"><span class="acct-av ${acctCls(a)}">${esc(acctIni(a))}</span>
+    return `<div class="acct-row">${acctAv(a)}
       <div style="flex:1;min-width:0"><b>${esc(a.name)}</b> <span class="mini">${esc([a.dept, a.oa_id].filter(Boolean).join(' · '))}${a.active ? '' : ' · ปิดใช้งาน'}</span>
         <div class="acct-pills">${hook}${ext}${x.chats != null ? `<span class="pill grey">${nf(x.chats)} แชท</span>` : ''}${x.forward ? '<span class="pill grey" title="ข้อความจาก LINE ถูกส่งต่อให้ระบบเดิมของบัญชีนี้ด้วย">ส่งต่อระบบเดิม</span>' : ''}</div>
         <div class="acct-url"><code title="${esc(webhookUrl(a))}">${esc(webhookUrl(a))}</code>
@@ -3940,7 +3953,7 @@ function aboutCardHtml(){
     <b>เวลาทำการ</b> = นับเฉพาะช่วงเวลางานของวันทำงาน ไม่นับวันหยุด · <b>24 ชม.</b> = เวลาจริง<br>
     <b>ผู้รับผิดชอบ</b>ของงาน = ผู้รับผิดชอบแชท ณ ตอนที่งานเข้า (ถ้ายังไม่มี = คนที่ตอบ) · เปลี่ยนผู้รับผิดชอบแชทจะย้ายเฉพาะงานที่ยังค้าง<br>
     <b>หลายบัญชี</b> = แต่ละบัญชี LINE มีทีม ผู้รับผิดชอบ รหัส PU เวลาทำการ SLA และคำรับทราบของตัวเอง · ตัวเลขทุกหน้าเป็นของบัญชีที่เปิดอยู่ · สลับบัญชีได้ที่ชื่อบัญชีบนหัวแอพ<br>
-    <span class="txt-muted">RTN Chat Hub v${APP_VERSION} · บัญชี ${esc(acctName())} · ${DEMO ? 'โหมดตัวอย่าง' : 'Supabase ' + SUPABASE_URL.replace('https://', '').split('.')[0]}</span></div></div>`;
+    <span class="txt-muted">Rattana One Chat v${APP_VERSION} · บัญชี ${esc(acctName())} · ${DEMO ? 'โหมดตัวอย่าง' : 'Supabase ' + SUPABASE_URL.replace('https://', '').split('.')[0]}</span></div></div>`;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -4193,8 +4206,8 @@ function renderOverview(){
     if(c.unknown) flags.push(`<div class="ov-flag">ยังไม่รู้ว่าใครตอบ ${nf(c.unknown)} งาน · ผูกชื่อแอดมิน OA / ตั้ง "คนในบริษัท" ในหน้าตั้งค่าของบัญชีนี้ แล้วระบบนับให้ย้อนหลัง</div>`);
     if(!pv && c.waits) flags.push(`<div class="ov-flag info">ยังไม่มีข้อมูล${esc(ov.R.prevName)}ให้เทียบ</div>`);
     return `<article class="ov-panel ov-acct">
-      <div class="ov-at"><i class="ov-dot" style="background:${ovCol(a.id)}"></i>
-        <div style="min-width:0"><h3>${esc(a.name)}</h3><div class="mode">${x.st.use_assignee !== false ? 'แบ่งงานรายแชท' : 'แอดมินใครว่างก็ตอบ'} · ${team ? `ทีม ${nf(team)} คน` : 'ยังไม่มีทีม'}</div></div>
+      <div class="ov-at">${acctAv(a, 'ov-av')}
+        <div style="min-width:0"><h3><i class="ov-dot" style="background:${ovCol(a.id)}"></i> ${esc(a.name)}</h3><div class="mode">${x.st.use_assignee !== false ? 'แบ่งงานรายแชท' : 'แอดมินใครว่างก็ตอบ'} · ${team ? `ทีม ${nf(team)} คน` : 'ยังไม่มีทีม'}</div></div>
         <div class="open ${(a.awaiting || 0) > 20 ? 'hot' : ''}"><b>${nf(a.awaiting || 0)}</b>ค้างตอนนี้</div></div>
       <div class="ov-mets">
         <div class="ov-met"><div class="lb">งานรอตอบ</div><div class="v">${nf(c.waits)}</div><div class="c">${pv ? ovDelta(c.waits, p.waits, 0) : ''}</div></div>
@@ -4341,7 +4354,7 @@ function acctItemHtml(a, big){
     a.active ? '' : '<span class="pill grey">ปิดใช้งาน</span>',
   ].join('');
   return `<button class="${big ? 'acct-item' : ''}" data-id="${a.id}" onclick="enterAccount(+this.dataset.id)">
-    <span class="acct-av ${acctCls(a)}">${esc(acctIni(a))}</span>
+    ${acctAv(a)}
     <span class="acct-meta"><b>${esc(a.name)}${big && last ? ' <span class="pill grey" style="font-size:10px;vertical-align:1px">ใช้ล่าสุด</span>' : ''}</b>
       <small>${esc([a.dept, a.oa_id, roleLabel(a.role)].filter(Boolean).join(' · '))}</small>
       <span class="acct-pills">${pills}</span></span>
@@ -4373,7 +4386,7 @@ function renderAcctHeader(){
   const multi = accounts.length > 1;
   // ลูกศรต่อท้ายชื่อบัญชีเลย (ไม่ใช่ท้ายบรรทัด) — จอแคบบรรทัดนี้ถูกตัดด้วย … แล้วลูกศรจะหาย · แผนกดูได้ในเมนู
   $('hdrGreet').innerHTML = acct
-    ? `${esc(acct.name)}${multi ? ic('chevdown') : ''} · ${esc(roleLabel(me.role))}`
+    ? `${ACCT_LOGO[acct.slug] ? `<img class="hdr-av" src="${ACCT_LOGO[acct.slug]}" alt="">` : ''}${esc(acct.name)}${multi ? ic('chevdown') : ''} · ${esc(roleLabel(me.role))}`
     : `แชท LINE · v${esc(APP_VERSION)}`;
   $('hdrAcct').classList.toggle('hdr-acct', multi);
   $('hdrAcct').title = multi ? 'สลับบัญชี LINE' : '';

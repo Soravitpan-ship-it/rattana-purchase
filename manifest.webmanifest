@@ -1,7 +1,7 @@
 {
-  "name": "RTN Chat Hub",
-  "short_name": "RTN Chat Hub",
-  "description": "แชท LINE OA ทุกบัญชีของรัตนไพบูลย์ + แดชบอร์ดผลงานการตอบแชท",
+  "name": "Rattana One Chat",
+  "short_name": "One Chat",
+  "description": "Rattana One Chat — แชท LINE OA ทุกบัญชีของรัตนไพบูลย์ + แดชบอร์ดผลงานการตอบแชท",
   "lang": "th",
   "dir": "ltr",
   "start_url": "rattana-purchase-chat.html",
