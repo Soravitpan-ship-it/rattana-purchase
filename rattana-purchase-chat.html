@@ -9,10 +9,10 @@
 <meta name="apple-mobile-web-app-title" content="Rattana One Chat">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.09">
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.10">
 <!-- แอพรุ่น v2.0–v2.07 หาเลขเวอร์ชันด้วยชื่อ "RTN Chat Hub vX" — คงไว้ให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบอัปเดต -->
-<meta name="x-app-legacy2" content="RTN Chat Hub v2.09">
-<title>Rattana One Chat v2.09</title>
+<meta name="x-app-legacy2" content="RTN Chat Hub v2.10">
+<title>Rattana One Chat v2.10</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -765,7 +765,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana One Chat v2.09 · 26/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana One Chat v2.10 · 26/09/2569</div>
   </div>
 </div>
 
@@ -796,7 +796,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
     <div class="ov-period" id="ovPeriod">กำลังโหลด…</div>
     <section class="ov-kpis" id="ovKpis"></section>
     <section class="ov-sec"><div class="ov-h"><h2>แต่ละบัญชี</h2><span class="hint">ตัวเลขหลักของทุกบัญชีวางเทียบกัน</span></div><div class="ov-accts" id="ovAccts"></div></section>
-    <section class="ov-sec"><div class="ov-h"><h2>งานรอตอบรายวัน</h2><span class="hint" id="ovDailyHint"></span></div>
+    <section class="ov-sec"><div class="ov-h"><h2>ข้อความที่ทักเข้ามารายวัน</h2><span class="hint" id="ovDailyHint"></span></div>
       <div class="ov-panel ov-chart"><div class="ov-leg" id="ovDailyLeg"></div><div id="ovDaily"></div></div></section>
     <section class="ov-sec"><div class="ov-h"><h2>อันดับตอบทัน SLA</h2><span class="hint">เรียงจาก % ตอบทัน SLA มากไปน้อย (ตอบตั้งแต่ 10 งาน) · อันดับท้าย = ตอบช้าสุด · จุดสี = ช่วงนี้ · จุดเทา = สัปดาห์ก่อน</span><div class="ov-chips" id="ovChips"></div></div>
       <div class="ov-two"><div class="ov-panel ov-rank"><div class="ov-scale"><div></div><div></div><div><span>0%</span><span>50%</span><span>100%</span></div><div></div></div><div id="ovRank"></div></div>
@@ -814,7 +814,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
     <div class="logo-text">Rattana <span>One Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.09</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.10</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -953,7 +953,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 
       <div class="card card-gold">
         <div class="card-head">
-          <h3><span class="hb info" data-ic="calendar"></span>งานรอตอบรายวัน <span class="mini" id="dailyUnit"></span></h3>
+          <h3><span class="hb info" data-ic="calendar"></span>ข้อความที่ทักเข้ามารายวัน <span class="mini" id="dailyUnit"></span></h3>
           <div class="acts"><button class="toggle-btn" onclick="toggleTable('daily')">ตาราง</button></div>
           <div class="hint">นับตามวันที่<span class="peer-word">ซัพพลายเออร์</span>ทักเข้ามา · <b>ทันเวลา</b> = ตอบภายใน SLA · <b>ช้า</b> = ตอบแต่เกิน SLA · <b>ยังไม่ตอบ</b> = ค้างอยู่ตอนนี้ · ข้อความรับทราบ (ขอบคุณ/สติกเกอร์) ไม่นับ</div>
         </div>
@@ -976,7 +976,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
           <div class="card-head">
             <h3><span class="hb warn" data-ic="flame"></span>ช่วงเวลาที่<span class="peer-word">ซัพพลายเออร์</span>ทักเข้ามา</h3>
             <div class="acts"><button class="toggle-btn" onclick="toggleTable('heat')">ตาราง</button></div>
-            <div class="hint">จำนวนงานรอตอบใหม่ แยกวันในสัปดาห์ × ชั่วโมง — ใช้วางแผนคนเฝ้าแชท</div>
+            <div class="hint">จำนวนครั้งที่ทักเข้ามา แยกวันในสัปดาห์ × ชั่วโมง — ใช้วางแผนคนเฝ้าแชท</div>
           </div>
           <div class="card-body chart-wrap" id="heatChart"></div>
           <div class="card-body" id="heatTable" hidden></div>
@@ -1012,7 +1012,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
       <div class="card card-gold">
         <div class="card-head">
           <h3><span class="hb" data-ic="tag"></span><span class="peer-word">ซัพพลายเออร์</span>ที่ทักบ่อยสุด</h3>
-          <div class="hint">จำนวนงานรอตอบในช่วงที่เลือก · คลิกเพื่อเปิดแชท</div>
+          <div class="hint">จำนวนครั้งที่ทักเข้ามาในช่วงที่เลือก · คลิกเพื่อเปิดแชท</div>
         </div>
         <div class="card-body" id="topChats"></div>
       </div>
@@ -1053,7 +1053,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana One Chat v2.09 (เดิม RTN Chat Hub) — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  Rattana One Chat v2.10 (เดิม RTN Chat Hub) — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
 //  v2.02: บัญชีเลือกได้ว่า "แบ่งงานรายแชท" หรือไม่ (pur_settings.use_assignee) — ปิดแล้วซ่อนผู้รับผิดชอบ/รหัส PU ทั้งแอพ
@@ -1064,6 +1064,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 //  v2.07: หน้า "ภาพรวมทุกบัญชี" (ผู้ดูแลระบบ/หัวหน้า) — รวมทุกบัญชีในหน้าเดียว เทียบสัปดาห์นี้กับสัปดาห์ก่อน · ใครตอบช้าสุด · ใครตอบผ่านช่องทางไหน
 //  v2.08: เปลี่ยนชื่อเป็น Rattana One Chat + โลโก้ใหม่ · รูปประจำบัญชี (ACCT_LOGO) ในหน้าเลือกบัญชี เมนู หัวแอพ ตั้งค่า ภาพรวม และแจ้งเตือน
 //  v2.09: หน้าภาพรวม — อันดับเรียง % ตอบทัน SLA มากไปน้อย · ตารางรายคนเรียงจำนวนงานที่ตอบมากไปน้อย (ไม่แบ่งตามบัญชี)
+//  v2.10: ป้ายที่หมายถึง "ปริมาณ" เปลี่ยนจาก "งานรอตอบ" เป็น "ข้อความที่ทักเข้ามา" (หน่วย ครั้ง) — ผู้ใช้อ่านแล้วนึกว่าเป็นงานค้าง · งานค้างจริงคือ "ค้างตอนนี้"
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -1928,7 +1929,7 @@ function renderMsgs(msgs){
     html += `<div class="msg-grp ${out ? 'fa' : 'fc'}">
       ${!out && who ? `<div class="sender">${esc(who)}</div>` : ''}
       <div class="bubble-row">${bubble}${canQuote ? `<button class="rq" onclick="startQuote('${m.id}')" title="ตอบกลับข้อความนี้">↩</button>` : ''}</div>
-      <div class="msg-time">${thTime(m.sent_at)}${out ? ` · ${esc(who)} ${sendMark(m)}` : (m.is_ack ? ' · <span title="ข้อความรับทราบ ไม่นับเป็นงานรอตอบ">รับทราบ</span>' : '')}</div>
+      <div class="msg-time">${thTime(m.sent_at)}${out ? ` · ${esc(who)} ${sendMark(m)}` : (m.is_ack ? ' · <span title="ข้อความรับทราบ ไม่นับเป็นข้อความที่ต้องตอบ">รับทราบ</span>' : '')}</div>
     </div>`;
   });
   area.innerHTML = html;
@@ -2767,7 +2768,7 @@ function renderDash(){
 
   $('statGrid').innerHTML = [
     tile('ค้างตอนนี้', nf(open.length), open.length ? `เกิน SLA ${nf(breach.length)} งาน · รอนานสุด ${fmtDur(oldest)}` : 'ไม่มีงานค้าง 🎉', open.length ? (breach.length ? 'danger' : '') : 'good'),
-    tile('งานรอตอบในช่วงนี้', nf(inR.length), `จาก ${nf(new Set(inR.map(w => w.chat_id)).size)} แชท · ไม่ต้องตอบ ${nf(dismissed.length)}`),
+    tile('ข้อความที่ทักเข้ามา', nf(inR.length), `จาก ${nf(new Set(inR.map(w => w.chat_id)).size)} แชท · ไม่ต้องตอบ ${nf(dismissed.length)}`),
     tile('อัตราการตอบ', pct(answered.length, needReply), `ตอบแล้ว ${nf(answered.length)} จาก ${nf(needReply)} งาน`, needReply && answered.length === needReply ? 'good' : (openInR.length ? 'danger' : '')),
     tile('เวลาตอบ (มัธยฐาน)', fmtDur(med), durs.length ? `P90 ${fmtDur(p90)} · เฉลี่ย ${fmtDur(mean)}` : 'ยังไม่มีงานที่ตอบ'),
     tile(`ตอบทัน SLA ${settings.sla_minutes} นาที`, pct(okN, answered.length), answered.length ? `ช้ากว่า SLA ${nf(answered.length - okN)} งาน` : 'ยังไม่มีงานที่ตอบ', answered.length ? (okN / answered.length < .8 ? 'danger' : 'good') : ''),
@@ -2853,7 +2854,7 @@ function renderDaily(inR, from, to){
     bars += `<rect class="hit" x="${m.l + slot * i}" y="${m.t}" width="${slot}" height="${ph}" fill="transparent" data-i="${i}"/>`;
     if(i % labelEvery === 0) labels += `<text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle" font-size="10" fill="var(--muted)">${b.label}</text>`;
   });
-  wrap.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="งานรอตอบรายวัน">${grid}<line x1="${m.l}" x2="${W - m.r}" y1="${y(0)}" y2="${y(0)}" stroke="var(--deemph)" stroke-width="1"/>${bars}${labels}</svg>`;
+  wrap.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="ข้อความที่ทักเข้ามารายวัน">${grid}<line x1="${m.l}" x2="${W - m.r}" y1="${y(0)}" y2="${y(0)}" stroke="var(--deemph)" stroke-width="1"/>${bars}${labels}</svg>`;
   bindTips(wrap, '.hit', el => { const b = buckets[+el.dataset.i]; return `<b>${esc(b.full)}</b>
     <div class="r"><span><i style="background:var(--st-good)"></i>ทันเวลา</span><b>${nf(b.ok)}</b></div>
     <div class="r"><span><i style="background:var(--st-warn)"></i>ช้ากว่า SLA</span><b>${nf(b.late)}</b></div>
@@ -2889,7 +2890,7 @@ function renderHeat(inR){
   });
   h += `</div><div class="scale"><span>น้อย</span>${ramp.map(c => `<i style="background:${c}"></i>`).join('')}<span>มาก (${nf(max)})</span></div>`;
   $('heatChart').innerHTML = h;
-  bindTips($('heatChart'), '.hc', el => `<b>${DOW_FULL[+el.dataset.r]} ${pad(+el.dataset.c)}.00–${pad(+el.dataset.c)}.59</b><div class="r"><span>งานรอตอบใหม่</span><b>${nf(el.dataset.v)}</b></div>`);
+  bindTips($('heatChart'), '.hc', el => `<b>${DOW_FULL[+el.dataset.r]} ${pad(+el.dataset.c)}.00–${pad(+el.dataset.c)}.59</b><div class="r"><span>ทักเข้ามา</span><b>${nf(el.dataset.v)}</b></div>`);
   $('heatTable').innerHTML = simpleTable(['วัน', ...Array.from({ length:24 }, (_, i) => pad(i))], grid.map((row, r) => [DOW_FULL[r], ...row]), [0]);
 }
 
@@ -2915,7 +2916,7 @@ function renderPersons(inR, open, reps){
   const list = [...rows.values()].map(r => { r.durs.sort((a, b) => a - b); r.med = quantile(r.durs, .5); r.p90 = quantile(r.durs, .9); r.slaPct = r.answered ? r.ok / r.answered : null; r.reps = r.repApp + r.repLine + r.repOa; return r; });
   // ผู้ดูแลระบบไม่ได้ตอบแชทซัพ — ไม่ขึ้นในผลงานรายคน (ทั้งการ์ดและตาราง)
   for(let i = list.length - 1; i >= 0; i--) if(list[i].email && members.get(list[i].email)?.role === 'admin') list.splice(i, 1);
-  const cols = [['name', useOwner() ? 'ผู้รับผิดชอบ' : 'คนที่ตอบ', 'str'], ['total', 'งานรอตอบ', 'num'], ['answered', 'ตอบแล้ว', 'num'], ['openR', 'ยังไม่ตอบ', 'num'], ['dis', 'ไม่ต้องตอบ', 'num'], ['openNow', 'ค้างตอนนี้', 'num'], ['slaPct', 'ทัน SLA', 'num'], ['late', 'ช้ากว่า SLA', 'num'], ['med', 'มัธยฐาน', 'num'], ['p90', 'P90', 'num'], ['byOther', 'คนอื่นช่วยตอบ', 'num'], ['reps', 'ข้อความส่ง', 'num']];
+  const cols = [['name', useOwner() ? 'ผู้รับผิดชอบ' : 'คนที่ตอบ', 'str'], ['total', 'ทักเข้ามา', 'num'], ['answered', 'ตอบแล้ว', 'num'], ['openR', 'ยังไม่ตอบ', 'num'], ['dis', 'ไม่ต้องตอบ', 'num'], ['openNow', 'ค้างตอนนี้', 'num'], ['slaPct', 'ทัน SLA', 'num'], ['late', 'ช้ากว่า SLA', 'num'], ['med', 'มัธยฐาน', 'num'], ['p90', 'P90', 'num'], ['byOther', 'คนอื่นช่วยตอบ', 'num'], ['reps', 'ข้อความส่ง', 'num']];
   const sorted = sortRows(list, personSort.key, personSort.dir);
   const T = list.reduce((t, r) => { t.total += r.total; t.answered += r.answered; t.openR += r.openR; t.dis += r.dis; t.openNow += r.openNow; t.ok += r.ok; t.late += r.late; t.byOther += r.byOther; t.reps += r.reps; return t; }, { total:0, answered:0, openR:0, dis:0, openNow:0, ok:0, late:0, byOther:0, reps:0 });
   const allDurs = inR.filter(w => w._answered).map(w => w._dur).sort((a, b) => a - b);
@@ -2950,7 +2951,7 @@ function renderPersons(inR, open, reps){
         <div><b class="${r.openNow ? 'bad' : ''}">${nf(r.openNow)}</b><span>ค้างตอนนี้</span></div>
         <div><b class="${r.openLate ? 'bad' : ''}">${nf(r.openLate)}</b><span>ค้างและเลย SLA</span></div>
         <div><b class="${r.late ? 'bad' : ''}">${nf(r.late)}</b><span>ตอบช้ากว่า SLA</span></div>
-        <div><b>${nf(r.total)}</b><span>งานรอตอบ</span></div>
+        <div><b>${nf(r.total)}</b><span>ทักเข้ามา</span></div>
         <div><b>${nf(r.answered)}</b><span>ตอบแล้ว</span></div>
         <div><b>${nf(r.dis)}</b><span>ไม่ต้องตอบ</span></div>
         <div><b>${fmtDur(r.med)}</b><span>มัธยฐาน</span></div>
@@ -3527,10 +3528,10 @@ function exportDashExcel(){
   if(!dashLoadedOnce){ showToast('ยังไม่มีข้อมูล', 'warning'); return; }
   const all = visibleWaits(), [from, to] = currentRange(), sla = slaSec(), inR = all.filter(w => w._inRange);
   const wb = XLSX.utils.book_new();
-  const persons = (dash.lastPersons || []).map(r => ({ 'ผู้รับผิดชอบ':r.name, 'งานรอตอบ':r.total, 'ตอบแล้ว':r.answered, 'ยังไม่ตอบ':r.openR, 'ไม่ต้องตอบ':r.dis, 'ค้างตอนนี้':r.openNow, 'ทัน SLA (%)':r.slaPct == null ? '' : Math.round(r.slaPct * 100), 'ช้ากว่า SLA (ครั้ง)':r.late,'มัธยฐาน (นาที)':r.med == null ? '' : Math.round(r.med / 60), 'P90 (นาที)':r.p90 == null ? '' : Math.round(r.p90 / 60), 'คนอื่นช่วยตอบ':r.byOther, 'ข้อความจากแอป':r.repApp, 'ข้อความจาก LINE ส่วนตัว':r.repLine, 'ข้อความจาก OA Manager':r.repOa }));
+  const persons = (dash.lastPersons || []).map(r => ({ 'ผู้รับผิดชอบ':r.name, 'ทักเข้ามา (ครั้ง)':r.total, 'ตอบแล้ว':r.answered, 'ยังไม่ตอบ':r.openR, 'ไม่ต้องตอบ':r.dis, 'ค้างตอนนี้':r.openNow, 'ทัน SLA (%)':r.slaPct == null ? '' : Math.round(r.slaPct * 100), 'ช้ากว่า SLA (ครั้ง)':r.late,'มัธยฐาน (นาที)':r.med == null ? '' : Math.round(r.med / 60), 'P90 (นาที)':r.p90 == null ? '' : Math.round(r.p90 / 60), 'คนอื่นช่วยตอบ':r.byOther, 'ข้อความจากแอป':r.repApp, 'ข้อความจาก LINE ส่วนตัว':r.repLine, 'ข้อความจาก OA Manager':r.repOa }));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(persons), 'รายคน');
   const waits = inR.sort((a, b) => a._s - b._s).map(w => { const c = chatById.get(w.chat_id); return { 'วันที่':thDate(w.started_at), 'เวลา':thTime(w.started_at), 'ซัพพลายเออร์/แชท':c ? chatName(c) : '', 'ประเภท':w.chat_kind === 'user' ? '1:1' : 'กลุ่ม', 'ผู้รับผิดชอบ':w.owner_email ? memberName(w.owner_email) : '', 'สถานะ':w._answered ? 'ตอบแล้ว' : w._dismissed ? 'ไม่ต้องตอบ' : 'ยังไม่ตอบ', 'ตอบโดย':w.closed_by ? memberName(w.closed_by) : '', 'ช่องทาง':w.answer_via === 'app' ? 'แอป' : w.answer_via === 'oa' ? 'OA Manager' : w.answer_via === 'line' ? 'LINE' : '', 'ตอบเมื่อ':w.closed_at ? thDateTime(w.closed_at) : '', 'ข้อความจากซัพ':w.in_count, 'เวลาตอบ 24ชม. (นาที)':w.response_sec == null ? '' : Math.round(w.response_sec / 60), 'เวลาตอบ เวลาทำการ (นาที)':w._answered ? Math.round(bizSeconds(Date.parse(w.started_at), Date.parse(w.closed_at)) / 60) : '', 'ทัน SLA':w._answered ? (w._ok ? 'ทัน' : 'ช้า') : '' }; });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(waits), 'งานรอตอบ');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(waits), 'ข้อความที่ทักเข้ามา');
   const { buckets } = dayBuckets(inR, from, to);
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(buckets.map(b => ({ 'วันที่':b.full, 'ทันเวลา':b.ok, 'ช้ากว่า SLA':b.late, 'ยังไม่ตอบ':b.open, 'ไม่ต้องตอบ':b.dis, 'รวม':b.ok + b.late + b.open + b.dis }))), 'รายวัน');
   const meta = [{ 'รายการ':'ช่วงเวลา', 'ค่า':`${thDate(from)} – ${thDate(addDays(to, -1))}` }, { 'รายการ':'นาฬิกา', 'ค่า':clockMode === 'biz' ? `เวลาทำการ ${settings.work_start}–${settings.work_end}` : '24 ชม.' }, { 'รายการ':'SLA (นาที)', 'ค่า':sla / 60 }, { 'รายการ':'ส่งออกเมื่อ', 'ค่า':thDateTime(new Date()) }, { 'รายการ':'โดย', 'ค่า':me?.email || '' }];
@@ -3909,7 +3910,7 @@ async function saveQuick(){
   catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
 }
 function ackCardHtml(){
-  return `<div class="card card-gold"><div class="card-head"><h3>🙏 คำรับทราบ (ไม่นับเป็นงานรอตอบ)</h3>
+  return `<div class="card card-gold"><div class="card-head"><h3>🙏 คำรับทราบ (ไม่นับเป็นข้อความที่ต้องตอบ)</h3>
     <div class="hint">ข้อความจาก${peer()}ที่ประกอบด้วยคำเหล่านี้ล้วนๆ (เช่น "ขอบคุณครับ", "รับทราบค่ะ 🙏", "ok") และสติกเกอร์ จะ<b>ไม่</b>เปิดงานรอตอบใหม่ · หนึ่งบรรทัดต่อคำ · มีผลกับข้อความใหม่ (ของเก่าให้ผู้ดูแลกด "คำนวณสถิติใหม่")</div></div>
     <div class="card-body"><textarea class="input" id="ackText" rows="8">${esc((settings.ack_words || []).join('\n'))}</textarea><div class="mt-8"><button class="btn btn-gold" onclick="saveAck()">💾 บันทึก</button></div></div></div>`;
 }
@@ -3934,11 +3935,11 @@ async function loadQuota(){
 }
 function adminCardHtml(){
   return `<div class="card" style="border-top:3px solid var(--st-crit)"><div class="card-head"><h3>🛠 ผู้ดูแลระบบ</h3>
-    <div class="hint">คำนวณงานรอตอบของทุกแชทในบัญชี <b>${esc(acctName())}</b> ใหม่จากประวัติข้อความ — ใช้หลังแก้คำรับทราบ หรือเมื่อสงสัยว่าสถิติเพี้ยน (ข้อความไม่หาย)</div></div>
+    <div class="hint">คำนวณสถิติการตอบของทุกแชทในบัญชี <b>${esc(acctName())}</b> ใหม่จากประวัติข้อความ — ใช้หลังแก้คำรับทราบ หรือเมื่อสงสัยว่าสถิติเพี้ยน (ข้อความไม่หาย)</div></div>
     <div class="card-body"><button class="btn btn-danger" onclick="rebuildAll()">♻️ คำนวณสถิติใหม่ทั้งบัญชีนี้</button></div></div>`;
 }
 async function rebuildAll(){
-  if(!confirm(`คำนวณสถิติงานรอตอบของบัญชี ${acctName()} ใหม่ทั้งหมด?\n\nข้อความไม่หาย แต่ตัวเลขแดชบอร์ดอาจเปลี่ยนตามกติกาปัจจุบัน`)) return;
+  if(!confirm(`คำนวณสถิติการตอบของบัญชี ${acctName()} ใหม่ทั้งหมด?\n\nข้อความไม่หาย แต่ตัวเลขแดชบอร์ดอาจเปลี่ยนตามกติกาปัจจุบัน`)) return;
   showSpinner('กำลังคำนวณสถิติใหม่…');
   try{ const n = await rpc('pur_rebuild_all', { p_account:acct.id }); showToast(`คำนวณใหม่แล้ว ${nf(n)} แชท ✓`, 'success'); await loadChats(); if(dashLoadedOnce) loadDash(); }
   catch(e){ if(e.message !== 'demo') showToast(e.message, 'error'); }
@@ -3946,7 +3947,7 @@ async function rebuildAll(){
 }
 function aboutCardHtml(){
   return `<div class="card"><div class="card-head"><h3>ℹ️ วิธีนับสถิติ</h3></div><div class="card-body txt-sm" style="line-height:1.85">
-    <b>งานรอตอบ</b> = ${peer()}ส่งข้อความเข้ามา (นับจากข้อความแรกหลังทีมตอบครั้งล่าสุด) จนถึงข้อความแรกที่ทีมตอบ → 1 งาน · ข้อความหลายข้อความติดกันก่อนได้คำตอบ = งานเดียว<br>
+    <b>ข้อความที่ทักเข้ามา</b> (นับเป็นครั้ง) = ${peer()}ส่งข้อความเข้ามา (นับจากข้อความแรกหลังทีมตอบครั้งล่าสุด) จนถึงข้อความแรกที่ทีมตอบ → 1 งาน · ข้อความหลายข้อความติดกันก่อนได้คำตอบ = งานเดียว<br>
     <b>ตอบแล้ว</b> = ทีมตอบจากแอพนี้ (LINE รับสำเร็จ) · พนักงานที่ผูก LINE ตอบในกลุ่มจาก LINE ส่วนตัว · หรือตอบใน <b>LINE OA Manager</b> โดยมีส่วนขยาย Bridge อ่านมา (LINE ไม่ส่งข้อความฝั่งแอดมินออกมาเอง — ต้องติดตั้งส่วนขยาย)<br>
     <b>ทีมที่เคยตอบแชทนี้</b> = รายชื่อเหนือแชท นับจากข้อความจริง · ถ้าตั้งผู้รับผิดชอบไว้ใน OA Manager และแอพยังไม่มี ระบบจะใช้คนนั้นให้อัตโนมัติ<br>
     <b>ไม่ต้องตอบ</b> = กดปิดงานเอง (ไม่นับเป็นตอบ ไม่นับเป็นค้าง มีบันทึกว่าใครกด) · <b>คำรับทราบ</b>/สติกเกอร์ ไม่เปิดงานใหม่<br>
@@ -4188,7 +4189,7 @@ function renderOverview(){
   const kT = ovPct(T), kL = hasPrev ? ovPct(L) : null;
   const k = (lb, v, u, d) => `<div class="ov-panel ov-k"><div class="lb">${lb}</div><div class="v">${v}<small>${u}</small></div><div class="d">${d}</div></div>`;
   $('ovKpis').innerHTML = [
-    k('งานรอตอบ (ทุกบัญชี)', nf(T.waits), 'งาน', `${ovDelta(T.waits, hasPrev ? L.waits : null, 0)} ${hasPrev ? esc(R.prevName) + ' ' + nf(L.waits) : ''}`),
+    k('ข้อความที่ทักเข้ามา (ทุกบัญชี)', nf(T.waits), 'ครั้ง', `${ovDelta(T.waits, hasPrev ? L.waits : null, 0)} ${hasPrev ? esc(R.prevName) + ' ' + nf(L.waits) : ''}`),
     k('ตอบทัน SLA', ovPctTxt(kT).replace('%', ''), kT == null ? '' : '%', `${ovDelta(kT, kL, 1, 'pt')} ${kL != null ? 'จาก ' + ovPctTxt(kL) : ''}`),
     k('ช้ากว่า SLA', nf(T.ans - T.ok), 'งาน', `${ovDelta(T.ans - T.ok, hasPrev ? L.ans - L.ok : null, -1)} ${hasPrev ? esc(R.prevName) + ' ' + nf(L.ans - L.ok) : ''}`),
     k('ค้างตอนนี้', nf(openNow), 'แชท', breach ? `<span class="ov-d bad">เกิน SLA ${nf(breach)}</span> ${list.map(a => `${esc(a.name)} ${nf(a.awaiting || 0)}`).join(' · ')}` : list.map(a => `${esc(a.name)} ${nf(a.awaiting || 0)}`).join(' · ')),
@@ -4211,7 +4212,7 @@ function renderOverview(){
         <div style="min-width:0"><h3><i class="ov-dot" style="background:${ovCol(a.id)}"></i> ${esc(a.name)}</h3><div class="mode">${x.st.use_assignee !== false ? 'แบ่งงานรายแชท' : 'แอดมินใครว่างก็ตอบ'} · ${team ? `ทีม ${nf(team)} คน` : 'ยังไม่มีทีม'}</div></div>
         <div class="open ${(a.awaiting || 0) > 20 ? 'hot' : ''}"><b>${nf(a.awaiting || 0)}</b>ค้างตอนนี้</div></div>
       <div class="ov-mets">
-        <div class="ov-met"><div class="lb">งานรอตอบ</div><div class="v">${nf(c.waits)}</div><div class="c">${pv ? ovDelta(c.waits, p.waits, 0) : ''}</div></div>
+        <div class="ov-met"><div class="lb">ทักเข้ามา</div><div class="v">${nf(c.waits)}</div><div class="c">${pv ? ovDelta(c.waits, p.waits, 0) : ''}</div></div>
         <div class="ov-met"><div class="lb">ตอบทัน SLA ${nf(x.st.sla_minutes)} น.</div><div class="v">${ovPctTxt(c.sla)}</div><div class="c">${pv && c.sla != null && p.sla != null ? ovDelta(c.sla, p.sla, 1, 'pt') : ''}</div></div>
         <div class="ov-met"><div class="lb">เวลาตอบกลาง</div><div class="v">${fmtDur(c.med)}</div><div class="c">${pv && c.med != null && p.med != null ? ovDelta(c.med, p.med, -1, 'dur') : ''}</div></div>
       </div>
@@ -4261,7 +4262,7 @@ function renderOvDaily(C){
     s += `<rect class="hit" x="${m.l + gw * i}" y="${m.t}" width="${gw}" height="${ph}" fill="transparent" data-i="${i}"/>`;
   });
   s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(0)}" y2="${y(0)}" stroke="var(--deemph)" stroke-width="1"/>`;
-  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="งานรอตอบรายวัน ${esc(ov.period === 'this' ? 'สัปดาห์นี้' : 'สัปดาห์ที่แล้ว')} เทียบ${esc(R.prevName)}">${s}</svg>`;
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="ข้อความที่ทักเข้ามารายวัน ${esc(ov.period === 'this' ? 'สัปดาห์นี้' : 'สัปดาห์ที่แล้ว')} เทียบ${esc(R.prevName)}">${s}</svg>`;
   $('ovDailyLeg').innerHTML = [[R.prevName + ' (รวมทุกบัญชี)', 'var(--ov-last)'], ...C.acc.map(x => [x.a.name, ovCol(x.a.id)])]
     .map(([t, c]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join('');
   $('ovDailyHint').textContent = `แท่งซ้าย = ${R.prevName} · แท่งขวา = ${ov.period === 'this' ? 'สัปดาห์นี้' : 'สัปดาห์ที่แล้ว'} แยกสีตามบัญชี`;
