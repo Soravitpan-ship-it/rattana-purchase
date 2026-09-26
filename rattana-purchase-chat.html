@@ -1,10 +1,32 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8">
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.11">
-<meta name="x-app-legacy2" content="RTN Chat Hub v2.11">
-<title>Rattana One Chat v2.11</title>
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.12">
+<meta name="x-app-legacy2" content="RTN Chat Hub v2.12">
+<title>Rattana One Chat v2.12</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- แอพย้ายไปอยู่ที่ index.html (ลิงก์สั้น ไม่มีชื่อไฟล์) — หน้านี้พาไปที่นั่น พร้อม ?demo=1 / #chat=… / ผลล็อกอินใน # -->
-<script>location.replace('./' + location.search + location.hash);</script>
-</head><body style="margin:0;background:#0d1b3e;color:#fff;font:15px system-ui,sans-serif;display:grid;place-items:center;min-height:100vh">
-<p>กำลังเปิด Rattana One Chat… <a href="./" style="color:#e8c86a">กดที่นี่ถ้าไม่เปิดเอง</a></p>
+<!-- แอพย้ายไป https://rattana2555.github.io/onechat/ (26/09/2569)
+     หน้านี้: ปิดแจ้งเตือนของลิงก์เดิมในเครื่องนี้ (กันเด้งซ้ำเมื่อเปิดแจ้งเตือนที่ลิงก์ใหม่) แล้วพาไปลิงก์ใหม่
+     คง ?… และ #… ไว้ (ลิงก์แจ้งเตือนเปิดแชท / ผลล็อกอิน) -->
+<script>
+(function(){
+  var to = 'https://rattana2555.github.io/onechat/' + location.search + location.hash, done = false;
+  function go(){ if(done) return; done = true; location.replace(to); }
+  setTimeout(go, 3000);
+  (async function(){
+    try{
+      if('serviceWorker' in navigator){
+        var regs = await navigator.serviceWorker.getRegistrations();
+        for(var i = 0; i < regs.length; i++){
+          try{ var s = await regs[i].pushManager.getSubscription(); if(s) await s.unsubscribe(); }catch(e){}
+          try{ await regs[i].unregister(); }catch(e){}
+        }
+      }
+    }catch(e){}
+    go();
+  })();
+})();
+</script>
+</head><body style="margin:0;background:#0d1b3e;color:#fff;font:15px system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:16px">
+<div><p style="font-size:17px;font-weight:700;margin:0 0 6px">Rattana One Chat ย้ายไปลิงก์ใหม่แล้ว</p>
+<p style="margin:0 0 12px;color:#b8c3de">กำลังพาไป… ถ้าไม่ไปเอง กดลิงก์ด้านล่าง</p>
+<p><a href="https://rattana2555.github.io/onechat/" style="color:#e8c86a">https://rattana2555.github.io/onechat/</a></p></div>
 </body></html>

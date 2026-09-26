@@ -49,18 +49,12 @@ self.addEventListener('message', e => {
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   const data = event.notification.data || {};
-  const target = new URL(data.url || './', self.location.href);
+  // แอพย้ายไป rattana2555.github.io/onechat — แจ้งเตือนที่ยังมาทางลิงก์เดิม กดแล้วเปิดลิงก์ใหม่
+  const target = new URL('https://rattana2555.github.io/onechat/');
   if (data.chat) target.hash = 'chat=' + data.chat + (data.account ? '&a=' + data.account : '');
 
   event.waitUntil((async () => {
     const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    for (const w of wins) {
-      if (w.url.startsWith(self.registration.scope)) {
-        await w.focus();
-        w.postMessage({ type: 'open-chat', chat: data.chat || '', account: data.account || '' });
-        return;
-      }
-    }
     await self.clients.openWindow(target.href);
   })());
 });
