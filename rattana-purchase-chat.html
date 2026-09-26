@@ -9,10 +9,10 @@
 <meta name="apple-mobile-web-app-title" content="Rattana One Chat">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.08">
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.09">
 <!-- แอพรุ่น v2.0–v2.07 หาเลขเวอร์ชันด้วยชื่อ "RTN Chat Hub vX" — คงไว้ให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบอัปเดต -->
-<meta name="x-app-legacy2" content="RTN Chat Hub v2.08">
-<title>Rattana One Chat v2.08</title>
+<meta name="x-app-legacy2" content="RTN Chat Hub v2.09">
+<title>Rattana One Chat v2.09</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -765,7 +765,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana One Chat v2.08 · 26/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">Rattana One Chat v2.09 · 26/09/2569</div>
   </div>
 </div>
 
@@ -798,7 +798,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
     <section class="ov-sec"><div class="ov-h"><h2>แต่ละบัญชี</h2><span class="hint">ตัวเลขหลักของทุกบัญชีวางเทียบกัน</span></div><div class="ov-accts" id="ovAccts"></div></section>
     <section class="ov-sec"><div class="ov-h"><h2>งานรอตอบรายวัน</h2><span class="hint" id="ovDailyHint"></span></div>
       <div class="ov-panel ov-chart"><div class="ov-leg" id="ovDailyLeg"></div><div id="ovDaily"></div></div></section>
-    <section class="ov-sec"><div class="ov-h"><h2>ใครตอบช้าสุด</h2><span class="hint">เรียงจาก % ตอบทัน SLA น้อยสุด (ตอบตั้งแต่ 10 งาน) · จุดสี = ช่วงนี้ · จุดเทา = สัปดาห์ก่อน</span><div class="ov-chips" id="ovChips"></div></div>
+    <section class="ov-sec"><div class="ov-h"><h2>อันดับตอบทัน SLA</h2><span class="hint">เรียงจาก % ตอบทัน SLA มากไปน้อย (ตอบตั้งแต่ 10 งาน) · อันดับท้าย = ตอบช้าสุด · จุดสี = ช่วงนี้ · จุดเทา = สัปดาห์ก่อน</span><div class="ov-chips" id="ovChips"></div></div>
       <div class="ov-two"><div class="ov-panel ov-rank"><div class="ov-scale"><div></div><div></div><div><span>0%</span><span>50%</span><span>100%</span></div><div></div></div><div id="ovRank"></div></div>
         <div class="ov-panel ov-ins" id="ovIns"></div></div></section>
     <section class="ov-sec"><div class="ov-h"><h2>ใครตอบอะไร ยังไง</h2><span class="hint">รายคน · ตอบผ่าน = สัดส่วนข้อความที่ส่งในช่วงนี้</span></div><div class="ov-panel ov-tbl" id="ovTbl"></div></section>
@@ -814,7 +814,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
     <div class="logo-text">Rattana <span>One Chat</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.08</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.09</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -1053,7 +1053,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  Rattana One Chat v2.08 (เดิม RTN Chat Hub) — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  Rattana One Chat v2.09 (เดิม RTN Chat Hub) — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
 //  v2.02: บัญชีเลือกได้ว่า "แบ่งงานรายแชท" หรือไม่ (pur_settings.use_assignee) — ปิดแล้วซ่อนผู้รับผิดชอบ/รหัส PU ทั้งแอพ
@@ -1063,6 +1063,7 @@ body.dark .ov-i .ic.good{background:#1a3a25;color:#7be0a3}body.dark .ov-i .ic.ba
 //  v2.06: การ์ดจากระบบอัตโนมัติที่ยังไม่ได้ส่งเนื้อการ์ดเข้าแอพ (OA Manager ให้มาแค่ altText) ขึ้นเป็นป้าย "การ์ดจากระบบ…" แทน "แอดมิน OA"
 //  v2.07: หน้า "ภาพรวมทุกบัญชี" (ผู้ดูแลระบบ/หัวหน้า) — รวมทุกบัญชีในหน้าเดียว เทียบสัปดาห์นี้กับสัปดาห์ก่อน · ใครตอบช้าสุด · ใครตอบผ่านช่องทางไหน
 //  v2.08: เปลี่ยนชื่อเป็น Rattana One Chat + โลโก้ใหม่ · รูปประจำบัญชี (ACCT_LOGO) ในหน้าเลือกบัญชี เมนู หัวแอพ ตั้งค่า ภาพรวม และแจ้งเตือน
+//  v2.09: หน้าภาพรวม — อันดับเรียง % ตอบทัน SLA มากไปน้อย · ตารางรายคนเรียงจำนวนงานที่ตอบมากไปน้อย (ไม่แบ่งตามบัญชี)
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -4282,7 +4283,7 @@ function renderOvChips(){
 function renderOvRank(C){
   const R = ov.R, ppl = C.people.filter(p => ov.filter === 'all' || String(p.acct) === ov.filter);
   const shown = ppl.filter(p => p.cur.ans > 0).sort((a, b) =>
-    ((b.cur.ans >= OV_MIN) - (a.cur.ans >= OV_MIN)) || (a.cur.sla - b.cur.sla) || (b.cur.late - a.cur.late) || (b.cur.ans - a.cur.ans));
+    ((b.cur.ans >= OV_MIN) - (a.cur.ans >= OV_MIN)) || (b.cur.sla - a.cur.sla) || (a.cur.late - b.cur.late) || (b.cur.ans - a.cur.ans));
   let no = 0;
   $('ovRank').innerHTML = shown.length ? shown.map(p => {
     const low = p.cur.ans < OV_MIN, sT = p.cur.sla, sP = p.prev.ans >= 3 ? p.prev.sla : null;
@@ -4320,7 +4321,7 @@ function renderOvRank(C){
 // ── ตารางรายคน ──
 function renderOvTable(C){
   const R = ov.R, ppl = C.people.filter(p => (ov.filter === 'all' || String(p.acct) === ov.filter) && (p.cur.waits || p.via.app + p.via.line + p.via.oa))
-    .sort((a, b) => (a.acct - b.acct) || (b.cur.ans - a.cur.ans) || String(a.name).localeCompare(String(b.name), 'th'));
+    .sort((a, b) => (b.cur.ans - a.cur.ans) || ((b.via.app + b.via.line + b.via.oa) - (a.via.app + a.via.line + a.via.oa)) || String(a.name).localeCompare(String(b.name), 'th'));
   const head = ['คน', 'บัญชี', `ตอบ (${R.prevName})`, 'เวลาตอบกลาง', '90% ตอบภายใน', 'ตอบทัน SLA', 'ช้ากว่า SLA', 'ยังไม่ตอบ', `เทียบ${R.prevName}`, 'ตอบผ่าน'];
   $('ovTbl').innerHTML = `<table><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${ppl.length ? ppl.map(p => {
     const vt = p.via.app + p.via.line + p.via.oa;
