@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="RTN Chat Hub">
 <meta name="theme-color" content="#0d1b3e">
 <!-- แอพรุ่นก่อน v2.0 หาเลขเวอร์ชันด้วยชื่อเดิม "Rattana Purchase Chat vX" ใน 1,500 ไบต์แรก — ป้ายนี้ทำให้เครื่องที่ยังเปิดรุ่นเก่าเห็นแถบ "มีเวอร์ชันใหม่" -->
-<meta name="x-app-legacy" content="Rattana Purchase Chat v2.05">
-<title>RTN Chat Hub v2.05</title>
+<meta name="x-app-legacy" content="Rattana Purchase Chat v2.06">
+<title>RTN Chat Hub v2.06</title>
 <link rel="icon" id="favicon" type="image/png" href="">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
@@ -209,6 +209,8 @@ button.older-bar:hover{border-color:var(--gold);color:var(--text)}
 .fa .bubble{background:var(--navy);color:#fff;border-bottom-right-radius:5px}
 .bubble.media{padding:0;background:transparent!important;border:none!important;box-shadow:none!important}
 .bubble.unsent{font-style:italic;color:var(--muted);background:transparent;border:1px dashed var(--border)}
+.sc-head{font-size:11px;font-weight:700;opacity:.8;margin-bottom:2px}
+.sc-note{font-size:11px;opacity:.7;margin-top:6px;padding-top:5px;border-top:1px solid rgba(255,255,255,.25)}
 .bubble a{color:inherit;text-decoration:underline}
 .quote{font-size:11px;opacity:.85;border-left:3px solid var(--gold);padding:2px 8px;margin:0 0 6px;border-radius:2px;background:rgba(0,0,0,.06);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
 .fa .quote{background:rgba(255,255,255,.14)}
@@ -641,7 +643,7 @@ select.input{appearance:auto}
     </button>
     <div class="lg-note">ใช้อีเมลบริษัทที่หัวหน้าเพิ่มไว้ในทีม · ล็อกอินครั้งเดียวแล้วเลือกบัญชี LINE<br>ยังไม่มีสิทธิ์? ติดต่อหัวหน้าแผนกหรือผู้ดูแลระบบ</div>
     <div class="lg-err" id="lgErr"></div>
-    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.05 · 25/09/2569</div>
+    <div style="font-size:10px;color:var(--sub);margin-top:14px">RTN Chat Hub v2.06 · 26/09/2569</div>
   </div>
 </div>
 
@@ -665,7 +667,7 @@ select.input{appearance:auto}
   <i class="brand-mark" style="width:40px;height:40px" aria-hidden="true"></i>
   <div style="min-width:0" id="hdrAcct" onclick="toggleAcctMenu(event)">
     <div class="logo-text">RTN <span>Chat Hub</span></div>
-    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.05</span>
+    <span class="logo-sub" id="hdrGreet">แชท LINE · v2.06</span>
   </div>
   <div class="hdr-r">
     <div class="noti-wrap" id="notiWrap">
@@ -904,13 +906,14 @@ select.input{appearance:auto}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  RTN Chat Hub v2.05 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
+//  RTN Chat Hub v2.06 — แชท LINE OA หลายบัญชี (จัดซื้อ · Rattana Official · Rattana Mart) + แดชบอร์ดการตอบแชท
 //  (เดิมชื่อ Rattana Purchase Chat — v2.0 22/09/2569 เพิ่มหลายบัญชี: ล็อกอินครั้งเดียว เลือกบัญชี สิทธิ์และการตั้งค่าแยกต่อบัญชี)
 //  v2.01: ส่งเร็วขึ้น — เรียก pur-send ที่โตเกียว (ข้างฐานข้อมูล) + ปลุกเครื่องไว้ตอนเริ่มพิมพ์
 //  v2.02: บัญชีเลือกได้ว่า "แบ่งงานรายแชท" หรือไม่ (pur_settings.use_assignee) — ปิดแล้วซ่อนผู้รับผิดชอบ/รหัส PU ทั้งแอพ
 //  v2.03: แชทเก่าที่ยังไม่มีรหัส LINE — ข้อความเตือนใช้คำของบัญชีนั้น (ลูกค้า/ซัพ) ไม่พูดถึงใบสั่งสินค้านอกบัญชีจัดซื้อ
 //  v2.04: ประหยัดโควตา Supabase แพ็กเกจฟรี — รอบอัตโนมัติขอเฉพาะแชทที่เปลี่ยน (pur_chats.updated_at) · ข้อความ/แดชบอร์ดโหลดเมื่อจำเป็น · ลิงก์รูปอายุ 1 วันจำในเครื่อง
 //  v2.05: ตัววาดการ์ด Flex ตีความแบบ LINE — flex 0 = กว้างตามเนื้อหา · ค่าปริยายในกล่องแนวนอน = 1 · ข้อความไม่ wrap = บรรทัดเดียว · aspectRatio ของรูป
+//  v2.06: การ์ดจากระบบอัตโนมัติที่ยังไม่ได้ส่งเนื้อการ์ดเข้าแอพ (OA Manager ให้มาแค่ altText) ขึ้นเป็นป้าย "การ์ดจากระบบ…" แทน "แอดมิน OA"
 //  ฐานข้อมูล: Supabase (ตาราง pur_*  ดู supabase/pur-schema.sql)
 //  ส่งข้อความ: Edge Function pur-send · รับข้อความ: pur-webhook-line
 // ═══════════════════════════════════════════════════════════
@@ -1486,9 +1489,25 @@ function previewOf(m){
     default: return `[${m.msg_type}]`;
   }
 }
+// การ์ดจากระบบอัตโนมัติ (ส่งผ่าน API ไม่มีแอดมินคนไหนพิมพ์) ที่ระบบต้นทางยังไม่ได้ส่งเนื้อการ์ดเข้า pur-card
+// OA Manager ให้มาแค่ altText เป็นข้อความธรรมดา → เดิมขึ้นเป็นฟองข้อความ + "แอดมิน OA" ทีมงงว่าใครพิมพ์
+// จับเฉพาะ: ขาออกจาก OA Manager · ยังเป็น text · ไม่มีการ์ด · ไม่มีชื่อ/อีเมล/bizId ของแอดมิน · ข้อความตรงกับ altText ที่รู้จักของบัญชีนั้น
+const SYS_CARDS = {
+  rpbsale:  { who:'ระบบ ROO', alts:[/^ขออนุญาตสรุปรายละเอียดสินค้าเพิ่มเติม/, /^🧾 สรุปคำสั่งซื้อ/, /^🛍️? ?ลืมกดยืนยันออเดอร์/] },
+  purchase: { who:'ระบบใบสั่งซื้อ', alts:[/^ใบสั่งซื้อ$/, /^ใบสั่งสินค้า$/, /^หนังสือขอสนับสนุน/] },   // ของก่อน 18/09 (ก่อนชีทส่งการ์ดเข้าแอพ)
+};
+function sysCardOf(m){
+  if(!m || m.direction !== 'out' || m.via !== 'oa' || m.msg_type !== 'text' || m.card) return null;
+  if(m.staff_email || m.sender_name || m.sender_biz_id) return null;
+  const s = SYS_CARDS[acct?.slug]; if(!s) return null;
+  const t = String(m.content || '').trim();
+  return s.alts.some(r => r.test(t)) ? s.who : null;
+}
 const mediaAttr = (content, attr = 'src') => /^https?:\/\//.test(content) ? `${attr}="${esc(content)}"` : `data-path="${esc(content)}"`;
 function bubbleBody(m){
   const c = m.content || '';
+  const sc = sysCardOf(m);
+  if(sc) return [`<div class="sc-head">📋 การ์ดจาก${esc(sc)}</div><div>${esc(c)}</div><div class="sc-note">แอพไม่ได้รับเนื้อการ์ด — ดูรายละเอียดใน LINE</div>`, false];
   switch(m.msg_type){
     case 'sticker': return [`<img class="sticker" src="${esc(c)}" alt="สติกเกอร์" loading="lazy">`, true];
     case 'image':   return [`<img class="photo" ${mediaAttr(c)} alt="รูปภาพ" loading="lazy" onclick="if(this.src)window.open(this.src,'_blank')">`, true];
@@ -1749,7 +1768,7 @@ function renderMsgs(msgs){
     let bubble;
     if(m.unsent) bubble = '<div class="bubble unsent">ข้อความถูกยกเลิก</div>';
     else { const [inner, media] = bubbleBody(m); bubble = `<div class="bubble ${media ? 'media' : ''}">${qHtml}${inner}</div>`; }
-    const who = out ? `${m.staff_email ? memberName(m.staff_email) : (m.sender_name || (m.via === 'oa' ? 'แอดมิน OA' : 'คนในบริษัท'))} · ${viaLabel(m.via)}` : (c && c.kind !== 'user' ? (m.sender_name || 'สมาชิกกลุ่ม') : '');
+    const who = out ? `${m.staff_email ? memberName(m.staff_email) : (m.sender_name || sysCardOf(m) || (m.via === 'oa' ? 'แอดมิน OA' : 'คนในบริษัท'))} · ${viaLabel(m.via)}` : (c && c.kind !== 'user' ? (m.sender_name || 'สมาชิกกลุ่ม') : '');
     const canQuote = !out && m.quote_token && !m.unsent && c && c.is_active;
     html += `<div class="msg-grp ${out ? 'fa' : 'fc'}">
       ${!out && who ? `<div class="sender">${esc(who)}</div>` : ''}
