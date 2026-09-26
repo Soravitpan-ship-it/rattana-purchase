@@ -21,7 +21,7 @@ self.addEventListener('push', event => {
     // เรื่องเดียวกันเด้งทับอันเดิม ไม่ท่วมจอ · renotify ให้สั่นซ้ำเมื่อมีอันใหม่จริง
     tag: d.tag || 'pur',
     renotify: true,
-    data: { chat: d.chat || '', account: d.account || '', url: d.url || 'rattana-purchase-chat.html' },
+    data: { chat: d.chat || '', account: d.account || '', url: d.url || './' },
     requireInteraction: d.kind === 'sla',
     silent: false,
   };
@@ -49,13 +49,13 @@ self.addEventListener('message', e => {
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   const data = event.notification.data || {};
-  const target = new URL(data.url || 'rattana-purchase-chat.html', self.location.href);
+  const target = new URL(data.url || './', self.location.href);
   if (data.chat) target.hash = 'chat=' + data.chat + (data.account ? '&a=' + data.account : '');
 
   event.waitUntil((async () => {
     const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const w of wins) {
-      if (w.url.includes('rattana-purchase-chat')) {
+      if (w.url.startsWith(self.registration.scope)) {
         await w.focus();
         w.postMessage({ type: 'open-chat', chat: data.chat || '', account: data.account || '' });
         return;

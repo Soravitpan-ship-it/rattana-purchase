@@ -4,7 +4,7 @@
   "description": "Rattana One Chat — แชท LINE OA ทุกบัญชีของรัตนไพบูลย์ + แดชบอร์ดผลงานการตอบแชท",
   "lang": "th",
   "dir": "ltr",
-  "start_url": "rattana-purchase-chat.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
